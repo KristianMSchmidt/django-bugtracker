@@ -19,5 +19,5 @@
                 "django-html"
             ]
         },
-        "python.pythonPath": "/bin/python3"
+        "python.pythonPath": "/home/kristian/.local/share/virtualenvs/django-bugtracker-77i5TrUz/bin/python"
 }
