@@ -127,3 +127,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# over-riding default redirect urls
+LOGIN_REDIRECT_URL = 'demo_login'
+LOGOUT_REDIRECT_URL = 'demo_login'
