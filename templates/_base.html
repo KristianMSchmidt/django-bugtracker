@@ -7,12 +7,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Bugtracker{% endblock title%} </title>
+        
         <!-- CSS -->
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
     </head>
 
     <body>
         <header>
+
             <a href="{% url 'home' %}">Home Page</a>
             {% if user.is_authenticated %}
                 Hi {{ user.username }}! Your email is {{ user.email }}.
@@ -24,7 +26,6 @@
                 <a href="{% url 'signup' %}">Sign Up</a>
             {% endif %}
         </header>
-
 
         <div>
             {% block content %}
