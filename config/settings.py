@@ -124,10 +124,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+
+# location of static files in local development (can be a list)
+STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
+
 STATIC_URL = '/static/'
+
+# location of static files for production
+STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
+
+# this is the default setting - we just make it explicit here
+STATICFILES_FINDERS = [  
+    # first look here (looks in STATICFILES_DIRS)
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    # then look here (looks directories defined by STATIC_URL ... in our case all directories named static)
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
+
 # over-riding default redirect urls
-LOGIN_REDIRECT_URL = 'demo_login'
-LOGOUT_REDIRECT_URL = 'demo_login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'

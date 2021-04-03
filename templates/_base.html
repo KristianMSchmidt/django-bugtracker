@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,26 +7,33 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Bugtracker{% endblock title%} </title>
+        <!-- CSS -->
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
     </head>
 
     <body>
+        <header>
+            <a href="{% url 'home' %}">Home Page</a>
+            {% if user.is_authenticated %}
+                Hi {{ user.username }}! Your email is {{ user.email }}.
+                <a href="{% url 'about' %}">About</a>
+                <a href="{% url 'logout' %}">Log Out</a>
+            {% else %}
+                <p>You are not logged in</p>
+                <a href="{% url 'login' %}">Log In</a>
+                <a href="{% url 'signup' %}">Sign Up</a>
+            {% endif %}
+        </header>
 
-        {% if user.is_authenticated %}
-            Hi {{ user.username }}! Your email is {{ user.email }}.
-            <a href="{% url 'logout' %}">Log Out</a>
-
-        {% else %}
-            <p>You are not logged in</p>
-            <a href="{% url 'login' %}">Log In</a>
-            <a href="{% url 'signup' %}">Sign Up</a>
-
-        {% endif %}
 
         <div>
             {% block content %}
 
             {% endblock content %}
         </div>
+
+        <!-- JavaScript -->
+        <script src="{% static 'js/base.js' %}"></script>
     </body>
 
 </html>
