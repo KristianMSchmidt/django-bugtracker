@@ -35,7 +35,7 @@ class CustomUserTests(TestCase):
         self.assertTrue(admin_user.is_superuser)
     
 
-class SignupPageTests(TestCase):  # new
+class SignupPageTests(TestCase):  
 
     def setUp(self):
         url = reverse('signup')
@@ -59,3 +59,41 @@ class SignupPageTests(TestCase):  # new
             view.func.__name__,
             SignupPageView.as_view().__name__
         )
+
+
+class ChangePasswordTests(TestCase):
+
+    def setUp(self):
+        User = get_user_model()
+        User.objects.create_user(
+            username='kris',
+            email='kris@email.com',
+            password='testpass123'
+        )
+        self.client.login(username='kris', password='testpass123')
+
+    def test_password_change_template_logged_in_user(self):
+        url = reverse('password_change')
+        self.response = self.client.get(url)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, 'registration/password_change_form.html')
+        self.assertContains(self.response, 'Password change')
+        self.assertNotContains(
+            self.response, 'Hi there! I should not be on the page.')
+
+    def test_password_change_template_logged_out_user(self):
+        self.client.logout()
+        url = reverse('password_change')
+        self.response = self.client.get(url)
+        self.assertEqual(self.response.status_code, 302)
+
+    def test_password_reset_template_logged_in_user(self):
+        url = reverse('password_reset')
+        self.response = self.client.get(url)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(
+            self.response, 'registration/password_reset_form.html')
+        self.assertContains(self.response, 'Forgot your password')
+        self.assertNotContains(
+            self.response, 'Hi there! I should not be on the page.')
+

@@ -18,6 +18,8 @@
         <div>
             {% if user.is_authenticated %}
                 Hi {{ user.username }}! Your email is {{ user.email }}.
+                <a href="{% url 'password_change' %}">Change password</a>
+
                 <a href="{% url 'about' %}">About</a>
                 <a href="{% url 'logout' %}">Log Out</a>
             {% else %}
