@@ -13,9 +13,9 @@
     </head>
 
     <body>
-        <header>
-
-            <a href="{% url 'home' %}">Home Page</a>
+        <a href="{% url 'home' %}">Home Page</a><br>
+        <a href="{% url 'project_list' %}">Projects</a><br><br>
+        <div>
             {% if user.is_authenticated %}
                 Hi {{ user.username }}! Your email is {{ user.email }}.
                 <a href="{% url 'about' %}">About</a>
@@ -25,7 +25,7 @@
                 <a href="{% url 'login' %}">Log In</a>
                 <a href="{% url 'signup' %}">Sign Up</a>
             {% endif %}
-        </header>
+        </div>
 
         <div>
             {% block content %}
