@@ -32,6 +32,15 @@ class TicketTests(TestCase):
             type=Ticket.BUG,
             priority=Ticket.HIGH
         )
+        self.ticket = Ticket.objects.create(
+            title="Test Ticket",
+            description="Test Ticket Description",
+            project=self.testproject,
+            submitter=self.testuser1,
+            developer=self.testuser2,
+            status=Ticket.OPEN,
+            type=Ticket.BUG,
+        )
 
     def test_ticket_listing(self):
         self.assertEqual(f'{self.ticket.title}', 'Test Ticket'),
@@ -42,6 +51,7 @@ class TicketTests(TestCase):
         self.assertEqual(f'{self.ticket.status}', 'OP'),
         self.assertEqual(f'{self.ticket.type}', 'BG'),
         self.assertEqual(f'{self.ticket.priority}', 'H'),
+
         # status methods
         self.assertTrue(self.ticket.is_open())
         self.assertFalse(self.ticket.is_closed())

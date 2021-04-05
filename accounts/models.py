@@ -7,4 +7,11 @@ from django.db import models
 
 
 class CustomUser(AbstractUser):
-    pass
+    # Role choices
+    DEVELOPER, ADMIN, PROJECT_MANAGER = 'D', 'A', 'PM'
+    ROLE_CHOICES = [(DEVELOPER, 'Developer'), (ADMIN, 'Admin'),
+                        (PROJECT_MANAGER, 'Project Manager')]
+    role = models.CharField(max_length=2,
+                            choices=ROLE_CHOICES,
+                            default=DEVELOPER,
+                            )
