@@ -1,0 +1,27 @@
+{% extends '_base.html' %}
+
+{% block title %}Tickets{% endblock title%}
+
+{% block content %}
+
+<h1>All Tickets</h1>
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Submitter</th>
+        <th>Created at</th>
+        <th>Last update</th>
+
+    </tr>
+    {% for ticket in ticket_list %}
+    <tr>
+        <td><a href="{{ ticket.get_absolute_url }}">{{ ticket.title }}</a></td>
+        <td>{{ ticket.description }}</td>
+        <td>{{ ticket.created_at }}</td>
+        <td>{{ ticket.submitter }}</td>
+        <td>{{ ticket.updated_at }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}

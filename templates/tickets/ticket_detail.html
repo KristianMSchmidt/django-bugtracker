@@ -1,0 +1,28 @@
+{% extends '_base.html' %}
+
+{% block title %}{{ ticket.title }}{% endblock title%}
+
+{% block content %}
+<h3>Ticket Details: {{ticket.title}}</h3>
+<table>
+    <tr>
+        <th>Description</th>
+        <th>Submitter</th>
+        <th>Created at</th>
+        <th>Last update</th>
+        <th>Status</th>
+        <th>Type</th>
+        <th>Priority</th>
+    </tr>
+    <tr>
+        <td>{{ ticket.description }}</td>
+        <td>{{ ticket.submitter }}</td>
+        <td>{{ ticket.created_at }}</td>
+        <td>{{ ticket.updated_at }}</td>
+        <td>{{ ticket.get_status_display }}</td>
+        <td>{{ ticket.get_type_display }}</td>
+        <td>{{ ticket.get_priority_display }}</td>
+    </tr>
+</table>
+{% endblock content %}
+p.get_shirt_size_display()

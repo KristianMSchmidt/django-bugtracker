@@ -4,8 +4,6 @@ from django.urls import reverse, resolve
 from .forms import CustomUserCreationForm  
 from .views import SignupPageView  
 
-
-
 class CustomUserTests(TestCase):
 
     def test_create_user(self):
@@ -61,7 +59,7 @@ class SignupPageTests(TestCase):
         )
 
 
-class ChangePasswordTests(TestCase):
+class ChangeOrResetPasswordTests(TestCase):
 
     def setUp(self):
         User = get_user_model()
@@ -72,22 +70,25 @@ class ChangePasswordTests(TestCase):
         )
         self.client.login(username='kris', password='testpass123')
 
-    def test_password_change_template_logged_in_user(self):
+    def test_password_change_view_for_logged_in_user(self):
         url = reverse('password_change')
-        self.response = self.client.get(url)
-        self.assertEqual(self.response.status_code, 200)
-        self.assertTemplateUsed(self.response, 'registration/password_change_form.html')
-        self.assertContains(self.response, 'Password change')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'registration/password_change_form.html')
+        self.assertContains(response, 'Password change')
         self.assertNotContains(
-            self.response, 'Hi there! I should not be on the page.')
+            response, 'Hi there! I should not be on the page.')
 
-    def test_password_change_template_logged_out_user(self):
+    def test_password_change_view_for_logged_out_user(self):
         self.client.logout()
-        url = reverse('password_change')
-        self.response = self.client.get(url)
-        self.assertEqual(self.response.status_code, 302)
+        response = self.client.get(reverse('password_change'))
+        self.assertEqual(response.status_code, 302) 
+        self.assertRedirects(response, reverse('login') + '?next=/accounts/password_change/')
+        response = self.client.get(
+            reverse('login') + '?next=/accounts/password_change/')
+        self.assertContains(response, 'Log In')
 
-    def test_password_reset_template_logged_in_user(self):
+    def test_password_reset_view(self):
         url = reverse('password_reset')
         self.response = self.client.get(url)
         self.assertEqual(self.response.status_code, 200)

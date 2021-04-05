@@ -3,8 +3,42 @@
 {% block title %}{{ project.title }}{% endblock title%}
 
 {% block content %}
-<div>
-    <h3>{{ project.title }}</h3>
-    <p>{{ project.description}}</p>
-</div>
+    <h3>Project Details: {{project.title}}</h3>
+    <table>
+        <tr>
+            <th>Description</th>
+            <th>Created by</th>
+            <th>Created at</th>
+            <th>Last update</th>
+        </tr>
+        <tr>
+            <td>{{ project.description }}</td>
+            <td>{{ project.created_at }}</td>
+            <td>{{ project.created_by }}</td>
+            <td>{{ project.updated_at }}</td>
+        </tr>
+    </table>    
+    <h3>Tickets for this project</h3>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Submitter</th>
+            <th>Created at</th>
+            <th>Last update</th>
+            <th>Developer</th>
+            <th>Details</th>
+        </tr>
+        {% for ticket in project.tickets.all %}
+            <tr>
+                <td>{{ ticket.title }}<br></td>
+                <td>{{ ticket.description }}<br></td>
+                <td>{{ ticket.submitter }}<br></td>
+                <td>{{ ticket.created_at }}<br></td>
+                <td>{{ ticket.updated_at }}<br></td>
+                <td>{{ ticket.developer }}<br></td>
+                <td><a href="#">More Details</a></td>
+            </tr>
+        {% endfor %}
+    </table>
 {% endblock content %}

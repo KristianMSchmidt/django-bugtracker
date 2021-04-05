@@ -13,6 +13,7 @@
     </head>
 
     <body>
+        <h1>Header</h1>
         <a href="{% url 'home' %}">Home Page</a><br>
         <a href="{% url 'project_list' %}">Projects</a><br><br>
         <div>
@@ -28,7 +29,7 @@
                 <a href="{% url 'signup' %}">Sign Up</a>
             {% endif %}
         </div>
-
+        <br>
         <div>
             {% block content %}
 
