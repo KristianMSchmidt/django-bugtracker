@@ -10,12 +10,15 @@ class Project(models.Model):
     created_by = models.ForeignKey(
         get_user_model(),
         on_delete = models.SET_NULL,
-        null=True
+        null=True,
+        #related_name='created_by'
     )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
-    #users = models.ManyToManyField(Publication)
-
+    
+    users = models.ManyToManyField(get_user_model(), related_name='projects') 
+    # by default: related_name = 'project_set'    ->   someuser.projects_set.all()  giver alle projekter til given bruger
+    # someproject.users  --> giver alle users til projektet 
     def __str__(self):
         return self.title
 

@@ -1,3 +1,8 @@
  sudo chown -R $USER:$USER .
 
  Hver gang settings.py er blevet ændret skal containere lukkes ned og genåbnes. docker-compose down    og docker-compose up
+
+
+Features: 
+- unit tests
+- 
