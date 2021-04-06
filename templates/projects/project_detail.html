@@ -37,7 +37,8 @@
                 <td>{{ ticket.created_at }}<br></td>
                 <td>{{ ticket.updated_at }}<br></td>
                 <td>{{ ticket.developer }}<br></td>
-                <td><a href="#">More Details</a></td>
+                <td><a href="{{ ticket.get_absolute_url }} %}">More Details</a>
+                </td>
             </tr>
         {% endfor %}
     </table>

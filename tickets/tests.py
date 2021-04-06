@@ -32,15 +32,6 @@ class TicketTests(TestCase):
             type=Ticket.BUG,
             priority=Ticket.HIGH
         )
-        self.ticket = Ticket.objects.create(
-            title="Test Ticket",
-            description="Test Ticket Description",
-            project=self.testproject,
-            submitter=self.testuser1,
-            developer=self.testuser2,
-            status=Ticket.OPEN,
-            type=Ticket.BUG,
-        )
 
     def test_ticket_listing(self):
         self.assertEqual(f'{self.ticket.title}', 'Test Ticket'),
@@ -77,7 +68,7 @@ class TicketTests(TestCase):
         self.assertTemplateUsed(response, 'tickets/ticket_list.html'),
         self.assertTemplateNotUsed(response, 'tickets/fantasy_list.html'),
 
-    def test_project_detail_view(self):
+    def test_ticket_detail_view(self):
         response = self.client.get(self.ticket.get_absolute_url())
         no_response = self.client.get('/ticket/12345/')
         self.assertEqual(response.status_code, 200)
@@ -85,3 +76,33 @@ class TicketTests(TestCase):
         self.assertContains(response, 'Ticket Details')
         self.assertTemplateUsed(response, 'tickets/ticket_detail.html')
         self.assertTemplateNotUsed(response, 'tickets/ticket_list.html')
+
+    def test_ticket_update_view(self):
+        response = self.client.get(
+            reverse('ticket_edit', kwargs={'pk': self.ticket.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Edit')
+        self.assertTemplateUsed(response, 'tickets/ticket_edit.html')
+        # permissions etc  
+
+    def test_ticket_create_view(self):
+        response = self.client.get(reverse('ticket_create'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'New Ticket')
+        self.assertTemplateUsed(response, 'tickets/ticket_new.html')
+        # permissions etc
+
+    def test_ticket_delete_view(self):
+        response = self.client.get(
+        reverse('ticket_delete', kwargs={'pk': self.ticket.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Delete')
+        self.assertTemplateUsed(response, 'tickets/ticket_delete.html')
+        # permissions etc
+    
+    # man kunne også teste selve update funktionaliteten et ticket post-requests
+    # Fx kan update funktionaliteten tjekkes sådan her: https://stackoverflow.com/questions/48814830/how-to-test-djangos-updateview
+    # Men der er selvfølgelig ingen grund til at teste djangos indbyggede funktionalitet
+
+
+   

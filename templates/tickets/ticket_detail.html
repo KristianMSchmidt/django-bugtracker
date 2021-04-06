@@ -6,6 +6,7 @@
 <h3>Ticket Details: {{ticket.title}}</h3>
 <table>
     <tr>
+        <th>Title</th>
         <th>Description</th>
         <th>Submitter</th>
         <th>Created at</th>
@@ -15,6 +16,7 @@
         <th>Priority</th>
     </tr>
     <tr>
+        <td>{{ ticket.title }}</td>
         <td>{{ ticket.description }}</td>
         <td>{{ ticket.submitter }}</td>
         <td>{{ ticket.created_at }}</td>
@@ -24,5 +26,8 @@
         <td>{{ ticket.get_priority_display }}</td>
     </tr>
 </table>
+
+<a href="{% url 'ticket_edit' ticket.pk %}">Edit ticket</a>
+
 {% endblock content %}
 p.get_shirt_size_display()

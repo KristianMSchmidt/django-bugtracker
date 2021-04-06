@@ -1,0 +1,14 @@
+{% extends '_base.html' %}
+
+{% block title %}{{ ticket.title }}{% endblock title%}
+
+{% block content %}
+    <h3>Ticket Edit:</h3>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update</button>
+    </form>
+ 
+{% endblock content %}
