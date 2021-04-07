@@ -12,20 +12,24 @@
     <tr>
         <th>Title</th>
         <th>Description</th>
+        <th>Project</th>
         <th>Submitter</th>
         <th>Created at</th>
         <th>Last update</th>
+        <th>More details</th>
 
     </tr>
     {% for ticket in ticket_list %}
-    <tr>
-        <td><a href="{{ ticket.get_absolute_url }}">{{ ticket.title }}</a></td>
-        <td>{{ ticket.description }}</td>
-        <td>{{ ticket.created_at }}</td>
-        <td>{{ ticket.submitter }}</td>
-        <td>{{ ticket.updated_at }}</td>
-    </tr>
-    {% endfor %}
+        <tr>
+            <td>{{ ticket.title }}</td>
+            <td>{{ ticket.project }}</td>
+            <td>{{ ticket.description }}</td>
+            <td>{{ ticket.created_at }}</td>
+            <td>{{ ticket.submitter }}</td>
+            <td>{{ ticket.updated_at }}</td>
+            <td><a href="{{ ticket.get_absolute_url }}">Details</a></td>
+        </tr>
+        {% endfor %}
 </table>
 
 

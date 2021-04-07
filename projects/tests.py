@@ -34,6 +34,26 @@ class ProjectTests(TestCase):
         self.assertContains(response, 'Test title')
         self.assertTemplateUsed(response, 'projects/project_detail.html')
 
+    def test_project_update_view(self):
+        response = self.client.get(
+            reverse('project_edit', kwargs={'pk': self.project.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Edit')
+        self.assertTemplateUsed(response, 'projects/project_edit.html')
+    
+    def test_project_create_view(self):
+        response = self.client.get(reverse('project_create'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'New Project')
+        self.assertTemplateUsed(response, 'projects/project_new.html')
+
+    def test_project_delete_view(self):
+        response = self.client.get(
+            reverse('project_delete', kwargs={'pk': self.project.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Delete')
+        self.assertTemplateUsed(response, 'projects/project_delete.html')
+
 
 class ProjectForeignKeyTests(TestCase):
 

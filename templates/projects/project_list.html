@@ -3,7 +3,10 @@
 {% block title %}Projects{% endblock title%}
 
 {% block content %}
+
     <h1>Projects</h1>
+    <a href="{% url 'project_create' %}">Create New Project</a>
+    <br><br>
     <table>
         <tr>
             <th>Title</th>
@@ -11,17 +14,19 @@
             <th>Created by</th> 
             <th>Created at</th>
             <th>Last update</th>
+            <th>More details</th>
  
         </tr>
     {% for project in project_list %}
         <tr>
-            <td><a href="{{ project.get_absolute_url }}">{{ project.title }}</a></td>
+            <td>{{ project.title }}</a></td>
             <td>{{ project.description }}</td>
             <td>{{ project.created_at }}</td>
             <td>{{ project.created_by }}</td>
             <td>{{ project.updated_at }}</td>
-
+            <td><a href="{{ project.get_absolute_url }}">Details</a></td>
         </tr>
     {% endfor %}
     </table>
 {% endblock content %}
+

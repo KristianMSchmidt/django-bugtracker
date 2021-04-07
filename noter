@@ -4,8 +4,16 @@
 
 
 Features: 
-- unit testing
-- 
+- throughout unit testing
+- pagination
+- crud 
+- 1-1, 1-many, many-to-many relations
+- postgresql database
 
-Todo: 
-    - change time zone
+Development and Deploy
+- docker to reproduce a production environment locally
+- PostreSQL locally
+
+
+
+Usefull info on generic views: https://docs.djangoproject.com/en/3.2/topics/class-based-views/generic-display/

@@ -16,13 +16,6 @@ class TicketListView(ListView):
     context_object_name = 'ticket_list'
     template_name = 'tickets/ticket_list.html'
 
-
-class TicketCreateView(CreateView):
-    model = Ticket
-    template_name = 'tickets/ticket_new.html'
-    fields = '__all__'
-
-
 class TicketDetailView(DetailView):
     model = Ticket
     context_object_name = 'ticket'
@@ -31,10 +24,28 @@ class TicketDetailView(DetailView):
 class TicketUpdateView(UpdateView):
     model = Ticket
     context_object_name = 'ticket'
-    fields = ('title', 'description', 'project', 'type', 'status', 'submitter', 'developer',)
+    fields = ('title', 'description', 'project', 'type', 'status', 'priority', 'developer',)
     template_name = 'tickets/ticket_edit.html'
 
 class TicketDeleteView(DeleteView):
     model = Ticket
     template_name = 'tickets/ticket_delete.html'
     success_url = reverse_lazy('ticket_list')
+
+
+class TicketCreateView(CreateView):
+    model = Ticket
+    template_name = 'tickets/ticket_new.html'
+    fields = ('title', 'description', 'project', 'type',
+              'status', 'priority', 'developer',)
+
+
+    def form_valid(self, form):
+        """
+        Override. We need to set submitter to currently logged in user before creating ticket. 
+        This method is called when valid form data has been POSTed.
+        It should return an HttpResponse.
+        """
+        form.instance.submitter = self.request.user
+
+        return super().form_valid(form)

@@ -3,11 +3,12 @@
 {% block title %}{{ ticket.title }}{% endblock title%}
 
 {% block content %}
-<h3>Ticket Details: {{ticket.title}}</h3>
+<h1>Ticket Details: {{ticket.title}}</h1>
 <table>
     <tr>
         <th>Title</th>
         <th>Description</th>
+        <th>Project</th>
         <th>Submitter</th>
         <th>Created at</th>
         <th>Last update</th>
@@ -18,6 +19,7 @@
     <tr>
         <td>{{ ticket.title }}</td>
         <td>{{ ticket.description }}</td>
+        <td>{{ ticket.project }}</td>
         <td>{{ ticket.submitter }}</td>
         <td>{{ ticket.created_at }}</td>
         <td>{{ ticket.updated_at }}</td>
@@ -28,6 +30,7 @@
 </table>
 
 <a href="{% url 'ticket_edit' ticket.pk %}">Edit ticket</a>
+<a href="{% url 'ticket_delete' ticket.pk %}">Delete ticket</a>
 
 {% endblock content %}
 p.get_shirt_size_display()

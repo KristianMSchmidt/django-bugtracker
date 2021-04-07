@@ -3,22 +3,28 @@
 {% block title %}{{ project.title }}{% endblock title%}
 
 {% block content %}
-    <h3>Project Details: {{project.title}}</h3>
+    <h1>Details for project: {{project.title}}</h1>
     <table>
         <tr>
+            <th>Title</th>
             <th>Description</th>
             <th>Created by</th>
             <th>Created at</th>
             <th>Last update</th>
         </tr>
         <tr>
+            <td>{{ project.title }}</td>
             <td>{{ project.description }}</td>
-            <td>{{ project.created_at }}</td>
             <td>{{ project.created_by }}</td>
+            <td>{{ project.created_at }}</td>
             <td>{{ project.updated_at }}</td>
         </tr>
     </table>    
-    <h3>Tickets for this project</h3>
+    <a href="{% url 'project_edit' project.pk %}">Edit project</a><br>
+    <a href="{% url 'project_delete' project.pk %}">Delete project</a><br>
+    <a href="{% url 'add_ticket_to_project' project.pk %}">Add ticket to project</a>
+    <br><br>
+    <h2>Tickets for this project</h2>
     <table>
         <tr>
             <th>Title</th>
@@ -27,7 +33,7 @@
             <th>Created at</th>
             <th>Last update</th>
             <th>Developer</th>
-            <th>Details</th>
+            <th>More Details</th>
         </tr>
         {% for ticket in project.tickets.all %}
             <tr>
@@ -37,13 +43,12 @@
                 <td>{{ ticket.created_at }}<br></td>
                 <td>{{ ticket.updated_at }}<br></td>
                 <td>{{ ticket.developer }}<br></td>
-                <td><a href="{{ ticket.get_absolute_url }} %}">More Details</a>
+                <td><a href="{{ ticket.get_absolute_url }} ">Details</a>
                 </td>
             </tr>
         {% endfor %}
     </table>
-
-    <h2>Enrolled Users</h2> 
+  <h2>Enrolled Users</h2> 
         {% for user in project.users.all %}
             {{ user.username }}<br>
         {% endfor %}
@@ -51,4 +56,3 @@
 
 {% endblock content %}
 
-# TODO: Make "Add ticket to project" link. 
