@@ -22,13 +22,14 @@ class Ticket(models.Model):
                     (OTHER, 'Other')]
 
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=301, default="")
+    description = models.CharField(max_length=301)
 
     # one to many
     project = models.ForeignKey(
         Project,
-        on_delete=models.CASCADE,
-        related_name='tickets'
+        on_delete=models.SET_NULL,
+        related_name='tickets',
+        null=True
     )
     submitter = models.ForeignKey(
         get_user_model(),

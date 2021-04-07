@@ -4,13 +4,23 @@ from tickets.models import Ticket
 
 class TicketInline(admin.TabularInline):
     model = Ticket
+    extra = 0
 
-# The field we want to show in the admin
+
+class EnrollmentsInline(admin.TabularInline):
+    model = Project.users.through
+    extra = 0   
+    verbose_name = "Enrolled user"
+    verbose_name_plural = "Enrolled users"
+
 class ProjectAdmin(admin.ModelAdmin):
     inlines = [
-        TicketInline,
+        TicketInline, EnrollmentsInline
     ]
-    list_display= ('title', 'description', 'created_by', 'created_at', 'updated_at')
+    # The field we want to show in the admin
+    list_display = ('title', 'description', 'created_by', 
+                    'created_at', 'updated_at')
+    exclude = ('users',)
 
 
 # Register your models here.

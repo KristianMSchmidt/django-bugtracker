@@ -5,6 +5,9 @@
 {% block content %}
 
 <h1>All Tickets</h1>
+
+<a href="{% url 'ticket_create' %}">Create New Ticket</a>
+
 <table>
     <tr>
         <th>Title</th>
@@ -24,4 +27,6 @@
     </tr>
     {% endfor %}
 </table>
+
+
 {% endblock content %}

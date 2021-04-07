@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from .models import Project
 #from django.shortcuts import render
 
@@ -11,6 +11,12 @@ class ProjectListView(ListView):
 
 
 class ProjectDetailView(DetailView):
+    model = Project
+    context_object_name = 'project'
+    template_name = 'projects/project_detail.html'
+
+
+class ProjectTicketCreateView(CreateView):
     model = Project
     context_object_name = 'project'
     template_name = 'projects/project_detail.html'

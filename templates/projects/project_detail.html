@@ -42,4 +42,13 @@
             </tr>
         {% endfor %}
     </table>
+
+    <h2>Enrolled Users</h2> 
+        {% for user in project.users.all %}
+            {{ user.username }}<br>
+        {% endfor %}
+
+
 {% endblock content %}
+
+# TODO: Make "Add ticket to project" link. 
