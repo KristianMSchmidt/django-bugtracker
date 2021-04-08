@@ -7,17 +7,17 @@ from projects.models import Project
 class Ticket(models.Model):
 
     # Priority choices
-    LOW, MEDIUM, HIGH, URGENT = 'L', 'M', 'H', 'U'
+    LOW, MEDIUM, HIGH, URGENT = 1, 2, 3, 4
     PRIORITY_CHOICES = [(LOW, 'Low'), (MEDIUM, 'Medium'),
                         (HIGH, 'High'), (URGENT, 'Urgent')]
 
     # Status choices
-    OPEN, IN_PROGRESS, CLOSED, INFO_REQUIRED = 'OP', 'IP', 'CL', 'IR'
+    OPEN, IN_PROGRESS, CLOSED, INFO_REQUIRED = 1, 2, 3, 4
     STATUS_CHOICES = [(OPEN, 'Open'), (IN_PROGRESS, 'In progress'),
                       (CLOSED, 'Closed'), (INFO_REQUIRED, 'More info required')]
 
     # Type choices
-    FEATURE_REQ, BUG, OTHER = 'FR', 'BG', 'OT'
+    FEATURE_REQ, BUG, OTHER = 1, 2, 3
     TYPE_CHOICES = [(FEATURE_REQ, 'Feature request'), (BUG, 'Bug/Error'),
                     (OTHER, 'Other')]
 
@@ -29,7 +29,8 @@ class Ticket(models.Model):
         Project,
         on_delete=models.SET_NULL,
         related_name='tickets',
-        null=True
+        null=True,
+        blank=True
     )
     submitter = models.ForeignKey(
         get_user_model(),
@@ -46,22 +47,19 @@ class Ticket(models.Model):
         related_name='developer'
     )
 
-    status = models.CharField(
-        max_length=2,
+    status = models.PositiveSmallIntegerField(
         choices=STATUS_CHOICES,
-        default=OPEN,
+        null=True
     )
 
-    priority = models.CharField(
-        max_length=1,
+    priority = models.PositiveSmallIntegerField(
         choices=PRIORITY_CHOICES,
-        default=LOW,
+        null=True
     )
 
-    type = models.CharField(
-        max_length=2,
+    type = models.PositiveSmallIntegerField(
         choices=TYPE_CHOICES,
-        default=OPEN,
+        null=True
     )
 
     def __str__(self):
@@ -72,41 +70,41 @@ class Ticket(models.Model):
 
     # status methods
     def is_open(self):
-        return self.status == 'OP'  # self.OPEN also works... but might be slower?
+        return self.status == self.OPEN
 
     def is_in_progress(self):
-        return self.status == 'IP'
+        return self.status == self.IN_PROGRESS
 
     def is_closed(self):
-        return self.status == 'CL'
+        return self.status == self.CLOSED
 
     def info_required(self):
-        return self.status == 'IR'
+        return self.status == self.INFO_REQUIRED
 
     # priority methods
 
     def priority_is_low(self):
-        return self.priority == 'L'
+        return self.priority == self.LOW
 
     def priority_is_medium(self):
-        return self.priority == 'M'
+        return self.priority == self.MEDIUM
 
     def priority_is_high(self):
-        return self.priority == 'H'
+        return self.priority == self.HIGH
 
     def priority_is_urgent(self):
-        return self.priority == 'U'
+        return self.priority == self.URGENT
 
     # type methods
 
     def type_is_bug(self):
-        return self.type == 'BG'
+        return self.type == self.BUG
 
     def type_is_feature_request(self):
-        return self.type == 'FR'
+        return self.type == self.FEATURE_REQ
 
     def type_is_other(self):
-        return self.type == 'OT'
+        return self.type == self.OTHER
 
 
 

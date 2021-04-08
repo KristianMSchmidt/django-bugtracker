@@ -8,6 +8,7 @@ from .views import (
     ProjectDeleteView,
     AddTicketToProjectView
 )
+
 urlpatterns = [
     path('', ProjectListView.as_view(), name='project_list'),
     path('new/', ProjectCreateView.as_view(), name='project_create'),

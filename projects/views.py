@@ -1,5 +1,7 @@
+from tickets.models import Ticket
 from .models import Project
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import (
     ListView,
     CreateView,
@@ -7,12 +9,12 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
-from tickets.models import Ticket
+
 from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
-class ProjectListView(ListView):
+class ProjectListView(LoginRequiredMixin, ListView):
     """
     Jeg får brug for tricks her fra, når/hvis kun visse projekter skal vises i 'My Projects'
     https: // docs.djangoproject.com/en/3.2/topics/class-based-views/generic-display/
@@ -21,34 +23,42 @@ class ProjectListView(ListView):
     context_object_name = 'project_list'
     template_name = 'projects/project_list.html'
 
+    def get_queryset(self):
+        """
+        Override. 
+        Admins will see all projects. 
+        Other users will only see the projects thery are enrolled in. 
+        """
+        if self.request.user.is_admin():
+            return Project.objects.all()
+        return Project.objects.filter(users=self.request.user)
 
-
-class ProjectDetailView(DetailView):
+class ProjectDetailView(LoginRequiredMixin, DetailView):
     model = Project
     context_object_name = 'project'
     template_name = 'projects/project_detail.html'
 
 
-class ProjectCreateView(CreateView):
+class ProjectCreateView(LoginRequiredMixin, CreateView):
     model = Project
     template_name = 'projects/project_new.html'
     fields = ('title', 'description', 'users')
 
 
-class ProjectUpdateView(UpdateView):
+class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     model = Project
     context_object_name = 'project'
     fields = ('title', 'description', 'users',)
     template_name = 'projects/project_edit.html'
 
 
-class ProjectDeleteView(DeleteView):
+class ProjectDeleteView(LoginRequiredMixin, DeleteView):
     model = Project
     template_name = 'projects/project_delete.html'
     success_url = reverse_lazy('project_list')
 
 
-class AddTicketToProjectView(CreateView):
+class AddTicketToProjectView(LoginRequiredMixin, CreateView):
     model = Ticket
     template_name = 'tickets/ticket_new.html'
     fields = ('title', 'description', 'type',
