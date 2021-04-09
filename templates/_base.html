@@ -17,7 +17,6 @@
         <div>
             {% if user.is_authenticated %}
                 Hi {{ user.username }}! Your email is {{ user.email }}.
-                <a href="{% url 'password_change' %}">Change password</a>
 
                 <a href="{% url 'about' %}">About</a>
                 <a href="{% url 'logout' %}">Log Out</a>
@@ -34,6 +33,22 @@
          <li><a href="{% url 'ticket_list' %}">My tickets</a></li>
         </ul>
         <div>
+            <!-- Potential messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    {% if 'success' in message.tags %}
+                        <div class="bg-green-200 text-green-800 px-4 py-2 mb-2">
+                            {{message}}
+                        </div>
+                    {% else %}
+                        <div class="bg-red-200 text-red-800 px-4 py-2 mb-2">
+                            {{message}}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            <!-- Page Content-->
             {% block content %}
 
             {% endblock content %}

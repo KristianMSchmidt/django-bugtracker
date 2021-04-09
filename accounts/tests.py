@@ -98,3 +98,55 @@ class ChangeOrResetPasswordTests(TestCase):
         self.assertNotContains(
             self.response, 'Hi there! I should not be on the page.')
 
+
+class UpdateProfileTests(TestCase):
+
+    def setUp(self):
+        User = get_user_model()
+        User.objects.create_user(
+            username='kris',
+            email='kris@email.com',
+            password='testpass123'
+        )
+
+    def test_profile_view_logged_in_user(self):
+        self.client.login(username='kris', password='testpass123')
+        url = reverse('profile')
+
+         # get request
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(
+            response, 'registration/profile.html')
+        self.assertContains(response, 'Profile')
+        self.assertContains(response, 'kris@email.com')
+        self.assertNotContains(
+            response, 'Hi there! I should not be on the page.')
+
+        # Post request
+        response = self.client.post(
+            url, {'email': 'new@mail.com', 'username': 'newname'})
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('profile'))
+        
+        # We can log in with new username
+        self.client.logout()
+        self.client.login(username='newname', password='testpass123')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        # We can't log in with old username
+        self.client.logout()
+        self.client.login(username='kris', password='testpass123')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+
+
+
+
+    def test_profile_view_logged_out_user(self):
+        url = reverse('profile')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login') + '?next=/accounts/profile/')
+
