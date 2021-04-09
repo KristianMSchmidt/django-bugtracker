@@ -16,10 +16,12 @@
         <h3>Header</h3>
         <div>
             {% if user.is_authenticated %}
-                Hi {{ user.username }}! Your email is {{ user.email }}.
+                Hi {{ user.username }}!. Your email is {{ user.email }}. Your role is {{ user.get_role_display }}. <br>
 
                 <a href="{% url 'about' %}">About</a>
                 <a href="{% url 'logout' %}">Log Out</a>
+                <a href="{% url 'profile' %}">Profile</a>
+
             {% else %}
                 <p>You are not logged in</p>
                 <a href="{% url 'login' %}">Log In</a>
@@ -27,7 +29,6 @@
             {% endif %}
         </div>
         <ul>
-         <li><a href="{% url 'home' %}">Home Page</a> </li>
          <li><a href="{% url 'admin:index' %}">Admin</a></li>
          <li><a href="{% url 'project_list' %}">My projects</a></li>
          <li><a href="{% url 'ticket_list' %}">My tickets</a></li>

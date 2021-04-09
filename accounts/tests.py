@@ -141,9 +141,6 @@ class UpdateProfileTests(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
 
-
-
-
     def test_profile_view_logged_out_user(self):
         url = reverse('profile')
         response = self.client.get(url)

@@ -148,8 +148,8 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 
 # over-riding default redirect urls
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'about'
+LOGOUT_REDIRECT_URL = 'demo_login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
