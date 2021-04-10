@@ -9,10 +9,10 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
+from django.shortcuts import get_object_or_404, render
 
-from django.shortcuts import get_object_or_404
-
-# Create your views here.
+def manage_enrollments_view(request):
+    return render(request, 'projects/manage_enrollments.html')
 
 class ProjectListView(LoginRequiredMixin, ListView):
     """
@@ -84,5 +84,4 @@ class AddTicketToProjectView(LoginRequiredMixin, CreateView):
         form.instance.project = self.project
 
         return super().form_valid(form)
-
 

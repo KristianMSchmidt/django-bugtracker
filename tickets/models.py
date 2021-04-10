@@ -21,7 +21,7 @@ class Ticket(models.Model):
     TYPE_CHOICES = [(FEATURE_REQ, 'Feature request'), (BUG, 'Bug/Error'),
                     (OTHER, 'Other')]
 
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, unique=True)
     description = models.CharField(max_length=301)
 
     # one to many
@@ -36,7 +36,7 @@ class Ticket(models.Model):
         get_user_model(),
         on_delete=models.SET_NULL,
         null=True,
-        related_name='submitter'
+        related_name='submitter_set'
     )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
@@ -44,7 +44,7 @@ class Ticket(models.Model):
         get_user_model(),
         on_delete=models.SET_NULL,
         null=True,
-        related_name='developer'
+        related_name='developer_set'
     )
 
     status = models.PositiveSmallIntegerField(

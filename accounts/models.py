@@ -16,6 +16,8 @@ class CustomUser(AbstractUser):
                             default=DEVELOPER,
                             null=True,
                             )
+    email = models.EmailField(blank=False)
+    
     def is_developer(self):
         return self.role == self.DEVELOPER
 

@@ -10,8 +10,6 @@ class SignupPageView(generic.CreateView):
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
 
-
-
 @login_required
 def profile_view(request):
     if request.method == 'POST':
@@ -29,3 +27,4 @@ def profile_view(request):
     }
 
     return render(request, 'registration/profile.html', context)
+

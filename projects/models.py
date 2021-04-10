@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse 
 
 class Project(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, unique=True)
     description = models.CharField(max_length=301, default="")
     
     # one-to-many relationship

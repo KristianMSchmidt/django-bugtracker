@@ -6,11 +6,13 @@ from .views import (
     ProjectDetailView,
     ProjectUpdateView,
     ProjectDeleteView,
-    AddTicketToProjectView
+    AddTicketToProjectView,
+    manage_enrollments_view
 )
 
 urlpatterns = [
     path('', ProjectListView.as_view(), name='project_list'),
+    path('manage-enrollments/', manage_enrollments_view, name='manage-enrollments'),
     path('new/', ProjectCreateView.as_view(), name='project_create'),
     path('<int:pk>/', ProjectDetailView.as_view(), name='project_detail'),
     path('<int:pk>/add-ticket', AddTicketToProjectView.as_view(), name='add_ticket_to_project'),
