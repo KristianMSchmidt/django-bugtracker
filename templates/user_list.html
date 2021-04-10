@@ -2,6 +2,25 @@
 {% block title %}Personel{% endblock title%}
 
 {% block content %}
+<h1>Personel</h1>
+<br><br>
+<table>
+    <tr>
+        <th>Username</th>
+        <th>Role</th>
+        <th>Email</th>
+        <th>Date joined</th>
+        <th>More details</th>
 
-
+    </tr>
+    {% for user in user_list %}
+    <tr>
+        <td>{{ user.username }}</a></td>
+        <td>{{ user.get_role_display }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.date_joined }}</td>
+        <td><a href="{{ user.get_absolute_url }}">Details</a></td>
+    </tr>
+    {% endfor %}
+</table>
 {% endblock content %}

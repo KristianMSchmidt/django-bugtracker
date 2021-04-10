@@ -32,3 +32,4 @@ Usefull info on generic views: https://docs.djangoproject.com/en/3.2/topics/clas
 
 Vent lidt med permissions og brug af user_role.... der er mange måder at gøre det på... groups og indbygget persmission system. Eller: Måske
 jeg bare skal køre med det simple rolle-system, indtil jeg får brug for noget mere kompliceret?
+

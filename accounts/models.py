@@ -1,7 +1,5 @@
 from django.db import models
-
-# Create your models here.
-
+from django.urls import reverse
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -26,3 +24,6 @@ class CustomUser(AbstractUser):
 
     def is_developer(self):
         return self.role == self.PROJECT_MANAGER
+
+    def get_absolute_url(self):
+        return reverse("user_detail", args=[self.username])
