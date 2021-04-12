@@ -73,11 +73,14 @@ class UserDetailView(TestCase):
         self.assertNotContains(
             self.response, 'Hi there! I should not be on the page.')
 
-    def test_user_detail_view_returns_404(self):
+    def test_user_detail_view_returns_404_when_user_does_not_exist(self):
         wrong_url = reverse('user_detail', kwargs={'username': 'fantasyuser'})
         no_response = self.client.get(wrong_url)
         self.assertEqual(no_response.status_code, 404)
 
+    def test_user_detail_view_returns_405_on_post_requests(self):
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 405)
 
     def test_user_detail_page_contains_ticket_when_user_is_submitter(self):
         ticket1 = Ticket(

@@ -33,3 +33,9 @@ Usefull info on generic views: https://docs.djangoproject.com/en/3.2/topics/clas
 Vent lidt med permissions og brug af user_role.... der er mange måder at gøre det på... groups og indbygget persmission system. Eller: Måske
 jeg bare skal køre med det simple rolle-system, indtil jeg får brug for noget mere kompliceret?
 
+
+
+Next up: 
+created_by/submitter --> logged in user. 
+Jeg venter med ekstra features: notificationser og ticket history og ticket comments og filer.. Først skal jeg have lortet til at virke - så kan 
+jeg altid tilføje funktionalittet! Dvs: Implementér core features. Next up: Få styr på de ting, som skal bruges til dashboardet. 

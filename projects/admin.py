@@ -21,6 +21,8 @@ class ProjectAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'created_by', 
                     'created_at', 'updated_at')
     exclude = ('users',)
+    search_fields = ('title',)
+
 
 
 # Register your models here.

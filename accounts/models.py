@@ -5,25 +5,26 @@ from django.db import models
 
 
 class CustomUser(AbstractUser):
-    # Role choices
-    DEVELOPER, ADMIN, PROJECT_MANAGER = 1, 2, 3
-    ROLE_CHOICES = [(DEVELOPER, 'Developer'), (ADMIN, 'Admin'),
-                        (PROJECT_MANAGER, 'Project Manager')]
-    role = models.PositiveSmallIntegerField(
-                            choices=ROLE_CHOICES,
-                            default=DEVELOPER,
-                            null=True,
-                            )
     email = models.EmailField(blank=False)
     
+    class Role(models.IntegerChoices):
+        DEVELOPER = 1
+        ADMIN = 2 
+        PROJECT_MANAGER = 3
+
+    role = models.PositiveSmallIntegerField(
+        choices=Role.choices, null=True, default=Role.DEVELOPER
+    )
+
+    # Model methods
     def is_developer(self):
-        return self.role == self.DEVELOPER
+        return self.role == self.Role.DEVELOPER
 
     def is_admin(self):
-        return self.role == self.ADMIN
+        return self.role == self.Role.ADMIN
 
     def is_developer(self):
-        return self.role == self.PROJECT_MANAGER
+        return self.role == self.Role.PROJECT_MANAGER
 
     def get_absolute_url(self):
         return reverse("user_detail", args=[self.username])

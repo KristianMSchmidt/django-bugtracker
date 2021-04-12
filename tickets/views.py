@@ -7,7 +7,7 @@ from django.views.generic import (
 ) 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
-from .models import Ticket
+from .models import Ticket, TicketEvent
 
 from django.db.models import Q
 
@@ -41,6 +41,7 @@ class TicketUpdateView(LoginRequiredMixin, UpdateView):
     fields = ('title', 'description', 'project', 'type', 'status', 'priority', 'developer',)
     template_name = 'tickets/ticket_edit.html'
 
+
 class TicketDeleteView(
         LoginRequiredMixin, 
         #PermissionRequiredMixin,
@@ -48,7 +49,7 @@ class TicketDeleteView(
     model = Ticket
     template_name = 'tickets/ticket_delete.html'
     success_url = reverse_lazy('ticket_list')
-    
+
     # NB: 
     #permission_required = 'tickets.delete_ticket'  #could also be multiple permissions
     # Custom permissions er nemme a lave. 
@@ -61,14 +62,11 @@ class TicketCreateView(LoginRequiredMixin, CreateView):
     template_name = 'tickets/ticket_new.html'
     fields = ('title', 'description', 'project', 'type',
               'status', 'priority', 'developer',)
-   
+    
 
     def form_valid(self, form):
-        """
-        Override. We need to set submitter to currently logged in user before creating ticket. 
-        This method is called when valid form data has been POSTed.
-        It should return an HttpResponse.
-        """
+        """Override. If the form is valid do these extra things before default behavior"""
         form.instance.submitter = self.request.user
-
+        #self.object = form.save()
+        #TicketEvent.objects.create(ticket=self.object, property_changed=TicketEvent.CREATED, user=self.request.user)
         return super().form_valid(form)

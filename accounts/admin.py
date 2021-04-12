@@ -38,6 +38,8 @@ class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
     model = CustomUser
     list_display = ['username', 'role', 'email']
+    list_filter = ("role",)
+
     inlines = [EnrollmentsInline, TicketDeveloperInline, TicketSubmitterInline]
     # Fields to show when creating user in admin. Default is just the required fields: email and username
     #add_fieldsets = UserAdmin.add_fieldsets  

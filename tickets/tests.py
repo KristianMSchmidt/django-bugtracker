@@ -15,22 +15,22 @@ class TicketTests(TestCase):
         self.testuser_admin = User.objects.create_user(
             username='kris',
             password='testpass123',
-            role = User.ADMIN
+            role = User.Role.ADMIN
         )
         self.testuser_dev1 = User.objects.create_user(
             username='tom',
             password='testpass123',
-            role=User.DEVELOPER
+            role=User.Role.DEVELOPER
         )
         self.testuser_dev2 = User.objects.create_user(
             username='hank',
             password='testpass123',
-            role=User.PROJECT_MANAGER
+            role=User.Role.PROJECT_MANAGER
         )
         self.testuser_dev3 = User.objects.create_user(
             username='bob',
             password='testpass123',
-            role=User.PROJECT_MANAGER
+            role=User.Role.PROJECT_MANAGER
         )
 
         self.ticket  = Ticket.objects.create(
@@ -39,18 +39,18 @@ class TicketTests(TestCase):
             project = self.testproject,
             submitter = self.testuser_admin,
             developer = self.testuser_dev1,
-            status=Ticket.OPEN,
-            type=Ticket.BUG,
-            priority=Ticket.HIGH
+            status=Ticket.Status.OPEN,
+            type=Ticket.Type.BUG,
+            priority=Ticket.Priority.HIGH
         )
         Ticket.objects.create(
             title="Test Ticket 2",
             description="Test Ticket 2 Description",
             project=self.testproject,
             submitter=self.testuser_dev2,
-            status=Ticket.OPEN,
-            type=Ticket.BUG,
-            priority=Ticket.HIGH
+            status=Ticket.Status.OPEN,
+            type=Ticket.Type.BUG,
+            priority=Ticket.Priority.HIGH
         )
  
 
@@ -60,9 +60,9 @@ class TicketTests(TestCase):
         self.assertEqual(f'{self.ticket.project}', 'Test Project'),
         self.assertEqual(f'{self.ticket.submitter}', 'kris'),
         self.assertEqual(f'{self.ticket.developer}', 'tom'),
-        self.assertEqual(self.ticket.status, Ticket.OPEN),
-        self.assertEqual(self.ticket.type, Ticket.BUG),
-        self.assertEqual(self.ticket.priority, Ticket.HIGH),
+        self.assertEqual(self.ticket.status, Ticket.Status.OPEN),
+        self.assertEqual(self.ticket.type, Ticket.Type.BUG),
+        self.assertEqual(self.ticket.priority, Ticket.Priority.HIGH),
 
         # status methods
         self.assertTrue(self.ticket.is_open())

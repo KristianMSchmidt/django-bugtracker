@@ -44,6 +44,11 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
     template_name = 'projects/project_new.html'
     fields = ('title', 'description', 'users')
 
+    def form_valid(self, form):
+        """Override. If the form is valid do these extra things before default behavior"""
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
 
 class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     model = Project
