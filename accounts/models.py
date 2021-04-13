@@ -23,7 +23,7 @@ class CustomUser(AbstractUser):
     def is_admin(self):
         return self.role == self.Role.ADMIN
 
-    def is_developer(self):
+    def is_pm(self):
         return self.role == self.Role.PROJECT_MANAGER
 
     def get_absolute_url(self):

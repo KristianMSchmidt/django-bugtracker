@@ -16,12 +16,12 @@ class ProjectViewsTests(TestCase):
         self.admin_user = User.objects.create_user(
             username='admin',
             password='testpass123',
-            role = User.ADMIN
+            role = User.Role.ADMIN
         )
         self.dev_user = User.objects.create_user(
             username='developer',
             password='testpass123',
-            role=User.DEVELOPER
+            role=User.Role.DEVELOPER
         )
 
     def test_project_listing(self):

@@ -53,7 +53,7 @@ class UserDetailView(TestCase):
         User = get_user_model()
         self.user = User.objects.create_user(
             username='kristian',
-            role=User.ADMIN,
+            role=User.Role.ADMIN,
             password='testpass123',
         )
         self.url = reverse('user_detail', kwargs={'username':'kristian'})
@@ -122,5 +122,35 @@ class UserDetailView(TestCase):
         self.assertNotContains(self.response, 'title3')
 
 
+class DashboardViewTests(TestCase):
 
+    def setUp(self):
+        """will be run before every test"""
+        User = get_user_model()
+        self.admin_user = User.objects.create_user(
+            username='admin',
+            password='testpass123',
+            role=User.Role.ADMIN
+        )
+        self.client.login(username='admin', password='testpass123')
+        self.url = reverse('dashboard')
+        self.response = self.client.get(self.url)
+
+    def test_dashboard_view_status_code_logged_in_user(self):
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_dashboard_view_status_code_logged_out_user(self):
+        self.client.logout()
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 302)
+
+    def test_dashboard_list_view_template(self):
+        self.assertTemplateUsed(self.response, 'dashboard.html')
+
+    def test_dashboard_list_page_contains_correct_html(self):
+        self.assertContains(self.response, '<title>Dashboard')
+
+    def test_dashboard_list_page_does_not_contain_incorrect_html(self):
+        self.assertNotContains(
+            self.response, 'Hi there! I should not be on the page.')
 

@@ -18,6 +18,7 @@
             {% if user.is_authenticated %}
                 Hi {{ user.username }}!. Your email is {{ user.email }}. Your role is {{ user.get_role_display }}. <br>
 
+                <a href="{% url 'dashboard' %}">Dashboard</a>
                 <a href="{% url 'about' %}">About</a>
                 <a href="{% url 'logout' %}">Log Out</a>
                 <a href="{% url 'profile' %}">Profile</a>
