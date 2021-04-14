@@ -32,5 +32,31 @@
 <a href="{% url 'ticket_edit' ticket.pk %}">Edit ticket</a>
 <a href="{% url 'ticket_delete' ticket.pk %}">Delete ticket</a>
 
+
+<h1>Ticket Comments</h1>
+
+  <form action="" method="post">{% csrf_token %}
+      {{form}}
+      <input type="submit" value="Add">
+  </form>
+    <table>
+        <tr>
+            <th>Commenter</th>
+            <th>Message</th>
+            <th>Created</th>
+        </tr>
+        {% for comment in comment_list %}
+            <tr>
+                <td>{{ comment.commenter }} </td>
+                <td>{{ comment.message }} </td>
+                <td>{{ comment.created_at }} </td>
+                <th><a href="{% url 'ticket_comment_edit' comment.pk %}">Edit ticket</a></th>
+                <th><a href="{% url 'ticket_comment_delete' comment.pk %}">Delete ticket</a></th>
+            </tr>
+        {% endfor %}
+    </table>
+
+<h1>Ticket History</h1>
+
+
 {% endblock content %}
-p.get_shirt_size_display()

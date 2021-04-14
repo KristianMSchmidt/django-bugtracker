@@ -146,3 +146,24 @@ class TicketEvent(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     # Using a separate database to store choices is only recommended when rows are changing dynamiccally.  I do it the recommeneded way by adding choices
+
+
+class TicketComment(models.Model):
+    ticket = models.ForeignKey(
+        Ticket,
+        on_delete=models.CASCADE
+    )
+    commenter = models.ForeignKey(
+        get_user_model(),
+        null=True,
+        on_delete=models.SET_NULL
+    )
+    message = models.CharField(max_length=500, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+
+
+    def __str__(self):
+        return self.message
+
+    def get_absolute_url(self):
+        return reverse("ticket_detail", args=[self.ticket.id])

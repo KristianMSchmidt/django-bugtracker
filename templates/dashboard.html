@@ -29,6 +29,7 @@
     <!-- JS chart library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
     <script>
+
         /* Ticket Status Chart */
         var ctx = document.getElementById('status_chart').getContext('2d');
         var statusChart = new Chart(ctx, {
@@ -95,13 +96,11 @@
                 {{priority.high}},
                 {{priority.urgent}},
             ],
-
-
             backgroundColor: [
-                'rgba(255, 148, 120, 0.4)',
-                'rgba(242, 38, 19, 0.4)',
-                'rgba(217, 30, 24, 0.4)',
-                'rgba(150, 40, 27, 0.4)',
+                'rgba(255, 148, 120, 0.8)',
+                'rgba(242, 38, 19, 0.6)',
+                'rgba(217, 30, 24, 0.8)',
+                'rgba(150, 40, 27, 0.8)',
             ],
             borderColor: [
               'rgba(255, 148, 120, 1)',
@@ -131,105 +130,7 @@
             }
          }
         });
-              /* Ticket Status Chart */
-        var ctx = document.getElementById('status_chart').getContext('2d');
-        var statusChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Open', 'In Progress', 'Closed', 'Info Required'],
-        
-                datasets: [{
-                    label: '# of Tickets',
-
-                    data: [
-                        {{status.open}},
-                        {{status.in_progress}},
-                        {{status.closed}},
-                        {{status.info_required}}
-                    ],
-
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: ['Tickets by status']
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
-        });
-              /* Ticket Status Chart */
-        var ctx = document.getElementById('status_chart').getContext('2d');
-        var statusChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Open', 'In Progress', 'Closed', 'Info Required'],
-        
-                datasets: [{
-                    label: '# of Tickets',
-
-                    data: [
-                        {{status.open}},
-                        {{status.in_progress}},
-                        {{status.closed}},
-                        {{status.info_required}}
-                    ],
-
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: ['Tickets by status']
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
-        });
-
+            
         /* Ticket Type Chart */
         var ctx = document.getElementById('type_chart').getContext('2d');
         var typeChart = new Chart(ctx, {
@@ -239,18 +140,19 @@
                 datasets: [{
                     label: '# of Tickets',
                     data: [
-                        {{ type.feature_request}},
-                        {{ type.bug}},
-                        {{ type.other}},
+                        {{ type.feature_request }},
+                        {{ type.bug }},
+                        {{ type.other }},
                     ],
                 backgroundColor: [
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(37, 116, 169, 1)',
-                    'rgba(31, 58, 147, 1)',
-                    'rgba(1, 50, 67, 1)'
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(37, 116, 169, 0.6)',
+                    'rgba(31, 58, 147, 0.6)',
                 ],
                 borderColor: [
-                '', '', '', '',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(37, 116, 169, 1)',
+                    'rgba(31, 58, 147, 1)',
                 ],
                 borderWidth: 1
                 }]

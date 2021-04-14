@@ -15,10 +15,6 @@ def manage_enrollments_view(request):
     return render(request, 'projects/manage_enrollments.html')
 
 class ProjectListView(LoginRequiredMixin, ListView):
-    """
-    Jeg får brug for tricks her fra, når/hvis kun visse projekter skal vises i 'My Projects'
-    https: // docs.djangoproject.com/en/3.2/topics/class-based-views/generic-display/
-    """
     model = Project
     context_object_name = 'project_list'
     template_name = 'projects/project_list.html'

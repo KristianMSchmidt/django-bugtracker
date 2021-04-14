@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from .models import Ticket
+from .models import Ticket, TicketComment
 from projects.models import Project
 from django.contrib.auth import get_user_model
 
@@ -52,7 +52,11 @@ class TicketTests(TestCase):
             type=Ticket.Type.BUG,
             priority=Ticket.Priority.HIGH
         )
- 
+        self.ticket_comment= TicketComment.objects.create(
+            commenter=self.testuser_admin,
+            message="Just a comment",
+            ticket=self.ticket
+        )            
 
     def test_ticket_listing(self):
         self.assertEqual(f'{self.ticket.title}', 'Test Ticket 1'),
@@ -126,19 +130,32 @@ class TicketTests(TestCase):
         self.assertAlmostEqual(response.context['ticket_list'].count(), 0)        
 
 
-    def test_ticket_detail_view(self):
-        # login required
+    def test_ticket_detail_view_user_not_logged_in(self):
         response = self.client.get(self.ticket.get_absolute_url())
         self.assertEqual(response.status_code, 302)
 
+    def test_ticket_detail_view_user_logged_in(self):
+        #get request
         self.client.login(username='kris', password='testpass123')
         response = self.client.get(self.ticket.get_absolute_url())
-        no_response = self.client.get('/ticket/12345/')
         self.assertEqual(response.status_code, 200)
+        no_response = self.client.get('/ticket/12345/')
         self.assertEqual(no_response.status_code, 404)
         self.assertContains(response, 'Ticket Details')
         self.assertTemplateUsed(response, 'tickets/ticket_detail.html')
         self.assertTemplateNotUsed(response, 'tickets/ticket_list.html')
+        
+        # previously, we have added one comment to the ticket:
+        self.assertEqual(self.ticket.ticketcomment_set.count(), 1)
+
+        # Post request - valid input should redirect 
+        response = self.client.post(self.ticket.get_absolute_url(), {'message': 'Test comment content'})
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, self.ticket.get_absolute_url())
+        
+        # There should now be two comment in the comment_set to the ticket
+        self.assertEqual(self.ticket.ticketcomment_set.count(), 2)
+        self.assertEqual(self.ticket.ticketcomment_set.last().message, 'Test comment content')
 
     def test_ticket_update_view(self):
         #login required
@@ -176,7 +193,44 @@ class TicketTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Delete')
         self.assertTemplateUsed(response, 'tickets/ticket_delete.html')
+
+    def test_ticket_comment_delete_view(self):
+        # login required 
+        response = self.client.get(reverse('ticket_comment_delete', kwargs={'pk': self.ticket_comment.id}))
+        self.assertEqual(response.status_code, 302)
+
+        self.client.login(username='kris', password='testpass123')
+        response = self.client.get(
+        reverse('ticket_comment_delete', kwargs={'pk': self.ticket_comment.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'tickets/comment_delete.html')
+        self.assertContains(response, 'Confirm')
+
+        #self.ticket should currently have 1 comments
+        self.assertEqual(self.ticket.ticketcomment_set.count(), 1)
+
+        response = self.client.post(
+            reverse('ticket_comment_delete', kwargs={'pk': self.ticket_comment.id}))
+        self.assertEqual(response.status_code, 302)
+        #self.ticket should now have 0 comments
+        self.assertEqual(self.ticket.ticketcomment_set.count(), 0)
+
     
+    def test_ticket_comment_update_view(self):
+        # login required 
+        response = self.client.get(reverse('ticket_comment_edit', kwargs={'pk': self.ticket_comment.id}))
+        self.assertEqual(response.status_code, 302)
+        self.client.login(username='kris', password='testpass123')
+        response = self.client.get(
+        reverse('ticket_comment_edit', kwargs={'pk': self.ticket_comment.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'tickets/comment_edit.html')
+        self.assertContains(response, 'Edit')
+
+        response = self.client.post(
+            reverse('ticket_comment_edit', kwargs={'pk': self.ticket_comment.id}),{'message':'updated message'})
+        self.assertEqual(response.status_code, 302)
+ 
     # man kunne også teste selve update funktionaliteten et ticket post-requests
     # Fx kan update funktionaliteten tjekkes sådan her: https://stackoverflow.com/questions/48814830/how-to-test-djangos-updateview
     # Men der er selvfølgelig ingen grund til at teste djangos indbyggede funktionalitet

@@ -6,11 +6,14 @@ from django.views.generic import (
     DeleteView
 ) 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.decorators import login_required
+
 from django.urls import reverse_lazy
-from .models import Ticket, TicketEvent
-
+from .models import Ticket, TicketEvent, TicketComment
 from django.db.models import Q
-
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render,redirect
+from .forms import CommentCreateForm
 # Create your views here.
 
 class TicketListView(LoginRequiredMixin, ListView):
@@ -30,10 +33,51 @@ class TicketListView(LoginRequiredMixin, ListView):
             return Ticket.objects.all()
         return Ticket.objects.filter(Q(developer=self.request.user) | Q(submitter=self.request.user))
 
+@login_required
+def ticket_detail_view(request, pk):
+    ticket = Ticket.objects.get(pk=pk)
+
+    if request.method == "POST":
+        # create new comment
+        form = CommentCreateForm(request.POST)
+        form.instance.commenter = request.user
+        form.instance.ticket = ticket
+        if form.is_valid():
+            form.save()
+            return redirect(ticket.get_absolute_url())
+    else:
+        form = CommentCreateForm()
+    
+    context = {
+        'ticket':ticket,
+        'comment_list': TicketComment.objects.filter(ticket=ticket),
+        'event_list': [],
+        'form':form
+        }
+    return render(request, 'tickets/ticket_detail.html', context)
+
+"""
 class TicketDetailView(LoginRequiredMixin, DetailView):
+    # Lav den først som en funktion-based view. Få den til at virke med al funktionaliteten. 
+    # Herefter eventuelt som clas-base-view, hvorden arver fra View
+    # Herefter eventuelt som templateview -- men jeg er ikke sikker på, at dette er smart. 
+
     model = Ticket
     context_object_name = 'ticket'
     template_name = 'tickets/ticket_detail.html'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        ticket_id = kwargs['object'].id
+
+        context['comment_list'] = TicketComment.objects.filter(
+            ticket=kwargs['object'])
+
+        return context
+"""
+
 
 class TicketUpdateView(LoginRequiredMixin, UpdateView):
     model = Ticket
@@ -70,3 +114,27 @@ class TicketCreateView(LoginRequiredMixin, CreateView):
         #self.object = form.save()
         #TicketEvent.objects.create(ticket=self.object, property_changed=TicketEvent.CREATED, user=self.request.user)
         return super().form_valid(form)
+
+
+class TicketCommentUpdateView(LoginRequiredMixin, UpdateView):
+    #TODO: user_passes_test .... skal være skaberen af the ticket
+    model = TicketComment
+    context_object_name = 'comment'
+    fields = ('message',)
+    template_name = 'tickets/comment_edit.html'
+
+
+class TicketCommentDeleteView(LoginRequiredMixin, DeleteView):
+    #TODO: user_passes_test .... skal være skaberen af the ticket
+    model = TicketComment
+    context_object_name = 'comment'
+    template_name = 'tickets/comment_delete.html'
+    
+    def delete(self, request, *args, **kwargs):
+        """
+        Override to redirect to ticket details after deleting. 
+        """
+        self.object = self.get_object()
+        success_url = reverse_lazy('ticket_detail', kwargs={'pk':self.object.ticket.id})    
+        self.object.delete()
+        return HttpResponseRedirect(success_url)

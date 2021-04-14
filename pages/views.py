@@ -54,14 +54,13 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     def get_context_data(self):
         tickets_in_progress = Ticket.objects.filter(status=Ticket.Status.IN_PROGRESS)
         num_tickets_in_progess = tickets_in_progress.count()
-        if self.request.user.is_admin():
-
+        #if self.request.user.is_admin():
+        if True:
             #alternative
             #from django.db.models import Count
             #priority_count = Ticket.objects.values('priority').annotate(cnt=Count('id'))
             #'low': priority_count.get(priority=Ticket.Priority.LOW)['cnt'],
             
-
             busy_user_list = Ticket.objects.filter(status=Ticket.Status.IN_PROGRESS).values('developer').annotate(cnt=Count('id')).order_by('-cnt')
             busy_user_count = min(busy_user_list.count(),5)
             context = {
@@ -87,7 +86,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                 'busy_users_labels': [get_user_model().objects.get(id=busy_user_list[index]['developer']).username for index in range(busy_user_count)],
                 'busy_users_data': [busy_user_list[index]['cnt'] for index in range(busy_user_count)]
             }
-        
+        """
         elif self.request.user.is_developer():
             context = {
                 'priority': {
@@ -128,4 +127,5 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                     'closed': tickets.filter(status=Ticket.Status.CLOSED).count(),
                 },
             }
+        """
         return context
