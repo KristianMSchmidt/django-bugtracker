@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Ticket, TicketEvent, TicketComment
+from .models import Ticket, TicketComment, TicketEvent
 
 
 class TicketAdmin(admin.ModelAdmin):
@@ -9,19 +9,16 @@ class TicketAdmin(admin.ModelAdmin):
     list_filter = ("status", "priority", "type")
     search_fields = ("title",'description','project__title')
 
-
-    class TicketEventInline(admin.TabularInline):
-        model = TicketEvent
+    class TicketCommentInline(admin.TabularInline):
+        model = TicketComment
         extra = 0
 
     inlines = [
-        TicketEventInline,
+        TicketCommentInline
     ]
    
-
-
 class TicketEventAdmin(admin.ModelAdmin):
-    list_display = ('ticket', 'property_changed', 'old_value', 'new_value', 'user', 'created_at')
+    list_display = ('ticket', 'property_changed', 'old_value', 'new_value', 'user', 'changed_at')
 
 
 class TicketCommentAdmin(admin.ModelAdmin):

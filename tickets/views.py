@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required
 
 from django.urls import reverse_lazy
-from .models import Ticket, TicketEvent, TicketComment
+from .models import Ticket, TicketComment, TicketEvent
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render,redirect
@@ -38,12 +38,12 @@ def ticket_detail_view(request, pk):
     ticket = Ticket.objects.get(pk=pk)
 
     if request.method == "POST":
-        # create new comment
         form = CommentCreateForm(request.POST)
-        form.instance.commenter = request.user
-        form.instance.ticket = ticket
         if form.is_valid():
-            form.save()
+            comment = form.save(commit=False)
+            comment.commenter = request.user
+            comment.ticket = ticket
+            comment.save()
             return redirect(ticket.get_absolute_url())
     else:
         form = CommentCreateForm()
@@ -51,7 +51,7 @@ def ticket_detail_view(request, pk):
     context = {
         'ticket':ticket,
         'comment_list': TicketComment.objects.filter(ticket=ticket),
-        'event_list': [],
+        'event_list': TicketEvent.objects.filter(ticket=ticket),
         'form':form
         }
     return render(request, 'tickets/ticket_detail.html', context)
@@ -84,6 +84,61 @@ class TicketUpdateView(LoginRequiredMixin, UpdateView):
     context_object_name = 'ticket'
     fields = ('title', 'description', 'project', 'type', 'status', 'priority', 'developer',)
     template_name = 'tickets/ticket_edit.html'
+    
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        old_ticket = self.get_object()
+        new_ticket = form.save(commit=False)
+        if form.cleaned_data['priority'] != old_ticket.priority:
+            TicketEvent.objects.create(
+                user=self.request.user, 
+                ticket=old_ticket,
+                property_changed=TicketEvent.ChangedProperty.PRIORITY_CHANGE,
+                old_value = old_ticket.get_priority_display(),
+                new_value = new_ticket.get_priority_display()
+            )
+        if form.cleaned_data['status'] != old_ticket.status:
+            TicketEvent.objects.create(
+                user=self.request.user, 
+                ticket=old_ticket,
+                property_changed=TicketEvent.ChangedProperty.STATUS_CHANGE,
+                old_value = old_ticket.get_status_display(),
+                new_value = new_ticket.get_status_display()
+            )
+        if form.cleaned_data['type'] != old_ticket.type:
+            TicketEvent.objects.create(
+                user=self.request.user, 
+                ticket=old_ticket,
+                property_changed=TicketEvent.ChangedProperty.TYPE_CHANGE,
+                old_value = old_ticket.get_type_display(),
+                new_value = new_ticket.get_type_display()
+            )
+        if form.cleaned_data['title'] != old_ticket.title:
+            TicketEvent.objects.create(
+                user=self.request.user,
+                ticket=old_ticket,
+                property_changed=TicketEvent.ChangedProperty.TITLE_CHANGE,
+                old_value=old_ticket.title,
+                new_value=form.cleaned_data['title']
+            )
+        if form.cleaned_data['description'] != old_ticket.description:
+            TicketEvent.objects.create(
+                user=self.request.user,
+                ticket=old_ticket,
+                property_changed=TicketEvent.ChangedProperty.DESCRIPTION_CHANGE,
+                old_value=old_ticket.description,
+                new_value=form.cleaned_data['description']
+            )
+        if form.cleaned_data['developer'] != old_ticket.developer:
+            TicketEvent.objects.create(
+                user=self.request.user,
+                ticket=old_ticket,
+                property_changed=TicketEvent.ChangedProperty.DEVELOPER_CHANGE,
+                old_value=old_ticket.developer,
+                new_value=form.cleaned_data['developer']
+            )
+
+        return super().form_valid(form)
 
 
 class TicketDeleteView(
@@ -138,3 +193,24 @@ class TicketCommentDeleteView(LoginRequiredMixin, DeleteView):
         success_url = reverse_lazy('ticket_detail', kwargs={'pk':self.object.ticket.id})    
         self.object.delete()
         return HttpResponseRedirect(success_url)
+
+
+"""
+def my_view(request):
+
+    if request.method == 'POST':
+        print request.POST.get('my_field')
+
+        form = MyForm(request.POST)
+
+        print form['my_field'].value()
+        print form.data['my_field']
+
+        if form.is_valid():
+
+            print form.cleaned_data['my_field']
+            print form.instance.my_field
+
+            form.save()
+            print form.instance.id  # now this one can access id/pk
+"""

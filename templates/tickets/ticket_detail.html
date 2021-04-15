@@ -57,6 +57,23 @@
     </table>
 
 <h1>Ticket History</h1>
+<table>
+    <tr>
+        <th>Property</th>
+        <th>Old value</th>
+        <th>New value</th>
+        <th>Changed by</th>
+    </tr>
+    {% for event in event_list %}
+    <tr>
+        <td>{{ event.get_property_changed_display }} </td>
+        <td>{{ event.old_value }} </td>
+        <td>{{ event.new_value }} </td>
+        <td>{{ event.changed_by }} </td>
+        <td>{{ event.user }} </td>
+    </tr>
+    {% endfor %}
+</table>
 
 
 {% endblock content %}

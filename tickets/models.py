@@ -80,7 +80,6 @@ class Ticket(models.Model):
         return self.status == self.status.INFO_REQUIRED
 
     # priority methods
-
     def priority_is_low(self):
         return self.priority == self.priority.LOW
 
@@ -108,46 +107,6 @@ class Ticket(models.Model):
     #    return self.status in {self.OPEN, self.CLOSED}
 
 
-class TicketEvent(models.Model):
-    # Event type choices
-    CREATED = 1
-    STATUS = 2
-    PRIORITY = 3
-    TYPE = 4
-    DEVELOPER = 5
-    TITLE = 6
-    DESCRIPTION = 7
-    DELETED = 8
-    CHANGED_PROPERTY_CHOICES = [
-        (CREATED, 'TicketCreated'),
-        (STATUS, 'StatusChange'), 
-        (PRIORITY, 'PriorityChange'),
-        (TYPE, 'TypeChange'),
-        (DEVELOPER, 'DeveloperChange'),
-        (TITLE, 'TitleChange'),
-        (DESCRIPTION, 'DescriptionChange'),
-        (DELETED, 'TicketDeleted')
-        ]
-    user = models.ForeignKey(
-        get_user_model(),
-        on_delete=models.SET_NULL,
-        null=True,
-    )
-    ticket = models.ForeignKey(
-        Ticket,
-        on_delete=models.CASCADE,
-        null=True
-    )
-    property_changed = models.PositiveSmallIntegerField(
-        choices = CHANGED_PROPERTY_CHOICES,
-    )
-    old_value = models.CharField(max_length=200, default="")
-    new_value = models.CharField(max_length=300, default="")
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-
-    # Using a separate database to store choices is only recommended when rows are changing dynamiccally.  I do it the recommeneded way by adding choices
-
-
 class TicketComment(models.Model):
     ticket = models.ForeignKey(
         Ticket,
@@ -167,3 +126,36 @@ class TicketComment(models.Model):
 
     def get_absolute_url(self):
         return reverse("ticket_detail", args=[self.ticket.id])
+
+
+class TicketEvent(models.Model):
+    user = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+    ticket = models.ForeignKey(
+        Ticket,
+        on_delete=models.CASCADE,
+        null=True
+    )
+
+    # Event type choices
+    class ChangedProperty(models.IntegerChoices):
+        STATUS_CHANGE = 1
+        PRIORITY_CHANGE = 2
+        TYPE_CHANGE = 3
+        DEVELOPER_CHANGE = 4
+        TITLE_CHANGE = 5
+        DESCRIPTION_CHANGE = 6
+        DELETED_CHANGE = 7
+
+    property_changed = models.IntegerField(choices=ChangedProperty.choices)
+
+    old_value = models.CharField(max_length=300, null=True)
+    new_value = models.CharField(max_length=300, null=True)
+
+    changed_at = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __str__(self):
+        return self.get_property_changed_display()
