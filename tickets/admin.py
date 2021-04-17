@@ -13,8 +13,12 @@ class TicketAdmin(admin.ModelAdmin):
         model = TicketComment
         extra = 0
 
+    class TicketEventInline(admin.TabularInline):
+        model = TicketEvent
+        extra = 0
+
     inlines = [
-        TicketCommentInline
+        TicketCommentInline, TicketEventInline
     ]
    
 class TicketEventAdmin(admin.ModelAdmin):
