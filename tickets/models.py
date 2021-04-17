@@ -93,7 +93,6 @@ class Ticket(models.Model):
         return self.priority == self.priority.URGENT
 
     # type methods
-
     def type_is_bug(self):
         return self.type == self.type.BUG
 
@@ -103,8 +102,27 @@ class Ticket(models.Model):
     def type_is_other(self):
         return self.type == self.type.OTHER
 
-    #def is_open_or_closed(self):
-    #    return self.status in {self.OPEN, self.CLOSED}
+    # override save method to create ticket events
+    def save(self, request=None, *args, **kw):
+        if self.pk is not None: # we are updating an existing ticket                    
+            orig = Ticket.objects.get(pk=self.pk)
+            for field_name in ('title', 'description', 'developer', 'status', 'type', 'priority'):
+                try:
+                    old_value = getattr(orig, f"get_{field_name}_display")()
+                    new_value = getattr(self, f"get_{field_name}_display")()
+                except:
+                    old_value = getattr(orig, field_name)
+                    new_value = getattr(self, field_name)
+                if old_value != new_value:
+                    TicketEvent.objects.create(
+                        user=request.user,
+                        ticket=self,
+                        property_changed=getattr(
+                            TicketEvent.ChangedProperty, field_name.upper() + '_CHANGE'),
+                        old_value=old_value,
+                        new_value=new_value
+                    )
+        super(Ticket, self).save(*args, **kw)
 
 
 class TicketComment(models.Model):
@@ -151,10 +169,8 @@ class TicketEvent(models.Model):
         DELETED_CHANGE = 7
 
     property_changed = models.IntegerField(choices=ChangedProperty.choices)
-
     old_value = models.CharField(max_length=300, null=True)
     new_value = models.CharField(max_length=300, null=True)
-
     changed_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):

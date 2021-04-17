@@ -51,7 +51,7 @@ def ticket_detail_view(request, pk):
     context = {
         'ticket':ticket,
         'comment_list': TicketComment.objects.filter(ticket=ticket),
-        'event_list': TicketEvent.objects.filter(ticket=ticket),
+        'event_list': TicketEvent.objects.filter(ticket=ticket).order_by('-changed_at'),
         'form':form
         }
     return render(request, 'tickets/ticket_detail.html', context)
@@ -78,69 +78,18 @@ class TicketDetailView(LoginRequiredMixin, DetailView):
         return context
 """
 
-
 class TicketUpdateView(LoginRequiredMixin, UpdateView):
     model = Ticket
     context_object_name = 'ticket'
-    fields = ('title', 'description', 'project', 'type', 'status', 'priority', 'developer',)
+    fields = ('title', 'description', 'type', 'status', 'priority', 'developer',)
     template_name = 'tickets/ticket_edit.html'
     
     def form_valid(self, form):
-        """If the form is valid, save the associated model."""
-        old_ticket = self.get_object()
+        #old_ticket = self.get_object()
         new_ticket = form.save(commit=False)
-        if form.cleaned_data['priority'] != old_ticket.priority:
-            TicketEvent.objects.create(
-                user=self.request.user, 
-                ticket=old_ticket,
-                property_changed=TicketEvent.ChangedProperty.PRIORITY_CHANGE,
-                old_value = old_ticket.get_priority_display(),
-                new_value = new_ticket.get_priority_display()
-            )
-        if form.cleaned_data['status'] != old_ticket.status:
-            TicketEvent.objects.create(
-                user=self.request.user, 
-                ticket=old_ticket,
-                property_changed=TicketEvent.ChangedProperty.STATUS_CHANGE,
-                old_value = old_ticket.get_status_display(),
-                new_value = new_ticket.get_status_display()
-            )
-        if form.cleaned_data['type'] != old_ticket.type:
-            TicketEvent.objects.create(
-                user=self.request.user, 
-                ticket=old_ticket,
-                property_changed=TicketEvent.ChangedProperty.TYPE_CHANGE,
-                old_value = old_ticket.get_type_display(),
-                new_value = new_ticket.get_type_display()
-            )
-        if form.cleaned_data['title'] != old_ticket.title:
-            TicketEvent.objects.create(
-                user=self.request.user,
-                ticket=old_ticket,
-                property_changed=TicketEvent.ChangedProperty.TITLE_CHANGE,
-                old_value=old_ticket.title,
-                new_value=form.cleaned_data['title']
-            )
-        if form.cleaned_data['description'] != old_ticket.description:
-            TicketEvent.objects.create(
-                user=self.request.user,
-                ticket=old_ticket,
-                property_changed=TicketEvent.ChangedProperty.DESCRIPTION_CHANGE,
-                old_value=old_ticket.description,
-                new_value=form.cleaned_data['description']
-            )
-        if form.cleaned_data['developer'] != old_ticket.developer:
-            TicketEvent.objects.create(
-                user=self.request.user,
-                ticket=old_ticket,
-                property_changed=TicketEvent.ChangedProperty.DEVELOPER_CHANGE,
-                old_value=old_ticket.developer,
-                new_value=form.cleaned_data['developer']
-            )
-
+        new_ticket.save(request=self.request)
         return super().form_valid(form)
-
-
+    
 class TicketDeleteView(
         LoginRequiredMixin, 
         #PermissionRequiredMixin,

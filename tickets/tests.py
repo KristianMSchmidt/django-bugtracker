@@ -230,6 +230,8 @@ class TicketTests(TestCase):
         response = self.client.post(
             reverse('ticket_comment_edit', kwargs={'pk': self.ticket_comment.id}),{'message':'updated message'})
         self.assertEqual(response.status_code, 302)
+
+    # Test view->update creates ticket events...
  
     # man kunne også teste selve update funktionaliteten et ticket post-requests
     # Fx kan update funktionaliteten tjekkes sådan her: https://stackoverflow.com/questions/48814830/how-to-test-djangos-updateview

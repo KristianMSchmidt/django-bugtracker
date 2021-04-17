@@ -63,14 +63,17 @@
         <th>Old value</th>
         <th>New value</th>
         <th>Changed by</th>
+        <th>Date changed</th>
+
     </tr>
     {% for event in event_list %}
     <tr>
         <td>{{ event.get_property_changed_display }} </td>
         <td>{{ event.old_value }} </td>
         <td>{{ event.new_value }} </td>
-        <td>{{ event.changed_by }} </td>
         <td>{{ event.user }} </td>
+        <td>{{ event.changed_at }} </td>
+
     </tr>
     {% endfor %}
 </table>

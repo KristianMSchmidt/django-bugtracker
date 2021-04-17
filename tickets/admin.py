@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import Ticket, TicketComment, TicketEvent
 
-
+   
+ 
 class TicketAdmin(admin.ModelAdmin):
 
     list_display = ('title', 'description','project', 'submitter',
@@ -20,6 +21,8 @@ class TicketAdmin(admin.ModelAdmin):
     inlines = [
         TicketCommentInline, TicketEventInline
     ]
+    def save_model(self, request, obj, form, change):
+        obj.save(request=request)
    
 class TicketEventAdmin(admin.ModelAdmin):
     list_display = ('ticket', 'property_changed', 'old_value', 'new_value', 'user', 'changed_at')
