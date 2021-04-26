@@ -45,11 +45,11 @@ INSTALLED_APPS = [
     'debug_toolbar',
 
     # Local
+    'notifications',
     'accounts',
     'pages',
-    'projects',
-    'tickets',
-    'notifications'
+    'projects.apps.ProjectsConfig',
+    'tickets.apps.TicketsConfig',
 ]
 
 MIDDLEWARE = [
@@ -72,10 +72,13 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                # build-in processors
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # local processors
+                'config.context_processors.get_notifications_to_context',
             ],
         },
     },

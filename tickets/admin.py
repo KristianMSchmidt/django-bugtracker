@@ -1,8 +1,6 @@
 from django.contrib import admin
 from .models import Ticket, TicketComment, TicketEvent
 
-   
- 
 class TicketAdmin(admin.ModelAdmin):
 
     list_display = ('title', 'description','project', 'submitter',
@@ -25,12 +23,15 @@ class TicketAdmin(admin.ModelAdmin):
         obj.save(request=request)
    
 class TicketEventAdmin(admin.ModelAdmin):
-    list_display = ('ticket', 'property_changed', 'old_value', 'new_value', 'user', 'changed_at')
+    list_display = ('ticket', 'property_changed', 'old_value', 'new_value', 'user', 'created_at')
 
 
 class TicketCommentAdmin(admin.ModelAdmin):
     list_display = ('ticket', 'commenter','message', 'created_at',)
     search_fields =('ticket__title', 'message')
+
+    def save_model(self, request, obj, form, change):
+        obj.save()
 
 # Register your models here.
 admin.site.register(Ticket,TicketAdmin)

@@ -18,6 +18,6 @@ class CustomUserChangeForm(UserChangeForm):
 class UserUpdateForm(ModelForm):
     class Meta:
         model = get_user_model()
-        fields = ['username', 'email','first_name', 'last_name']
+        fields = ['username', 'email','first_name', 'last_name', 'role']
 
 

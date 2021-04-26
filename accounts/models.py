@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.apps import apps
 
 
 class CustomUser(AbstractUser):
@@ -28,3 +29,21 @@ class CustomUser(AbstractUser):
 
     def get_absolute_url(self):
         return reverse("user_detail", args=[self.username])
+
+  # override save method to create ticket events & notifications
+
+    def save(self, actor=None, *args, **kwargs):
+        Notification = apps.get_model('notifications', 'Notification') # to avoid circular imports
+        if self.pk: # we are updating an existing account
+            user_before_save = CustomUser.objects.get(pk=self.pk)
+            if user_before_save.role != self.role:
+                Notification.objects.create(
+                    recipient=self,
+                    sender=actor,
+                    type=Notification.Type.ROLE_UPDATE,
+                    new_role=self.role
+            )
+        
+        super().save(*args, **kwargs)
+
+

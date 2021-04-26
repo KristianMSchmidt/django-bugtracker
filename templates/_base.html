@@ -35,6 +35,65 @@
          <li><a href="{% url 'ticket_list' %}">My tickets</a></li>
          <li><a href="{% url 'user_list' %}">Personel</a></li>
         </ul>
+        
+        <h2>Notifications</h2>
+        <table>
+            <tr>
+                <th>sender - not correct</th>
+                <th>recipient</th>
+                <th>created_at</th>
+                <th>type</th>
+                <th>type display</th>
+                <th>unseen</th>
+                <th>text</th>
+                <th>link</th>
+            </tr>
+            
+            {% for ntf in notifications %}
+            <tr>
+                <td>{{ ntf.sender }}</td>
+                <td>{{ ntf.recipient }}</td>
+                <td>{{ ntf.created_at }}</td>
+                <td>{{ ntf.type }}</td>
+                <td>{{ ntf.get_type_display }}</td>
+                <td>{{ ntf.unseen }}</td>
+                
+                {% if ntf.type == 1 %} 
+                    <!-- role change -->
+                    <td>{{ ntf.get_new_role_display }}</td>
+                    <td><a href="{% url 'profile' %}">Profile</a></td>
+
+                {% elif ntf.type == 2 %}
+                    <!-- ticket assignment-->
+                    <td> {{ ntf.ticket.title }} </td>
+                    <td><a href="{% url 'ticket_detail' ntf.ticket.pk %}">Ticket</a></td>
+                
+                {% elif ntf.type == 3 %}
+                    <!-- ticket un-assignment-->
+                    <td> {{ ntf.ticket.title }} </td>
+                    <td><a href="{% url 'ticket_detail' ntf.ticket.pk %}">Ticket</a></td>
+
+                {% elif ntf.type == 4 %}
+                    <!-- project enrollment-->
+                    <td> {{ ntf.project.title }} </td>
+                    <td><a href="{% url 'project_detail' ntf.project.pk %}">Project</a></td>
+
+                
+                {% elif ntf.type == 5 %}
+                     <!-- project dis-enrollment-->
+                     <td> {{ ntf.project.title }} </td>
+                     <td><a href="{% url 'project_detail' ntf.project.pk %}">Project</a></td>
+
+                {% elif ntf.type == 6 %}
+                    <!-- New ticket comment -->
+                    <td> {{ ntf.ticket.title }} </td>
+                    <td><a href="{% url 'ticket_detail' ntf.ticket.pk %}">Ticket</a></td>
+
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+        
         <div>
             <!-- Potential messages -->
             {% if messages %}

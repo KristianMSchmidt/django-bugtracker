@@ -49,4 +49,11 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = ((None, {'fields': ('username', 'password')}), ('Role', {'fields': ('role',)}), ('Personal info', {'fields': ('first_name', 'last_name', 'email')}), ('Permissions', {'fields': (
         'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}), ('Important dates', {'fields': ('last_login', 'date_joined')}))
 
+    def save_model(self, request, obj, form, change):
+        obj.save(actor=request.user)
+
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('type', 'sender', 'receiver', 'created_at')
+
 admin.site.register(CustomUser, CustomUserAdmin)
+

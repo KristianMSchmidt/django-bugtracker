@@ -15,7 +15,9 @@ def profile_view(request):
     if request.method == 'POST':
         form = UserUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
-            form.save()
+            #form.save()
+            u = form.save(commit=False)   #perhaps usea distinct form with role as field, when request.user is admin. 
+            u.save(actor=request.user)
             messages.success(
                 request, f'Your account has been updated!')
             return redirect('profile')  # PRG-pattern

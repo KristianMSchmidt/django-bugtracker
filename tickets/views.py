@@ -51,7 +51,7 @@ def ticket_detail_view(request, pk):
     context = {
         'ticket':ticket,
         'comment_list': TicketComment.objects.filter(ticket=ticket),
-        'event_list': TicketEvent.objects.filter(ticket=ticket).order_by('-changed_at'),
+        'event_list': TicketEvent.objects.filter(ticket=ticket).order_by('-created_at'),
         'form':form
         }
     return render(request, 'tickets/ticket_detail.html', context)
@@ -86,6 +86,7 @@ class TicketUpdateView(LoginRequiredMixin, UpdateView):
     
     def form_valid(self, form):
         #old_ticket = self.get_object()
+        form.instance.updated_by = self.request.user
         new_ticket = form.save(commit=False)
         new_ticket.save(request=self.request)
         return super().form_valid(form)
@@ -115,6 +116,8 @@ class TicketCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         """Override. If the form is valid do these extra things before default behavior"""
         form.instance.submitter = self.request.user
+        form.instance.updated_by = self.request.user
+
         #self.object = form.save()
         #TicketEvent.objects.create(ticket=self.object, property_changed=TicketEvent.CREATED, user=self.request.user)
         return super().form_valid(form)
@@ -142,7 +145,6 @@ class TicketCommentDeleteView(LoginRequiredMixin, DeleteView):
         success_url = reverse_lazy('ticket_detail', kwargs={'pk':self.object.ticket.id})    
         self.object.delete()
         return HttpResponseRedirect(success_url)
-
 
 """
 def my_view(request):

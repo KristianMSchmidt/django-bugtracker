@@ -1,10 +1,8 @@
-
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from projects.models import Project
 from django.utils.translation import gettext_lazy as _
-
 
 class Ticket(models.Model):
 
@@ -25,6 +23,12 @@ class Ticket(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True, null=True)    
     updated_at = models.DateTimeField(auto_now=True, null=True)
+    updated_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='updater_set'
+    )
     developer = models.ForeignKey(
         get_user_model(),
         on_delete=models.SET_NULL,
@@ -111,8 +115,8 @@ class Ticket(models.Model):
                     old_value = getattr(orig, f"get_{field_name}_display")()
                     new_value = getattr(self, f"get_{field_name}_display")()
                 except:
-                    old_value = getattr(orig, field_name)
-                    new_value = getattr(self, field_name)
+                    old_value = str(getattr(orig, field_name))
+                    new_value = str(getattr(self, field_name))
                 if old_value != new_value:
                     TicketEvent.objects.create(
                         user=request.user,
@@ -123,7 +127,6 @@ class Ticket(models.Model):
                         new_value=new_value
                     )
         super(Ticket, self).save(*args, **kw)
-
 
 class TicketComment(models.Model):
     ticket = models.ForeignKey(
@@ -138,13 +141,11 @@ class TicketComment(models.Model):
     message = models.CharField(max_length=500, blank=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
-
     def __str__(self):
         return self.message
 
     def get_absolute_url(self):
         return reverse("ticket_detail", args=[self.ticket.id])
-
 
 class TicketEvent(models.Model):
     user = models.ForeignKey(
@@ -171,7 +172,7 @@ class TicketEvent(models.Model):
     property_changed = models.IntegerField(choices=ChangedProperty.choices)
     old_value = models.CharField(max_length=300, null=True)
     new_value = models.CharField(max_length=300, null=True)
-    changed_at = models.DateTimeField(auto_now_add=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return self.get_property_changed_display()

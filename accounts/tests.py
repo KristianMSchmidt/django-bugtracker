@@ -125,7 +125,7 @@ class UpdateProfileTests(TestCase):
 
         # Post request
         response = self.client.post(
-            url, {'email': 'new@mail.com', 'username': 'newname'})
+            url, {'email': 'new@mail.com', 'username': 'newname', 'role':1})
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('profile'))
         
