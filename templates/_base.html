@@ -10,19 +10,58 @@
         
         <!-- CSS -->
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet" />
+
     </head>
 
     <body>
-        <h3>Header</h3>
+     <!-- Navigation-->
+     <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+         <div class="container">
+             <a class="navbar-brand" href="#!">Bug Tracker</a>
+             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span
+                     class="navbar-toggler-icon"></span></button>
+             <div class="collapse navbar-collapse" id="navbarResponsive">
+                 <ul class="navbar-nav ml-auto">
+                     <li class="nav-item active">
+                         <a class="nav-link" href="{% url 'dashboard' %}">
+                            Dashboard
+                            <span class="sr-only">(current)</span>
+                         </a>
+                     </li>
+                    
+                     <li class="nav-item"><a class="nav-link" href="#">Users Overview</a></li>
+                     <li class="nav-item"><a class="nav-link" href="#">Manage Project Users</a></li>
+                     {% if user.is_authenticated %}
+                     <li class="nav-item dropdown">
+                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                             {{ user.username }}
+                         </a>
+                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="{% url 'project_list' %}">My Projects</a>
+                            <a class="dropdown-item" href="{% url 'ticket_list' %}">My Tickets</a>
+                            <a class="dropdown-item" href="{% url 'user_list' %}">Personel</a>
+                            <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                            <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+                         </div>
+                     </li>
+                     {% endif %}
+
+                 </ul>
+             </div>
+         </div>
+     </nav>
+
+
         <div>
             {% if user.is_authenticated %}
                 Hi {{ user.username }}!. Your email is {{ user.email }}. Your role is {{ user.get_role_display }}. <br>
 
                 <a href="{% url 'dashboard' %}">Dashboard</a>
                 <a href="{% url 'about' %}">About</a>
-                <a href="{% url 'logout' %}">Log Out</a>
-                <a href="{% url 'profile' %}">Profile</a>
-
+               
             {% else %}
                 <p>You are not logged in</p>
                 <a href="{% url 'login' %}">Log In</a>
@@ -31,9 +70,6 @@
         </div>
         <ul>
          <li><a href="{% url 'admin:index' %}">Admin Area</a></li>
-         <li><a href="{% url 'project_list' %}">My projects</a></li>
-         <li><a href="{% url 'ticket_list' %}">My tickets</a></li>
-         <li><a href="{% url 'user_list' %}">Personel</a></li>
         </ul>
         
         <h2>Notifications</h2>
@@ -78,7 +114,6 @@
                     <td> {{ ntf.project.title }} </td>
                     <td><a href="{% url 'project_detail' ntf.project.pk %}">Project</a></td>
 
-                
                 {% elif ntf.type == 5 %}
                      <!-- project dis-enrollment-->
                      <td> {{ ntf.project.title }} </td>
@@ -94,7 +129,7 @@
             {% endfor %}
         </table>
         
-        <div>
+        <main>
             <!-- Potential messages -->
             {% if messages %}
                 {% for message in messages %}
@@ -112,12 +147,19 @@
 
             <!-- Page Content-->
             {% block content %}
-
             {% endblock content %}
-        </div>
+        </main>
 
-        <!-- JavaScript -->
+        <!-- Bootstrap core JS-->
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+       
+        <!-- Core theme JS-->
         <script src="{% static 'js/base.js' %}"></script>
+        {% block javascript %}
+        {% endblock javascript %}
+
     </body>
 
 </html>
