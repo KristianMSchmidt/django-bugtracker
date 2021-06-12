@@ -10,6 +10,7 @@ environs = {version = "==8.0.0", extras = ["django"]}
 django-debug-toolbar = "==2.2"
 
 [dev-packages]
+autopep8 = "*"
 
 [requires]
 python_version = "3.8"
