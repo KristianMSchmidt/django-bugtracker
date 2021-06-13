@@ -6,10 +6,11 @@ Unsolved issue: how to paginate notifications, when base.html has no view-functi
 from notifications.models import Notification
 
 def get_notifications_to_context(request):
-    
     context = {}
     if request.user.is_authenticated:
         context = {
+            'notifications':Notification.objects.filter(recipient=request.user)[:20],
             'num_unseen_notifications': Notification.objects.filter(recipient=request.user, unseen=True).count()
         }
     return context
+    

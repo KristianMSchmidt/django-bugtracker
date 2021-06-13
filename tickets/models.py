@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 class Ticket(models.Model):
 
-    title = models.CharField(max_length=200, unique=True, default="Ticket #")
+    title = models.CharField(max_length=200, unique=True, default="Default ticket title")
     description = models.CharField(max_length=300, default="Default ticket description")
     project = models.ForeignKey(
         Project,
