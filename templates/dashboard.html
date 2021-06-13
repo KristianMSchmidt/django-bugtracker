@@ -4,32 +4,34 @@
 {% block title %}Dashboard{% endblock title%}
 
 {% block content %}
-    {% for username,count in busy_users %}
-        {{username}}{{count}}
-    {%endfor%} 
-    <div class="row" style="display:flex">     
-        <div class="card" style="width:30%">
-            <canvas id="status_chart"></canvas>
-        </div>
-        <div class="card" style="width:30%">
-            <canvas id="priority_chart"></canvas>
-        </div>
-    </div>
-
-    <div class="row" style="display:flex">
-        <div class="card" style="width:30%">
-            <canvas id="type_chart"></canvas>
-        </div>
-
-        <div class="card" style="width:30%">
-            <canvas id="top_busy_users_chart"></canvas>
+    <div class="container-fluid p-5">
+        <div class="row">     
+            <div class="col mb-3">
+                <canvas id="status_chart"></canvas>
+            </div>
+            <div class="col mb-3">
+                <canvas id="priority_chart"></canvas>
+            </div>
+            <div class="w-100"></div>
+            <div class="col mb-3">
+                <canvas id="type_chart"></canvas>
+            </div>
+            <div class="col mb-3">
+                <canvas id="top_busy_users_chart"></canvas>
+            </div>
         </div>
     </div>
     
+{% endblock content %}
+
+
+
+{% block javascript %}
+
     <!-- JS chart library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
-    <script>
 
+    <script>
         /* Ticket Status Chart */
         var ctx = document.getElementById('status_chart').getContext('2d');
         var statusChart = new Chart(ctx, {
@@ -219,4 +221,4 @@
         });
     </script>
 
-{% endblock content %}
+{% endblock javascript %}
