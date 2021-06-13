@@ -1,27 +1,18 @@
-{% extends "_base.html" %}
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %}Profile{% endblock title %}
 
 {% block content %}
-<div>
-    <div class="px-4 py-1 mr-3">
-        <h1> {{ user.username }} </h1>
-        <p> {{ user.email }}</p>
-        <p>{{ user.get_role_display }}</p>
+
+    <div class="container-fluid p-5">
+        <h3>Account settings</h3>
+        <form class="my-4" method="POST">{% csrf_token %}
+            {{ form|crispy }}
+            <button class="btn btn-primary" type='submit'>Update</button>
+        </form>
+        <a href="{% url 'password_change' %}">Change password</a><br>
     </div>
-
-
-</div>
-
-<form method="POST">{% csrf_token %}
-    {{form}}
-    <button type='submit'>
-        Update
-    </button>
-</form>
-
-<a href="{% url 'password_change' %}">Change password</a>
-
 {% endblock content %}
 
 
