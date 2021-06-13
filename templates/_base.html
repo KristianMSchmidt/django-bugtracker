@@ -17,7 +17,7 @@
     <!-- Core theme CSS -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <style>
-        @media screen and (min-width: 680px) {
+        @media screen and (min-width: 800px) {
             .rwd-break {
             display: none;
             }
@@ -48,7 +48,7 @@
                                 <i class="far fa-bell"></i>
                             </a>
                         {% endif %}
-                        <div class="dropdown-menu dropdown-menu-right text-muted" style="height:80vh; width:60vw; overflow-y:auto; overflow-x:hidden"
+                        <div class="dropdown-menu dropdown-menu-right text-muted" style="height:80vh; overflow-y:auto; overflow-x:hidden"
                                 aria-labelledby="navbarNotificationsDropdownMenuLink">
                           
                             {% for ntf in notifications %}  
@@ -67,7 +67,7 @@
                                 <!-- ticket assignment-->                           
                                 <a class="dropdown-item" href="{% url 'ticket_detail' ntf.ticket.pk %}">
                                     <b>{{ ntf.sender }}</b> assigned you <br class="rwd-break">to the ticket
-                                    <b>{{ ntf.ticket.title|truncatechars:8 }}</b><br>
+                                    <b>{{ ntf.ticket.title|truncatechars:15 }}</b><br>
                                     <small class="text-muted">{{ ntf.time_ago }}</small>
                                 </a>
                                 
@@ -75,7 +75,7 @@
                                 <!-- ticket un-assignment-->
                                 <a class="dropdown-item" style="display:block" href="{% url 'ticket_detail' ntf.ticket.pk %}">
                                     <b>{{ ntf.sender }}</b> un-assigned you <br class="rwd-break">from the ticket
-                                    <b>{{ ntf.ticket.title|truncatechars:8 }}</b><br>
+                                    <b>{{ ntf.ticket.title|truncatechars:15 }}</b><br>
                                     <small class="text-muted">{{ ntf.time_ago }}</small>
                                 </a>
 
@@ -83,7 +83,7 @@
                                 <!-- project enrollment-->
                                 <a class="dropdown-item" href="{% url 'project_detail' ntf.project.pk %}">
                                     <b>{{ ntf.sender }}</b> enrolled you <br class="rwd-break">in the project
-                                    <b>{{ ntf.project.title|truncatechars:8 }}</b><br>
+                                    <b>{{ ntf.project.title|truncatechars:15 }}</b><br>
                                     <small class="text-muted">{{ ntf.time_ago }}</small>
                                 </a>
 
@@ -91,7 +91,7 @@
                                 <!-- project dis-enrollment-->
                                 <a class="dropdown-item" href="{% url 'project_detail' ntf.project.pk %}">
                                 <b>{{ ntf.sender }}</b> dis-enrolled you <br class="rwd-break">from the project
-                                <b>{{ ntf.project.title|truncatechars:8 }}</b><br>
+                                <b>{{ ntf.project.title|truncatechars:15 }}</b><br>
                                     <small class="text-muted">{{ ntf.time_ago }}</small>
                                 </a>
 
@@ -99,7 +99,7 @@
                                 <!-- New ticket comment -->
                                 <a class="dropdown-item" href="{% url 'ticket_detail' ntf.ticket.pk %}">
                                     <b>{{ ntf.sender }}</b> added a new <br class="rwd-break">comment to your ticket
-                                    <b>{{ ntf.ticket.title|truncatechars:8 }}</b><br>
+                                    <b>{{ ntf.ticket.title|truncatechars:15 }}</b><br>
                                     <small class="text-muted">{{ ntf.time_ago }}</small>
                                 </a>
                                 {% endif %}             
