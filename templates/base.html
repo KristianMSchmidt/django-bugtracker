@@ -29,83 +29,85 @@
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand navbar-dark bg-dark sticky-top">
-        <div class="container-fluid">
+        <div class="container-fluid d-flex flex-column flex-sm-row">
             <a class="navbar-brand" href="{% url 'dashboard' %}">Bug Tracker</a>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-         
-                <ul class="navbar-nav ml-auto">
-                    {% if user.is_authenticated %}
+            {% if user.is_authenticated %}
+                <div class="container-fluid d-flex justify-content-between">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="{% url 'dashboard' %}">Home</a>
+                    </div> 
+                    <ul class="navbar-nav flex-row-reverse flex-sm-row">  
                         <li class="nav-item dropdown">
-                        {% if num_unseen_notifications > 0 %}
-                            <a class="nav-link dropdown-toggle" onclick="set_notifications_seen()" href="#"
-                                id="navbarNotificationsDropdownMenuLink" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <div class="fa-stack" data-count={{ num_unseen_notifications }}></div>
-                                <i class="far fa-bell"></i>
-                            </a>
-                        {% else %}
-                            <a class="nav-link dropdown-toggle" href=" #" id="navbarNotificationsDropdownMenuLink"
-                                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="far fa-bell"></i>
-                            </a>
-                        {% endif %}
-                        <div class="dropdown-menu dropdown-menu-right text-muted" style="max-height:80vh; overflow-y:auto; overflow-x:hidden"
-                                aria-labelledby="navbarNotificationsDropdownMenuLink">
-                          
-                            {% for ntf in notifications %}  
-                                {% if not forloop.first %}
-                                <div class="dropdown-divider"></div>
-                                {% endif %}
+                            {% if num_unseen_notifications > 0 %}
+                                <a class="nav-link dropdown-toggle" onclick="set_notifications_seen()" href="#"
+                                    id="navbarNotificationsDropdownMenuLink" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <div class="fa-stack" data-count={{ num_unseen_notifications }}></div>
+                                    <i class="far fa-bell"></i>
+                                </a>
+                            {% else %}
+                                <a class="nav-link dropdown-toggle" href=" #" id="navbarNotificationsDropdownMenuLink"
+                                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="far fa-bell"></i>
+                                </a>
+                            {% endif %}
+                            <div class="dropdown-menu dropdown-menu-right text-muted" style="max-height:80vh; overflow-y:auto; overflow-x:hidden"
+                                    aria-labelledby="navbarNotificationsDropdownMenuLink">
+                            
+                                {% for ntf in notifications %}  
+                                    {% if not forloop.first %}
+                                    <div class="dropdown-divider"></div>
+                                    {% endif %}
 
-                                {% if ntf.type == 1 %}
-                                <!-- role change -->
-                                <a class="dropdown-item" href="{% url 'profile' %}">
-                                        <b>{{ ntf.sender }}</b> updated your <br class="rwd-break">role to <b>{{ ntf.get_new_role_display }}</b><br>
+                                    {% if ntf.type == 1 %}
+                                    <!-- role change -->
+                                    <a class="dropdown-item" href="{% url 'profile' %}">
+                                            <b>{{ ntf.sender }}</b> updated your <br class="rwd-break">role to <b>{{ ntf.get_new_role_display }}</b><br>
+                                            <small class="text-muted">{{ ntf.time_ago }}</small>
+                                    </a>
+
+                                    {% elif ntf.type == 2 %}
+                                    <!-- ticket assignment-->                           
+                                    <a class="dropdown-item" href="{% url 'ticket_detail' ntf.ticket.pk %}">
+                                        <b>{{ ntf.sender }}</b> assigned you <br class="rwd-break">to the ticket
+                                        <b>{{ ntf.ticket.title|truncatechars:15 }}</b><br>
                                         <small class="text-muted">{{ ntf.time_ago }}</small>
-                                </a>
+                                    </a>
+                                    
+                                    {% elif ntf.type == 3 %}
+                                    <!-- ticket un-assignment-->
+                                    <a class="dropdown-item" style="display:block" href="{% url 'ticket_detail' ntf.ticket.pk %}">
+                                        <b>{{ ntf.sender }}</b> un-assigned you <br class="rwd-break">from the ticket
+                                        <b>{{ ntf.ticket.title|truncatechars:15 }}</b><br>
+                                        <small class="text-muted">{{ ntf.time_ago }}</small>
+                                    </a>
 
-                                {% elif ntf.type == 2 %}
-                                <!-- ticket assignment-->                           
-                                <a class="dropdown-item" href="{% url 'ticket_detail' ntf.ticket.pk %}">
-                                    <b>{{ ntf.sender }}</b> assigned you <br class="rwd-break">to the ticket
-                                    <b>{{ ntf.ticket.title|truncatechars:15 }}</b><br>
-                                    <small class="text-muted">{{ ntf.time_ago }}</small>
-                                </a>
-                                
-                                {% elif ntf.type == 3 %}
-                                <!-- ticket un-assignment-->
-                                <a class="dropdown-item" style="display:block" href="{% url 'ticket_detail' ntf.ticket.pk %}">
-                                    <b>{{ ntf.sender }}</b> un-assigned you <br class="rwd-break">from the ticket
-                                    <b>{{ ntf.ticket.title|truncatechars:15 }}</b><br>
-                                    <small class="text-muted">{{ ntf.time_ago }}</small>
-                                </a>
+                                    {% elif ntf.type == 4 %}
+                                    <!-- project enrollment-->
+                                    <a class="dropdown-item" href="{% url 'project_detail' ntf.project.pk %}">
+                                        <b>{{ ntf.sender }}</b> enrolled you <br class="rwd-break">in the project
+                                        <b>{{ ntf.project.title|truncatechars:15 }}</b><br>
+                                        <small class="text-muted">{{ ntf.time_ago }}</small>
+                                    </a>
 
-                                {% elif ntf.type == 4 %}
-                                <!-- project enrollment-->
-                                <a class="dropdown-item" href="{% url 'project_detail' ntf.project.pk %}">
-                                    <b>{{ ntf.sender }}</b> enrolled you <br class="rwd-break">in the project
+                                    {% elif ntf.type == 5 %}
+                                    <!-- project dis-enrollment-->
+                                    <a class="dropdown-item" href="{% url 'project_detail' ntf.project.pk %}">
+                                    <b>{{ ntf.sender }}</b> dis-enrolled you <br class="rwd-break">from the project
                                     <b>{{ ntf.project.title|truncatechars:15 }}</b><br>
-                                    <small class="text-muted">{{ ntf.time_ago }}</small>
-                                </a>
+                                        <small class="text-muted">{{ ntf.time_ago }}</small>
+                                    </a>
 
-                                {% elif ntf.type == 5 %}
-                                <!-- project dis-enrollment-->
-                                <a class="dropdown-item" href="{% url 'project_detail' ntf.project.pk %}">
-                                <b>{{ ntf.sender }}</b> dis-enrolled you <br class="rwd-break">from the project
-                                <b>{{ ntf.project.title|truncatechars:15 }}</b><br>
-                                    <small class="text-muted">{{ ntf.time_ago }}</small>
-                                </a>
-
-                                {% elif ntf.type == 6 %}
-                                <!-- New ticket comment -->
-                                <a class="dropdown-item" href="{% url 'ticket_detail' ntf.ticket.pk %}">
-                                    <b>{{ ntf.sender }}</b> added a new <br class="rwd-break">comment to your ticket
-                                    <b>{{ ntf.ticket.title|truncatechars:15 }}</b><br>
-                                    <small class="text-muted">{{ ntf.time_ago }}</small>
-                                </a>
-                                {% endif %}             
-                            {% endfor %}   
-                        </div>                     
+                                    {% elif ntf.type == 6 %}
+                                    <!-- New ticket comment -->
+                                    <a class="dropdown-item" href="{% url 'ticket_detail' ntf.ticket.pk %}">
+                                        <b>{{ ntf.sender }}</b> added a new <br class="rwd-break">comment to your ticket
+                                        <b>{{ ntf.ticket.title|truncatechars:15 }}</b><br>
+                                        <small class="text-muted">{{ ntf.time_ago }}</small>
+                                    </a>
+                                    {% endif %}             
+                                {% endfor %}   
+                            </div>                     
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarAddDropdownMenuLink" role="button"
@@ -122,7 +124,7 @@
                                 <a class="dropdown-item" href="{% url 'admin:index' %}">Admin area</a>
                             </div>
                         </li>
-                        <li class="nav-item dropdown pr-4">
+                        <li class="nav-item dropdown mr-sm-4">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdownMenuLink" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="far fa-user"></i>
@@ -137,10 +139,9 @@
                             <a class="dropdown-item" href="{% url 'logout' %}">Sign out</a>
                             </div>
                         </li>
-                    {% endif %}
-
-                </ul>
-            </div>
+                    </ul>
+                </div>
+            {% endif %}
         </div>
     </nav>
 
