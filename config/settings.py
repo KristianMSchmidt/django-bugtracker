@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     # Third-party
     'debug_toolbar',
+    'crispy_forms',
 
     # Local
     'notifications',
@@ -51,6 +52,8 @@ INSTALLED_APPS = [
     'projects.apps.ProjectsConfig',
     'tickets.apps.TicketsConfig',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -153,10 +156,11 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # over-riding default redirect urls
 LOGIN_REDIRECT_URL = 'dashboard'
-LOGOUT_REDIRECT_URL = 'demo_login'
+LOGOUT_REDIRECT_URL = 'login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # django-debug-toolbar
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 INTERNAL_IPS = [ip[:-1] + "1" for ip in ips]
+
