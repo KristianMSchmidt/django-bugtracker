@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ ticket.title }}{% endblock title%}
+
+{% block content %}
+<h1>Ticket Details: {{ticket.title}}</h1>
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Project</th>
+        <th>Submitter</th>
+        <th>Developer</th>
+        <th>Created at</th>
+        <th>Last update</th>
+        <th>Status</th>
+        <th>Type</th>
+        <th>Priority</th>
+    </tr>
+    <tr>
+        <td>{{ ticket.title }}</td>
+        <td>{{ ticket.description }}</td>
+        <td>{{ ticket.project }}</td>
+        <td>{{ ticket.submitter }}</td>
+        <td>{{ ticket.developer }}</td>
+        <td>{{ ticket.created_at }}</td>
+        <td>{{ ticket.updated_at }}</td>
+        <td>{{ ticket.get_status_display }}</td>
+        <td>{{ ticket.get_type_display }}</td>
+        <td>{{ ticket.get_priority_display }}</td>
+    </tr>
+</table>
+
+<a href="{% url 'ticket_edit' ticket.pk %}">Edit ticket</a>
+<a href="{% url 'ticket_delete' ticket.pk %}">Delete ticket</a>
+
+
+<h1>Ticket Comments</h1>
+
+  <form action="" method="post">{% csrf_token %}
+      {{form}}
+      <input type="submit" value="Add">
+  </form>
+    <table>
+        <tr>
+            <th>Commenter</th>
+            <th>Message</th>
+            <th>Created</th>
+        </tr>
+        {% for comment in comment_list %}
+            <tr>
+                <td>{{ comment.commenter }} </td>
+                <td>{{ comment.message }} </td>
+                <td>{{ comment.created_at }} </td>
+                <th><a href="{% url 'ticket_comment_edit' comment.pk %}">Edit comment</a></th>
+                <th><a href="{% url 'ticket_comment_delete' comment.pk %}">Delete comment</a></th>
+            </tr>
+        {% endfor %}
+    </table>
+
+<h1>Ticket History</h1>
+<table>
+    <tr>
+        <th>Property</th>
+        <th>Old value</th>
+        <th>New value</th>
+        <th>Changed by</th>
+        <th>Date changed</th>
+
+    </tr>
+    {% for event in event_list %}
+    <tr>
+        <td>{{ event.get_property_changed_display }} </td>
+        <td>{{ event.old_value }} </td>
+        <td>{{ event.new_value }} </td>
+        <td>{{ event.user }} </td>
+        <td>{{ event.created_at }} </td>
+
+    </tr>
+    {% endfor %}
+</table>
+
+
+{% endblock content %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Comment{% endblock title%}
+
+{% block content %}
+<h3>Delete Ticket Comment for {{comment.ticket}}</h3>
+<form action="" method="post">
+    {% csrf_token %}
+    <p>Are you sure you want to delete "{{ comment.message }}"? </p>
+    <button type="submit">Confirm</button>
+</form>
+
+<h1>Ticket Comments</h1>
+{{comment}}
+{{comment.ticket}}
+<table>
+    <tr>
+        <th>Commenter</th>
+        <th>Message</th>
+        <th>Created</th>
+    </tr>
+    <tr>
+        <td>{{ comment.commenter }} </td>
+        <td>{{ comment.message }} </td>
+        <td>{{ comment.created_at }} </td>
+    </tr>
+   
+</table>
+
+
+{% endblock content %}
