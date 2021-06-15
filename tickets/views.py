@@ -14,7 +14,6 @@ from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render,redirect
 from .forms import CommentCreateForm
-# Create your views here.
 
 class TicketListView(LoginRequiredMixin, ListView):
 
