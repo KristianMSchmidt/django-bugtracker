@@ -31,6 +31,7 @@ class TicketListView(LoginRequiredMixin, ListView):
         if self.request.user.is_admin():
             return Ticket.objects.all()
         return Ticket.objects.filter(Q(developer=self.request.user) | Q(submitter=self.request.user))
+        
 
 @login_required
 def ticket_detail_view(request, pk):

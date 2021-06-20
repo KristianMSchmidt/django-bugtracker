@@ -6,16 +6,16 @@
 {% block content %}
     <div class="container-fluid px-3 px-sm-5 py-5" style="max-width:1100px">
         <div class="row">     
-            <div class="col-12 col-md-6 mb-4">
+            <div class="col-12 col-md-6 mb-5">
                 <canvas id="status_chart"></canvas>
             </div>
-            <div class="col-12 col-md-6 mb-4">
+            <div class="col-12 col-md-6 mb-5">
                 <canvas id="priority_chart"></canvas>
             </div>
-            <div class="col-12 col-md-6 mb-4">
+            <div class="col-12 col-md-6 mb-5">
                 <canvas id="type_chart"></canvas>
             </div>
-            <div class="col-12 col-md-6 mb-4">
+            <div class="col-12 col-md-6 mb-5">
                 <canvas id="top_busy_users_chart"></canvas>
             </div>
         </div>
@@ -24,10 +24,12 @@
 
 
 {% block javascript %}
+
     <!-- JS chart library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
 
     <script>
+
         /* Ticket Status Chart */
         var ctx = document.getElementById('status_chart').getContext('2d');
         var statusChart = new Chart(ctx, {
@@ -39,10 +41,10 @@
                     label: '# of Tickets',
 
                     data: [
-                        {{status.open}},
-                        {{status.in_progress}},
-                        {{status.closed}},
-                        {{status.info_required}}
+                        {{ status.open }},
+                        {{ status.in_progress }},
+                        {{ status.closed }},
+                        {{ status.info_required }}
                     ],
 
                     backgroundColor: [
@@ -172,6 +174,7 @@
             },
             }
         });
+
         /*Busy Users Chart */
         var ctx = document.getElementById('top_busy_users_chart').getContext('2d');
         var Chart = new Chart(ctx, {
