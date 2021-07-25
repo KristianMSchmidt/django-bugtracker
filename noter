@@ -1,0 +1,45 @@
+ sudo chown -R $USER:$USER .
+
+ Hver gang settings.py er blevet ændret skal containere lukkes ned og genåbnes. docker-compose down    og docker-compose up
+
+...
+Features: 
+- throughout unit testing
+- pagination
+- crud 
+- 1-1, 1-many, many-to-many relations
+- postgresql database
+- authentication and authorization
+- password reset via email
+- search functionality - both in admin and in custom pages
+- internal automated notifications system 
+- database-triggers: 
+    - notifications
+    - when user is assigned to ticket, he gets assigned to project
+    - when user get unassigned from project, he gets unassigned from tickets related to project
+- ordering option
+    
+Security measures
+- environment variables 
+- etc
+
+Development and Deploy
+- docker to reproduce a production environment locally
+- PostreSQL locally
+
+
+Usefull info on generic views: https://docs.djangoproject.com/en/3.2/topics/class-based-views/generic-display/
+
+Vent lidt med permissions og brug af user_role.... der er mange måder at gøre det på... groups og indbygget persmission system. Eller: Måske
+jeg bare skal køre med det simple rolle-system, indtil jeg får brug for noget mere kompliceret?
+
+
+
+Next up: 
+Jeg venter med ekstra features: notifications og ticket history og ticket comments og filer.. Først skal jeg have lortet til at virke - så kan 
+jeg altid tilføje funktionalittet! Dvs: Implementér core features. Next up: Få styr på de ting, som skal bruges til dashboardet. 
+
+
+
+De projekter, hvor user 3 er 
+Project_ids = Project.objects.filter(users = users[3])

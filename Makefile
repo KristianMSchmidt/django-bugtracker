@@ -28,7 +28,7 @@ shell:
 	docker-compose exec web /bin/bash
 
 # Makemigrations within within docker image
-migrate:
+migrations:
 	docker-compose exec web python manage.py makemigrations
 
 # Migrate within within docker image
