@@ -4,9 +4,11 @@ from .models import Ticket, TicketComment
 from projects.models import Project
 from django.contrib.auth import get_user_model
 
+
 class TicketTests(TestCase):
 
     def setUp(self):
+
         self.testproject = Project.objects.create(
             title='Test Project',
             description='Test Project description',
@@ -15,7 +17,7 @@ class TicketTests(TestCase):
         self.testuser_admin = User.objects.create_user(
             username='kris',
             password='testpass123',
-            role = User.Role.ADMIN
+            role=User.Role.ADMIN
         )
         self.testuser_dev1 = User.objects.create_user(
             username='tom',
@@ -33,12 +35,12 @@ class TicketTests(TestCase):
             role=User.Role.PROJECT_MANAGER
         )
 
-        self.ticket  = Ticket.objects.create(
+        self.ticket = Ticket.objects.create(
             title="Test Ticket 1",
-            description = "Test Ticket 1 Description",
-            project = self.testproject,
-            submitter = self.testuser_admin,
-            developer = self.testuser_dev1,
+            description="Test Ticket 1 Description",
+            project=self.testproject,
+            submitter=self.testuser_admin,
+            developer=self.testuser_dev1,
             status=Ticket.Status.OPEN,
             type=Ticket.Type.BUG,
             priority=Ticket.Priority.HIGH
@@ -52,15 +54,16 @@ class TicketTests(TestCase):
             type=Ticket.Type.BUG,
             priority=Ticket.Priority.HIGH
         )
-        self.ticket_comment= TicketComment.objects.create(
+        self.ticket_comment = TicketComment.objects.create(
             commenter=self.testuser_admin,
             message="Just a comment",
             ticket=self.ticket
-        )            
+        )
 
     def test_ticket_listing(self):
         self.assertEqual(f'{self.ticket.title}', 'Test Ticket 1'),
-        self.assertEqual(f'{self.ticket.description}', 'Test Ticket 1 Description'),
+        self.assertEqual(f'{self.ticket.description}',
+                         'Test Ticket 1 Description'),
         self.assertEqual(f'{self.ticket.project}', 'Test Project'),
         self.assertEqual(f'{self.ticket.submitter}', 'kris'),
         self.assertEqual(f'{self.ticket.developer}', 'tom'),
@@ -74,13 +77,13 @@ class TicketTests(TestCase):
         self.assertFalse(self.ticket.is_in_progress())
         self.assertFalse(self.ticket.info_required())
 
-        #priority methods
+        # priority methods
         self.assertTrue(self.ticket.priority_is_high())
         self.assertFalse(self.ticket.priority_is_urgent())
         self.assertFalse(self.ticket.priority_is_low())
         self.assertFalse(self.ticket.priority_is_medium())
 
-        #type methods
+        # type methods
         self.assertTrue(self.ticket.type_is_bug())
         self.assertFalse(self.ticket.type_is_feature_request())
         self.assertFalse(self.ticket.type_is_other())
@@ -111,7 +114,7 @@ class TicketTests(TestCase):
 
         self.client.logout()
 
-        # log in as developer 2 --- context should only contain ticket 2 
+        # log in as developer 2 --- context should only contain ticket 2
         self.client.login(username='hank', password='testpass123')
         response = self.client.get(reverse('ticket_list'))
         self.assertEqual(response.status_code, 200)
@@ -127,15 +130,14 @@ class TicketTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, 'Test Ticket 2')
         self.assertNotContains(response, 'Test Ticket 1')
-        self.assertAlmostEqual(response.context['ticket_list'].count(), 0)        
-
+        self.assertAlmostEqual(response.context['ticket_list'].count(), 0)
 
     def test_ticket_detail_view_user_not_logged_in(self):
         response = self.client.get(self.ticket.get_absolute_url())
         self.assertEqual(response.status_code, 302)
 
     def test_ticket_detail_view_user_logged_in(self):
-        #get request
+        # get request
         self.client.login(username='kris', password='testpass123')
         response = self.client.get(self.ticket.get_absolute_url())
         self.assertEqual(response.status_code, 200)
@@ -144,21 +146,23 @@ class TicketTests(TestCase):
         self.assertContains(response, 'Ticket Details')
         self.assertTemplateUsed(response, 'tickets/ticket_detail.html')
         self.assertTemplateNotUsed(response, 'tickets/ticket_list.html')
-        
+
         # previously, we have added one comment to the ticket:
         self.assertEqual(self.ticket.ticketcomment_set.count(), 1)
 
-        # Post request - valid input should redirect 
-        response = self.client.post(self.ticket.get_absolute_url(), {'message': 'Test comment content'})
+        # Post request - valid input should redirect
+        response = self.client.post(self.ticket.get_absolute_url(), {
+                                    'message': 'Test comment content'})
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, self.ticket.get_absolute_url())
-        
+
         # There should now be two comment in the comment_set to the ticket
         self.assertEqual(self.ticket.ticketcomment_set.count(), 2)
-        self.assertEqual(self.ticket.ticketcomment_set.last().message, 'Test comment content')
+        self.assertEqual(
+            self.ticket.ticketcomment_set.last().message, 'Test comment content')
 
     def test_ticket_update_view(self):
-        #login required
+        # login required
         response = self.client.get(
             reverse('ticket_edit', kwargs={'pk': self.ticket.id}))
         self.assertEqual(response.status_code, 302)
@@ -172,7 +176,7 @@ class TicketTests(TestCase):
         self.assertTemplateUsed(response, 'tickets/ticket_edit.html')
 
     def test_ticket_create_view(self):
-        #login required
+        # login required
         response = self.client.get(reverse('ticket_create'))
         self.assertEqual(response.status_code, 302)
 
@@ -183,57 +187,58 @@ class TicketTests(TestCase):
         self.assertTemplateUsed(response, 'tickets/ticket_new.html')
 
     def test_ticket_delete_view(self):
-        # login required 
-        response = self.client.get(reverse('ticket_delete', kwargs={'pk': self.ticket.id}))
+        # login required
+        response = self.client.get(
+            reverse('ticket_delete', kwargs={'pk': self.ticket.id}))
         self.assertEqual(response.status_code, 302)
 
         self.client.login(username='kris', password='testpass123')
         response = self.client.get(
-        reverse('ticket_delete', kwargs={'pk': self.ticket.id}))
+            reverse('ticket_delete', kwargs={'pk': self.ticket.id}))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Delete')
         self.assertTemplateUsed(response, 'tickets/ticket_delete.html')
 
     def test_ticket_comment_delete_view(self):
-        # login required 
-        response = self.client.get(reverse('ticket_comment_delete', kwargs={'pk': self.ticket_comment.id}))
+        # login required
+        response = self.client.get(
+            reverse('ticket_comment_delete', kwargs={'pk': self.ticket_comment.id}))
         self.assertEqual(response.status_code, 302)
 
         self.client.login(username='kris', password='testpass123')
         response = self.client.get(
-        reverse('ticket_comment_delete', kwargs={'pk': self.ticket_comment.id}))
+            reverse('ticket_comment_delete', kwargs={'pk': self.ticket_comment.id}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'tickets/comment_delete.html')
         self.assertContains(response, 'Confirm')
 
-        #self.ticket should currently have 1 comments
+        # self.ticket should currently have 1 comments
         self.assertEqual(self.ticket.ticketcomment_set.count(), 1)
 
         response = self.client.post(
             reverse('ticket_comment_delete', kwargs={'pk': self.ticket_comment.id}))
         self.assertEqual(response.status_code, 302)
-        #self.ticket should now have 0 comments
+        # self.ticket should now have 0 comments
         self.assertEqual(self.ticket.ticketcomment_set.count(), 0)
 
-    
     def test_ticket_comment_update_view(self):
-        # login required 
-        response = self.client.get(reverse('ticket_comment_edit', kwargs={'pk': self.ticket_comment.id}))
+        # login required
+        response = self.client.get(
+            reverse('ticket_comment_edit', kwargs={'pk': self.ticket_comment.id}))
         self.assertEqual(response.status_code, 302)
         self.client.login(username='kris', password='testpass123')
         response = self.client.get(
-        reverse('ticket_comment_edit', kwargs={'pk': self.ticket_comment.id}))
+            reverse('ticket_comment_edit', kwargs={'pk': self.ticket_comment.id}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'tickets/comment_edit.html')
         self.assertContains(response, 'Edit')
 
         response = self.client.post(
-            reverse('ticket_comment_edit', kwargs={'pk': self.ticket_comment.id}),{'message':'updated message'})
+            reverse('ticket_comment_edit', kwargs={'pk': self.ticket_comment.id}), {'message': 'updated message'})
         self.assertEqual(response.status_code, 302)
 
     # Test view->update creates ticket events...
- 
+
     # man kunne også teste selve update funktionaliteten et ticket post-requests
     # Fx kan update funktionaliteten tjekkes sådan her: https://stackoverflow.com/questions/48814830/how-to-test-djangos-updateview
     # Men der er selvfølgelig ingen grund til at teste djangos indbyggede funktionalitet
-

@@ -4,7 +4,7 @@ from django.views.generic import (
     DetailView,
     UpdateView,
     DeleteView
-) 
+)
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
 
@@ -12,9 +12,9 @@ from django.urls import reverse_lazy
 from .models import Ticket, TicketComment, TicketEvent
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from .forms import CommentCreateForm
-# Create your views here.
+
 
 class TicketListView(LoginRequiredMixin, ListView):
 
@@ -33,6 +33,7 @@ class TicketListView(LoginRequiredMixin, ListView):
             return Ticket.objects.all()
         return Ticket.objects.filter(Q(developer=self.request.user) | Q(submitter=self.request.user))
 
+
 @login_required
 def ticket_detail_view(request, pk):
     ticket = Ticket.objects.get(pk=pk)
@@ -47,14 +48,15 @@ def ticket_detail_view(request, pk):
             return redirect(ticket.get_absolute_url())
     else:
         form = CommentCreateForm()
-    
+
     context = {
-        'ticket':ticket,
+        'ticket': ticket,
         'comment_list': TicketComment.objects.filter(ticket=ticket),
         'event_list': TicketEvent.objects.filter(ticket=ticket).order_by('-created_at'),
-        'form':form
-        }
+        'form': form
+    }
     return render(request, 'tickets/ticket_detail.html', context)
+
 
 """
 class TicketDetailView(LoginRequiredMixin, DetailView):
@@ -78,40 +80,42 @@ class TicketDetailView(LoginRequiredMixin, DetailView):
         return context
 """
 
+
 class TicketUpdateView(LoginRequiredMixin, UpdateView):
     model = Ticket
     context_object_name = 'ticket'
-    fields = ('title', 'description', 'type', 'status', 'priority', 'developer',)
+    fields = ('title', 'description', 'type',
+              'status', 'priority', 'developer',)
     template_name = 'tickets/ticket_edit.html'
-    
+
     def form_valid(self, form):
         #old_ticket = self.get_object()
         form.instance.updated_by = self.request.user
         new_ticket = form.save(commit=False)
         new_ticket.save(request=self.request)
         return super().form_valid(form)
-    
+
+
 class TicketDeleteView(
-        LoginRequiredMixin, 
-        #PermissionRequiredMixin,
+        LoginRequiredMixin,
+        # PermissionRequiredMixin,
         DeleteView):
     model = Ticket
     template_name = 'tickets/ticket_delete.html'
     success_url = reverse_lazy('ticket_list')
 
-    # NB: 
-    #permission_required = 'tickets.delete_ticket'  #could also be multiple permissions
-    # Custom permissions er nemme a lave. 
-    #persmission kan tildeles indiduelt eller gennem grupper. Er dett smart i mit tilfælde?
+    # NB:
+    # permission_required = 'tickets.delete_ticket'  #could also be multiple permissions
+    # Custom permissions er nemme a lave.
+    # persmission kan tildeles indiduelt eller gennem grupper. Er dett smart i mit tilfælde?
     # I could also implement permisions with "user passes test...fx based on role"
-    
+
 
 class TicketCreateView(LoginRequiredMixin, CreateView):
     model = Ticket
     template_name = 'tickets/ticket_new.html'
     fields = ('title', 'description', 'project', 'type',
               'status', 'priority', 'developer',)
-    
 
     def form_valid(self, form):
         """Override. If the form is valid do these extra things before default behavior"""
@@ -124,7 +128,7 @@ class TicketCreateView(LoginRequiredMixin, CreateView):
 
 
 class TicketCommentUpdateView(LoginRequiredMixin, UpdateView):
-    #TODO: user_passes_test .... skal være skaberen af the ticket
+    # TODO: user_passes_test .... skal være skaberen af the ticket
     model = TicketComment
     context_object_name = 'comment'
     fields = ('message',)
@@ -132,19 +136,21 @@ class TicketCommentUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class TicketCommentDeleteView(LoginRequiredMixin, DeleteView):
-    #TODO: user_passes_test .... skal være skaberen af the ticket
+    # TODO: user_passes_test .... skal være skaberen af the ticket
     model = TicketComment
     context_object_name = 'comment'
     template_name = 'tickets/comment_delete.html'
-    
+
     def delete(self, request, *args, **kwargs):
         """
         Override to redirect to ticket details after deleting. 
         """
         self.object = self.get_object()
-        success_url = reverse_lazy('ticket_detail', kwargs={'pk':self.object.ticket.id})    
+        success_url = reverse_lazy('ticket_detail', kwargs={
+                                   'pk': self.object.ticket.id})
         self.object.delete()
         return HttpResponseRedirect(success_url)
+
 
 """
 def my_view(request):

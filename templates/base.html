@@ -1,0 +1,210 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bugtracker{% endblock title%} | BugTracker</title>  
+        
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+    integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+    <!-- Font awesome -->
+    <script src="https://kit.fontawesome.com/114f0c3f98.js" crossorigin="anonymous"></script>
+
+    <!-- Core theme CSS -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+    <style>
+        @media screen and (max-width: 325px) {
+             .hide-when-small {
+                display: none;
+             }
+        }
+    </style>    
+</head> 
+
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand navbar-dark bg-dark sticky-top">
+        <div class="container-fluid d-flex flex-column flex-sm-row">
+            <a class="navbar-brand" href="#"> 
+                Bug Tracker
+            </a>
+            {% if user.is_authenticated %}
+                <div class="container-fluid d-flex justify-content-between">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="{% url 'dashboard' %}">Home</a>
+                    </div> 
+                    <ul class="navbar-nav">  
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarAddDropdownMenuLink" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarAddDropdownMenuLink">
+                                <a class="dropdown-item" href="{% url 'logout' %}">New project</a>
+                                <a class="dropdown-item" href="{% url 'logout' %}">New ticket</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'project_list' %}">Manage User Roles</a>
+                                <a class="dropdown-item" href="{% url 'ticket_list' %}">Manage Project Users</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'admin:index' %}">Admin area</a>
+                            </div>
+                        </li>
+                        <div class="nav-item dropdown hide-when-small">
+                            <a class="nav-link dropdown-toggle" onclick="set_notifications_seen()" href="#"
+                                id="navbarNotificationsDropdownMenuLink" role="button" data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false">
+                                <i class="far fa-bell"></i>
+                                {% if num_unseen_notifications > 0 %}
+                                    <span class="badge bg-danger">{{ num_unseen_notifications }}</span>
+                                {% endif %}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right"
+                                style="max-height:80vh;overflow-y:auto; overflow-x:hidden;"
+                                aria-labelledby="navbarNotificationsDropdownMenuLink">
+
+                                {% for ntf in notifications %}
+                                    {% if not forloop.first %}
+                                        <li><div class="dropdown-divider"></div></li>
+                                    {% endif %}
+
+                                    {% if ntf.type == 1 %}
+                                        <!-- role change -->
+                                        <a class="dropdown-item" href="{% url 'profile' %}">
+                                            <b>{{ ntf.sender }}</b> <br class="d-sm-none"> updated <br class="d-sm-none">your
+                                            role to
+                                            <br class="d-md-none">
+                                            <b>{{ ntf.get_new_role_display }}</b><br>
+                                            <small class="text-muted">{{ ntf.time_ago }}</small>
+                                        </a>
+
+                                    {% elif ntf.type == 2 %}
+                                        <!-- ticket assignment-->
+                                        <a class="dropdown-item" href="{% url 'ticket_detail' ntf.ticket.pk %}">
+                                            <b>{{ ntf.sender }}</b> <br class="d-sm-none"> assigned you <br
+                                                class="d-md-none">to the ticket
+                                            <br class="d-sm-none">
+                                            <b>{{ ntf.ticket.title|truncatechars:15 }}</b><br>
+                                            <small class="text-muted">{{ ntf.time_ago }}</small>
+                                        </a>
+
+                                    {% elif ntf.type == 3 %}
+                                        <!-- ticket un-assignment-->
+                                        <a class="dropdown-item" style="display:block"
+                                            href="{% url 'ticket_detail' ntf.ticket.pk %}">
+                                            <b>{{ ntf.sender }}</b> <br class="d-sm-none"> un-assigned <br
+                                                class="d-md-none">you from the ticket
+                                            <br class="d-sm-none">
+                                            <b>{{ ntf.ticket.title|truncatechars:15 }}</b><br>
+                                            <small class="text-muted">{{ ntf.time_ago }}</small>
+                                        </a>
+
+                                    {% elif ntf.type == 4 %}
+                                        <!-- project enrollment-->
+                                        <a class="dropdown-item" href="{% url 'project_detail' ntf.project.pk %}">
+                                            <b>{{ ntf.sender }}</b> <br class="d-sm-none"> enrolled <br class="d-md-none">you
+                                            in the project
+                                            <br class="d-sm-none"><b>{{ ntf.project.title|truncatechars:15 }}</b><br>
+                                            <small class="text-muted">{{ ntf.time_ago }}</small>
+                                        </a>
+
+                                    {% elif ntf.type == 5 %}
+                                        <!-- project dis-enrollment-->
+                                        <a class="dropdown-item" href="{% url 'project_detail' ntf.project.pk %}">
+                                            <b>{{ ntf.sender }}</b> <br class="d-sm-none"> dis-enrolled <br
+                                                class="d-md-none">you from the project <br class="d-sm-none">
+                                            <b>{{ ntf.project.title|truncatechars:15 }}</b><br>
+                                            <small class="text-muted">{{ ntf.time_ago }}</small>
+                                        </a>
+
+                                    {% elif ntf.type == 6 %}
+                                        <!-- new ticket comment -->
+                                        <a class="dropdown-item" href="{% url 'ticket_detail' ntf.ticket.pk %}">
+                                            <b>{{ ntf.sender }}</b> <br class="d-sm-none"> added a new <br
+                                                class="d-md-none">comment to your
+                                            <br class="d-sm-none">ticket
+                                            <b>{{ ntf.ticket.title|truncatechars:15 }}</b><br>
+                                            <small class="text-muted">{{ ntf.time_ago }}</small>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="nav-item dropdown mr-sm-4">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdownMenuLink" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="far fa-user"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu dropdown-menu-right" aria-labelledby="navbarUserDropdownMenuLink">
+                                <a class="dropdown-item" href="{% url 'profile' %}">Signed in as <b>{{ user.username }}</b></a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'project_list' %}">Your projects</a>
+                                <a class="dropdown-item" href="{% url 'ticket_list' %}">Your tickets</a> 
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'logout' %}">Sign out</a>
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main>
+        <!-- Potential messages -->
+        {% if messages %}
+            {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }}">
+                      {{ message }}
+                  </div>
+            {% endfor %}
+        {% endif %}
+        
+        <!-- Page Content -->
+        {% block content %}{% endblock content %}
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+
+    <!-- htmx -->
+    <script src="https://unpkg.com/htmx.org@1.1.0"></script>
+    <script>
+        document.body.addEventListener('htmx:configRequest', (event) => {
+            event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+        })
+    </script>
+
+    <!-- Core theme JS -->
+    <script src="{% static 'js/base.js' %}"></script>
+  
+    <script>
+        function set_notifications_seen() {
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'notifications_seen' %}",
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
+                dataType: 'json',
+                success: function(data) {
+                }
+            });
+        };
+    </script>
+
+    <!-- Page theme JS -->
+    {% block javascript %}
+    {% endblock javascript %}
+
+</body>
+
+</html>

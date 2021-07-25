@@ -11,11 +11,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from notifications.models import Notification
 
-class DemoLoginView(TemplateView):
-    template_name = 'demo_login.html'
-
-class AboutView(TemplateView):
-    template_name = 'about.html'
 
 class UserListView(ListView):
     model = get_user_model()

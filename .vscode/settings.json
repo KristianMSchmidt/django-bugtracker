@@ -1,23 +1,22 @@
 {
     "workbench.settings.editor": "json",
-    "editor.formatOnSave": false,
-     "tailwindCSS.emmetCompletions": true,
-    "tailwindCSS.colorDecorators": "on",
-     "files.associations": {
-            "**/*.html": "html",
-            "**/templates/**/*.html": "django-html",
-            "**/templates/**/*": "django-txt",
-            "**/requirements{/**,*}.{txt,in}": "pip-requirements"
-        },
-    "emmet.includeLanguages": {
-        "django-html": "html"
+    "python.formatting.provider": "autopep8",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste":true,
+    "files.associations": {
+    "**/*.html": "html",
+     "**/templates/**/*.html": "django-html",
+    "**/templates/**/*": "django-txt",
+    "**/requirements{/**,*}.{txt,in}": "pip-requirements"
     },
+    "emmet.includeLanguages": {
+   "django-html": "html"
+},
     "beautify.language": {
         "html": [
-            "htm",
-            "html",
-            "django-html"
-        ]
-    },
-    "python.pythonPath": "/home/kristian/.local/share/virtualenvs/django-bugtracker-77i5TrUz/bin/python"
+        "htm",
+        "html",
+        "django-html"
+    ]
+},
 }

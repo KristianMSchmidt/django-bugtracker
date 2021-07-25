@@ -14,7 +14,7 @@ class CustomUser(AbstractUser):
         PROJECT_MANAGER = 3
 
     role = models.PositiveSmallIntegerField(
-        choices=Role.choices, null=True, default=Role.DEVELOPER
+        choices=Role.choices, null=True, blank=True, default=Role.DEVELOPER
     )
 
     # Model methods
@@ -44,6 +44,6 @@ class CustomUser(AbstractUser):
                     new_role=self.role
             )
         
-        super().save(*args, **kwargs)
+        super().save(*args, **kwargs)   
 
 

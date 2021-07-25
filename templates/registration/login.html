@@ -1,16 +1,61 @@
-{% extends '_base.html' %}
-
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block title %}Log In{% endblock title %}
 
 {% block content %}
-<h2>Log In</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Log In</button>
-</form>
-<a href="{% url 'password_reset' %}">Forgot password?</a>
-<a href="{% url 'demo_login' %}">Login as demo user?</a>
 
+<div class="container-fluid px-5 py-4">
+    
+    <h2>Sign in</h2>    
+    <div class="row mb-5">
+        <div class="col-12 col-md-6">
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="row">
+                    <div class="col-12 col-sm-4 mb-2 mb-sm-0">
+                        <button class="btn btn-primary" type="submit">Sign In</button>
+                    </div>
+                    <div class="col-12 col-sm-4 mb-2 mb-sm-0">
+                        <a href="{% url 'password_reset' %}">Forgot password?</a>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        <a href="{% url 'signup' %}">Create account</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
+    <div class="row mb-5">
+        <div class="col-12 col-md-4 mb-5">
+            <h4>Demo Admin</h4>
+            <p>Admins have access to all data and functionality of the site. They also have access to the admin area.</p>
+            <form action="{% url 'login' %}" method="POST"> {% csrf_token %}
+                <input type="hidden" name="username" value="demo_admin">
+                <input type="hidden" name="password" value="Stjerne1">
+                <button class="btn btn-dark" type="submit" value="Sign In">Sign in as Admin</button>
+            </form>
+        </div>
+        <div class="col-12 col-md-4 mb-5">
+            <h4>Demo Project Manager</h4>
+            <p>Project managers can create projects and ticket, assign users to tickets edit ticket status (among other things).</p>
+            <form action="{% url 'login' %}" method="POST"> {% csrf_token %}
+                <input type="hidden" name="username" value="demo_pm">
+                <input type="hidden" name="password" value="Stjerne1">
+                <button class="btn btn-warning" type="submit" value="Sign In">Sign in as Project Manager</button>
+            </form>
+        </div>
+        <div class="col-12 col-md-4 mb-5">
+            <h4>Developer</h4>
+            <p>Developers can see their projects and tickets and make comments on the tickets they are assigned to.</p>
+            <form action="{% url 'login' %}" method="POST"> {% csrf_token %}
+                <input type="hidden" name="username" value="demo_dev">
+                <input type="hidden" name="password" value="Stjerne1">
+                <button class="btn btn-info" type="submit" value="Sign In">Sign in as Developer</button>
+            </form>
+        </div>
+  
+    </div>
+</div>
 {% endblock content %}

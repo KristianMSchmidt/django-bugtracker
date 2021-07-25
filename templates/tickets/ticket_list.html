@@ -1,38 +1,45 @@
-{% extends '_base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Tickets{% endblock title%}
 
 {% block content %}
+    <div class="container mt-5">
 
-<h1>All Tickets</h1>
-
-<a href="{% url 'ticket_create' %}">Create New Ticket</a>
-
-<table>
-    <tr>
-        <th>Title</th>
-        <th>Description</th>
-        <th>Project</th>
-        <th>Submitter</th>
-        <th>Developer</th>
-        <th>Created at</th>
-        <th>Last update</th>
-        <th>More details</th>
-
-    </tr>
-    {% for ticket in ticket_list %}
-        <tr>
-            <td>{{ ticket.title }}</td>
-            <td>{{ ticket.description }}</td>
-            <td>{{ ticket.project }}</td>
-            <td>{{ ticket.submitter }}</td>
-            <td>{{ ticket.developer }}</td>
-            <td>{{ ticket.created_at }}</td>
-            <td>{{ ticket.updated_at }}</td>
-            <td><a href="{{ ticket.get_absolute_url }}">Details</a></td>
-        </tr>
-        {% endfor %}
-</table>
-
+        <div class="row justify-content-between my-2">
+            <h1 class="mb-2">My Tickets</h1>
+            <form action="{% url "ticket_create" %}" method="GET">
+                <button type="submit" class="btn btn-primary">Create New Ticket</button>
+            </form>
+        </div>
+        
+        <table class="table table-responsive table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Project</th>
+                    <th>Submitter</th>
+                    <th>Developer</th>
+                    <th>Created at</th>
+                    <th>Last update</th>
+                    <th>More details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in ticket_list %}
+                <tr>
+                   <td>{{ ticket.title }}</td>
+                   <td>{{ ticket.description }}</td>
+                   <td>{{ ticket.project }}</td>
+                   <td>{{ ticket.submitter }}</td>
+                   <td>{{ ticket.developer }}</td>
+                   <td>{{ ticket.created_at }}</td>
+                   <td>{{ ticket.updated_at }}</td>
+                   <td><a href="{{ ticket.get_absolute_url }}">Details</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <table>
+    </div>
 
 {% endblock content %}
