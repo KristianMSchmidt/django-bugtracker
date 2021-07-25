@@ -1,24 +1,22 @@
 {
     "workbench.settings.editor": "json",
+    "python.formatting.provider": "autopep8",
     "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
-     "tailwindCSS.emmetCompletions": true,
-    "tailwindCSS.colorDecorators": "on",
-     "files.associations": {
-            "**/*.html": "html",
-            "**/templates/**/*.html": "django-html",
-            "**/templates/**/*": "django-txt",
-            "**/requirements{/**,*}.{txt,in}": "pip-requirements"
-        },
-    "emmet.includeLanguages": {
-        "django-html": "html"
+    "editor.formatOnPaste":true,
+    "files.associations": {
+    "**/*.html": "html",
+     "**/templates/**/*.html": "django-html",
+    "**/templates/**/*": "django-txt",
+    "**/requirements{/**,*}.{txt,in}": "pip-requirements"
     },
+    "emmet.includeLanguages": {
+   "django-html": "html"
+},
     "beautify.language": {
         "html": [
-            "htm",
-            "html",
-            "django-html"
-        ]
-    },
-    "python.formatting.provider": "autopep8",
+        "htm",
+        "html",
+        "django-html"
+    ]
+},
 }

@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 class TicketTests(TestCase):
 
     def setUp(self):
+
         self.testproject = Project.objects.create(
             title='Test Project',
             description='Test Project description',
