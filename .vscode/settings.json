@@ -1,6 +1,7 @@
 {
     "workbench.settings.editor": "json",
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
      "tailwindCSS.emmetCompletions": true,
     "tailwindCSS.colorDecorators": "on",
      "files.associations": {
@@ -19,5 +20,5 @@
             "django-html"
         ]
     },
-    "python.pythonPath": "/home/kristian/.local/share/virtualenvs/django-bugtracker-77i5TrUz/bin/python"
+    "python.formatting.provider": "autopep8",
 }

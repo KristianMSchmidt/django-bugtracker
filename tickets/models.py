@@ -4,10 +4,13 @@ from django.urls import reverse
 from projects.models import Project
 from django.utils.translation import gettext_lazy as _
 
+
 class Ticket(models.Model):
 
-    title = models.CharField(max_length=200, unique=True, default="Default ticket title")
-    description = models.CharField(max_length=300, default="Default ticket description")
+    title = models.CharField(max_length=200, unique=True,
+                             default="Default ticket title")
+    description = models.CharField(
+        max_length=300, default="Default ticket description")
     project = models.ForeignKey(
         Project,
         on_delete=models.SET_NULL,
@@ -21,7 +24,7 @@ class Ticket(models.Model):
         null=True,
         related_name='submitter_set'
     )
-    created_at = models.DateTimeField(auto_now_add=True, null=True)    
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
     updated_by = models.ForeignKey(
         get_user_model(),
@@ -36,7 +39,7 @@ class Ticket(models.Model):
         related_name='developer_set',
         blank=True
     )
-    
+
     class Status(models.IntegerChoices):
         OPEN = 1
         INFO_REQUIRED = 2
@@ -45,7 +48,7 @@ class Ticket(models.Model):
     status = models.PositiveSmallIntegerField(
         choices=Status.choices, null=True, default=Status.OPEN
     )
-    
+
     class Priority(models.IntegerChoices):
         LOW = 1
         MEDIUM = 2
@@ -54,11 +57,11 @@ class Ticket(models.Model):
     priority = models.IntegerField(
         choices=Priority.choices, null=True, default=Priority.LOW
     )
-    
+
     class Type(models.IntegerChoices):
         FEATURE_REQUEST = 1
         BUG = 2, _('Bug/Error')
-        OTHER = 3 
+        OTHER = 3
 
     type = models.PositiveSmallIntegerField(
         choices=Type.choices, null=True, default=Type.BUG
@@ -108,7 +111,7 @@ class Ticket(models.Model):
 
     # override save method to create ticket events
     def save(self, request=None, *args, **kw):
-        if self.pk is not None: # we are updating an existing ticket                    
+        if self.pk is not None:  # we are updating an existing ticket
             orig = Ticket.objects.get(pk=self.pk)
             for field_name in ('title', 'description', 'developer', 'status', 'type', 'priority'):
                 try:
@@ -128,6 +131,7 @@ class Ticket(models.Model):
                     )
         super(Ticket, self).save(*args, **kw)
 
+
 class TicketComment(models.Model):
     ticket = models.ForeignKey(
         Ticket,
@@ -146,6 +150,7 @@ class TicketComment(models.Model):
 
     def get_absolute_url(self):
         return reverse("ticket_detail", args=[self.ticket.id])
+
 
 class TicketEvent(models.Model):
     user = models.ForeignKey(

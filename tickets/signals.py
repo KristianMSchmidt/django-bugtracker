@@ -3,6 +3,7 @@ from django.dispatch import receiver
 from .models import Ticket, TicketComment
 from notifications.models import Notification
 
+
 @receiver(pre_save, sender=Ticket)
 def create_notification_when_editing_existing_ticket(instance, *args, **kwargs):
     new_developer = instance.developer
@@ -11,26 +12,28 @@ def create_notification_when_editing_existing_ticket(instance, *args, **kwargs):
         if old_developer != new_developer:
             Notification.objects.create(
                 recipient=old_developer,
-                sender=instance.updated_by,  
+                sender=instance.updated_by,
                 type=Notification.Type.TICKET_UNASSIGNMENT,
                 ticket=instance
             )
             Notification.objects.create(
                 recipient=new_developer,
-                sender=instance.updated_by,  
+                sender=instance.updated_by,
                 type=Notification.Type.TICKET_ASSIGNMENT,
                 ticket=instance
             )
 
+
 @receiver(post_save, sender=Ticket)
 def create_notifications_when_new_ticket(instance, created, *args, **kwargs):
-    if created: # a new ticket has been created
+    if created:  # a new ticket has been created
         Notification.objects.create(
-                recipient=instance.developer,
-                sender=instance.submitter, 
-                type=Notification.Type.TICKET_ASSIGNMENT,
-                ticket=instance
+            recipient=instance.developer,
+            sender=instance.submitter,
+            type=Notification.Type.TICKET_ASSIGNMENT,
+            ticket=instance
         )
+
 
 @receiver(post_save, sender=TicketComment)
 def create_notifications_when_new_ticket_comments(instance, created, *args, **kwargs):
