@@ -44,4 +44,4 @@ jeg altid tilføje funktionalittet! Dvs: Implementér core features. Next up: F�
 De projekter, hvor user 3 er 
 Project_ids = Project.objects.filter(users = users[3])
 
-Enviroment-variable kommer fra docker-compose, ikke fra .env-file!!
+Enviroment-variable kommer fra docker-compose, ikke fra .env-file!!d
