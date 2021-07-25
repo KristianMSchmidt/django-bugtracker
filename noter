@@ -45,3 +45,5 @@ De projekter, hvor user 3 er
 Project_ids = Project.objects.filter(users = users[3])
 
 
+
+
