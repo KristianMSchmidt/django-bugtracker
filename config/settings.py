@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     # Third-party
     'debug_toolbar',
     'crispy_forms',
+    'fontawesome-free',
+
 
     # Local
     'notifications',
