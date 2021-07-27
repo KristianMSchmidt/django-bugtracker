@@ -13,11 +13,11 @@
         integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     
     <!-- Font Awesome Free's Solid  files -->
-        <link href="{% static 'fontawesome_free/css/fontawesome.min.css' %}"> 
-        <link href="{% static 'fontawesome_free/css/solid.min.css' %}">
+  <!-- Our project just needs Font Awesome Free's Solid + Brand files -->
+  <link href="{% static 'fontawesome_free/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'fontawesome_free/css/solid.css' %}" rel="stylesheet" type="text/css">
         
     <!-- Core theme CSS -->
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <style>
     
     /*     ************     SIDEBAR  *****************                   */
@@ -363,7 +363,6 @@
         </script>
 
         <!-- JS for sidebar -->
-        <script src="{% static 'js/sidebar.js' %}"></script>
 
         <script>
 
