@@ -42,7 +42,4 @@ superuser:
 check:
 	docker-compose exec web python manage.py check --deploy
 
-# Generate new secret key
-secret:
-	docker-compose exec web python -c 'import secrets; print(secrets.token_urlsafe(38))'
 
