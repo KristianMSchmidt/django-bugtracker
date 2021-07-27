@@ -12,6 +12,7 @@ django-crispy-forms = "*"
 pylint = "*"
 whitenoise = "==5.1.0"
 gunicorn = "==20.0.4"
+autopep8 = "*"
 
 [dev-packages]
 pycodestyle = "*"

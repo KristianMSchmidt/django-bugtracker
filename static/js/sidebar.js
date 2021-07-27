@@ -9,7 +9,7 @@ $('#body-row .collapse').collapse('hide');
 $('#collapse-icon').addClass('fa-angle-double-left');
 
 // Collapse click
-$('[data-toggle=sidebar-colapse]').click(function () {
+$('[data-toggle=sidebar-colapse]').click(function() {
     SidebarCollapse();
 });
 

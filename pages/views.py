@@ -12,17 +12,11 @@ from django.db.models import Count
 from notifications.models import Notification
 
 
-def new_base(request):
-    return render(request, 'newbase.html')
-
-
-
-
-
 class UserListView(ListView):
     model = get_user_model()
     context_object_name = 'user_list'
     template_name = 'user_list.html'
+
 
 class UserDetailView(View):
 
@@ -37,22 +31,23 @@ class UserDetailView(View):
 
 
 class DashboardView(LoginRequiredMixin, View):
-   
 
     def get(self, request):
 
-        tickets_in_progress = Ticket.objects.filter(status=Ticket.Status.IN_PROGRESS)
+        tickets_in_progress = Ticket.objects.filter(
+            status=Ticket.Status.IN_PROGRESS)
         num_tickets_in_progess = tickets_in_progress.count()
 
-        #if self.request.user.is_admin():
+        # if self.request.user.is_admin():
         if True:
-            #alternative
+            # alternative
             #from django.db.models import Count
             #priority_count = Ticket.objects.values('priority').annotate(cnt=Count('id'))
-            #'low': priority_count.get(priority=Ticket.Priority.LOW)['cnt'],
-            
-            busy_user_list = Ticket.objects.filter(status=Ticket.Status.IN_PROGRESS).values('developer').annotate(cnt=Count('id')).order_by('-cnt')
-            busy_user_count = min(busy_user_list.count(),5)
+            # 'low': priority_count.get(priority=Ticket.Priority.LOW)['cnt'],
+
+            busy_user_list = Ticket.objects.filter(status=Ticket.Status.IN_PROGRESS).values(
+                'developer').annotate(cnt=Count('id')).order_by('-cnt')
+            busy_user_count = min(busy_user_list.count(), 5)
             context = {
                 'priority': {
                     'low': Ticket.objects.filter(priority=Ticket.Priority.LOW).count(),
@@ -119,4 +114,3 @@ class DashboardView(LoginRequiredMixin, View):
             }
         """
         return render(request, 'dashboard.html', context)
-
