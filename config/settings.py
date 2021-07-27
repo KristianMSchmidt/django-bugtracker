@@ -138,14 +138,22 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 
+# location of static files in local development (can be a list)
+STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
+
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [str(BASE_DIR.joinpath('static'))]
+
+# location of static files for production
 STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
+
+# this is the default setting - we just make it explicit here
 STATICFILES_FINDERS = [
+    # first look here (looks in STATICFILES_DIRS)
     "django.contrib.staticfiles.finders.FileSystemFinder",
+    # then look here (looks directories defined by STATIC_URL ... in our case all directories named static)
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' 
+
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
@@ -168,3 +176,6 @@ SECURE_HSTS_PRELOAD = env.bool("DJANGO_SECURE_HSTS_PRELOAD", default=True)
 SESSION_COOKIE_SECURE = env.bool("DJANGO_SESSION_COOKIE_SECURE", default=True)
 CSRF_COOKIE_SECURE = env.bool("DJANGO_CSRF_COOKIE_SECURE", default=True)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' # new
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
