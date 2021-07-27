@@ -1,5 +1,5 @@
 # Run development server
-runserver:
+up:
 	docker-compose up
 
 # Execute tests within the docker image
@@ -14,18 +14,17 @@ build:
 build-prod:
 	docker-compose -f docker-compose-prod.yml build
 
-# Start docker
-up:
-	docker-compose up
-
 # Start docker production 
 build-up-prod:
 	docker-compose -f docker-compose-prod.yml up --build
 
 
-# Open shell within running docker development container
-shell:
+# Open terminal within running docker development container
+terminal:
 	docker-compose exec web /bin/bash
+
+shell:
+	docker-compose exec web python manage.py shell
 
 # Makemigrations within within docker image
 migrations:

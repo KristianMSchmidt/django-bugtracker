@@ -12,6 +12,13 @@ from django.db.models import Count
 from notifications.models import Notification
 
 
+def new_base(request):
+    return render(request, 'newbase.html')
+
+
+
+
+
 class UserListView(ListView):
     model = get_user_model()
     context_object_name = 'user_list'

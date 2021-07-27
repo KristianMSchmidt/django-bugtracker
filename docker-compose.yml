@@ -3,7 +3,9 @@ version: "3.8"
 services:
   web:
     build: .
+    #command: python manage.py runserver
     command: gunicorn config.wsgi -b 0.0.0.0:8000
+    
     volumes:
       - .:/code
     ports:

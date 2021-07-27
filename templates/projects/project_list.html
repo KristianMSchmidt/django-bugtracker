@@ -9,7 +9,6 @@
             <form action="{% url "project_create" %}" method="GET">
                 <button type="submit" class="btn btn-primary">Create New Project</button>
             </form>
-    
         </div>
         <table class="table table-hover table-responsive">
             <thead>
@@ -22,6 +21,7 @@
                     <th>More details</th>
                 </tr>
             </thead>
+            
             <tbody>
                 {% for project in project_list %}
                     <tr>
@@ -36,5 +36,6 @@
             </tbody>
         <table>
     </div>
+
 {% endblock content %}
 

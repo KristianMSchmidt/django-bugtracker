@@ -1,8 +1,9 @@
 from django.test import TestCase, SimpleTestCase
 from django.urls import reverse
-from django.contrib.auth import get_user_model 
+from django.contrib.auth import get_user_model
 from projects.models import Project
 from tickets.models import Ticket
+
 
 class UserListViewTests(TestCase):
 
@@ -35,7 +36,7 @@ class UserDetailView(TestCase):
             role=User.Role.ADMIN,
             password='testpass123',
         )
-        self.url = reverse('user_detail', kwargs={'username':'kristian'})
+        self.url = reverse('user_detail', kwargs={'username': 'kristian'})
         self.response = self.client.get(self.url)
 
     def test_user_detail_view_status_code(self):
@@ -69,13 +70,13 @@ class UserDetailView(TestCase):
         )
         # ticket is not saved, so currently user is not submitter of ticket
         self.assertNotContains(self.response, 'title1')
-        
+
         # now we save and check that ticket1 is part of response:
         ticket1.save()
         self.response = self.client.get(self.url)
         self.assertContains(self.response, 'title1')
 
-    def test_user_detail_page_contains_ticket_when_user_is_submitter(self):
+    def test_user_detail_page_contains_ticket_when_user_is_submitter_2(self):
         ticket2 = Ticket(
             title='title2',
             description='d1',
@@ -132,4 +133,3 @@ class DashboardViewTests(TestCase):
     def test_dashboard_list_page_does_not_contain_incorrect_html(self):
         self.assertNotContains(
             self.response, 'Hi there! I should not be on the page.')
-

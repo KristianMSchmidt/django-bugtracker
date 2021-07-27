@@ -7,6 +7,9 @@ class NotificationsSeen(View, LoginRequiredMixin):
 
     def post(self, request):
 
+
+
+
         for ntf in self.request.user.notification_set.all().filter(unseen=True):
             ntf.unseen = False
             ntf.save()
