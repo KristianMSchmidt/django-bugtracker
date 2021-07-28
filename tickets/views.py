@@ -16,6 +16,16 @@ from django.shortcuts import render, redirect
 from .forms import CommentCreateForm
 
 
+@login_required
+def ticket_list_view(request):
+    order = request.GET['order']
+    if request.user.is_admin():
+        tickets = Ticket.objects.all().order_by(order)[:10]
+    tickets = Ticket.objects.filter(
+        Q(developer=request.user) | Q(submitter=request.user)).order_by(order)[:10]
+    return render(request, 'tickets/ticket_list.html', {"tickets": tickets})
+
+
 class TicketListView(LoginRequiredMixin, ListView):
 
     model = Ticket

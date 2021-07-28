@@ -136,7 +136,7 @@
                             </a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{% url 'project_list' %}">Your projects</a>
-                            <a class="dropdown-item" href="{% url 'ticket_list' %}">Your tickets</a>
+                            <a class="dropdown-item" href="{% url 'ticket_list' %}?order=updated_at">Your tickets</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{% url 'logout' %}">Sign out</a>
                         </div>
@@ -176,7 +176,8 @@
                     </div>
                 </a>
 
-                <a href="{% url 'ticket_list' %}" class="bg-dark list-group-item list-group-item-action">
+
+                <a href="{% url 'ticket_list' %}?order=updated_at" class="bg-dark list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fas fa-ticket-alt fa-fw mr-3"></span>
                         <span class="menu-collapsed">My Tickets</span>
@@ -231,8 +232,9 @@
         </div>
         <!-- sidebar-container END -->
         {% endif %}
+
         <!-- Main -->
-        <div class="col" id="body-col">
+        <div class="col" id="body-col" style="background-color:green">
             <div id="cy">
                 <!-- Potential messages -->
                 {% if messages %} {% for message in messages %}
