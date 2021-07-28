@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from projects.models import Project
 from django.utils.translation import gettext_lazy as _
+from utils.time_ago import time_ago
 
 
 class Ticket(models.Model):
@@ -45,6 +46,7 @@ class Ticket(models.Model):
         INFO_REQUIRED = 2
         IN_PROGRESS = 3
         CLOSED = 4
+
     status = models.PositiveSmallIntegerField(
         choices=Status.choices, null=True, default=Status.OPEN
     )
@@ -73,7 +75,14 @@ class Ticket(models.Model):
     def get_absolute_url(self):
         return reverse("ticket_detail", args=[str(self.id)])
 
+    def time_since_create(self):
+        return time_ago(self.created_at)
+
+    def time_since_update(self):
+        return time_ago(self.updated_at)
+
     # status methods
+
     def is_open(self):
         return self.status == self.status.OPEN
 
@@ -87,6 +96,7 @@ class Ticket(models.Model):
         return self.status == self.status.INFO_REQUIRED
 
     # priority methods
+
     def priority_is_low(self):
         return self.priority == self.priority.LOW
 

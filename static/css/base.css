@@ -1,3 +1,6 @@
+/* **************   FontAwesome classes ********************* */
+
+
 /*     ************     SIDEBAR  *****************                   */
 
 #body-row {
@@ -7,6 +10,7 @@
 
 #sidebar-container {
     min-height: 100vh;
+    min-width: 200px;
     background-color: white;
     padding: 0;
 }

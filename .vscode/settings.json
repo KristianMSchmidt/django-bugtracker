@@ -1,7 +1,4 @@
 {
     "editor.formatOnSaveMode": "file",
-    "editor.formatOnSave":false,    
-    "editor.formatOnPaste":false,
-    "editor.formatOnType": false,    
 
 }

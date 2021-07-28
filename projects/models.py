@@ -2,29 +2,38 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.urls import reverse 
+from django.urls import reverse
+from utils.time_ago import time_ago
+
 
 class Project(models.Model):
     title = models.CharField(max_length=200, unique=True)
     description = models.CharField(max_length=301, default="")
-    
+
     # one-to-many relationship
     created_by = models.ForeignKey(
         get_user_model(),
-        on_delete = models.SET_NULL,
+        on_delete=models.SET_NULL,
         null=True,
     )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     # we override the default related name, which is 'project_set'
-    users = models.ManyToManyField(get_user_model(), related_name='projects', blank=True) 
+    users = models.ManyToManyField(
+        get_user_model(), related_name='projects', blank=True)
 
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
         return reverse("project_detail", args=[str(self.id)])
+
+    def time_since_create(self):
+        return time_ago(self.created_at)
+
+    def time_since_update(self):
+        return time_ago(self.updated_at)
 
 
 """
