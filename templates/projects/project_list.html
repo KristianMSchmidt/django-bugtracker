@@ -1,36 +1,29 @@
-{% extends 'base.html' %}
-
-{% block title %}Projects{% endblock title%}
-
-{% block content %}
-    <div class="container mt-5">
-        <h1 class="mb-3">Your Projects</h1>
-        <table class="table table-striped table-hover table-sm table-responsive text-nowrap">
-            <thead>
+<div class="container mt-5">
+    <h1 class="mb-3">Your Projects</h1>
+    <table class="table table-striped table-hover table-sm table-responsive text-nowrap">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Created by</th>
+                <th>Created at</th>
+                <th>Last update</th>
+                <th>More details</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            {% for project in project_list %}
                 <tr>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Created by</th>
-                    <th>Created at</th>
-                    <th>Last update</th>
-                    <th>More details</th>
+                    <td>{{ project.title }}</a></td>
+                    <td>{{ project.description }}</td>
+                    <td>{{ project.created_by }}</td>
+                    <td>{{ project.time_since_create }}</td>
+                    <td>{{ project.time_since_update }}</td>
+                    <td><a href="{{ project.get_absolute_url }}">Details</a></td>
                 </tr>
-            </thead>
-            
-            <tbody>
-                {% for project in project_list %}
-                    <tr>
-                        <td>{{ project.title }}</a></td>
-                        <td>{{ project.description }}</td>
-                        <td>{{ project.created_by }}</td>
-                        <td>{{ project.time_since_create }}</td>
-                        <td>{{ project.time_since_update }}</td>
-                        <td><a href="{{ project.get_absolute_url }}">Details</a></td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        <table>
-    </div>
-
-{% endblock content %}
+            {% endfor %}
+        </tbody>
+    <table>
+</div>
 

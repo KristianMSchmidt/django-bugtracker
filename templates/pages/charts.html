@@ -1,8 +1,3 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block title %}Dashboard{% endblock title%}
-
-{% block content %}
 <div class="container-fluid px-3 px-sm-5 py-5" style="max-width:1200px">
     <div class="row">
         <div class="col-12 col-md-6 mb-5 pl-5">
@@ -20,15 +15,13 @@
     </div>
 </div>
 
-{% endblock content %} {% block javascript %}
-
 <!-- JS chart library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
 
 <script>
     /* Ticket Status Chart */
     var ctx = document.getElementById('status_chart').getContext('2d');
-    var statusChart = new Chart(ctx, {
+    new Chart(ctx, {
         type: 'bar',
         data: {
             labels: ['Open', 'In Progress', 'Closed', 'Info Required'],
@@ -74,7 +67,7 @@
     /* Ticket Priority Chart */
     var ctx = document.getElementById('priority_chart').getContext('2d');
 
-    var priorityChart = new Chart(ctx, {
+    new Chart(ctx, {
         type: 'bar',
         data: {
             labels: ['Low', 'Medium', 'High', 'Urgent'],
@@ -115,55 +108,57 @@
             }
         }
     });
+
     /* Ticket Type Chart */
     var ctx = document.getElementById('type_chart').getContext('2d');
-    var typeChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-    labels: ['Feature request', 'Bug/Error', 'Other'],
-    datasets: [{
-    label: '# of Tickets',
-            data: [{{ type.feature_request }},{{ type.bug }}, {{ type.other }},],
-            backgroundColor: [
-                'rgba(54, 162, 235, 0.6)',
-                'rgba(37, 116, 169, 0.6)',
-                'rgba(31, 58, 147, 0.6)',
-            ],
-            borderColor: [
-                'rgba(54, 162, 235, 1)',
-                'rgba(37, 116, 169, 1)',
-                'rgba(31, 58, 147, 1)',
-            ],
-            borderWidth: 1
-        }]
-        },
-        options: {
-        title: {
-            display: true,
-            text: 'Tickets by Type'
-        },
-        legend: {
-            display: false
-        },
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Feature request', 'Bug/Error', 'Other'],
+            datasets: [{
+                label: '# of Tickets',
+                data: [{{ type.feature_request }},{{ type.bug }}, {{ type.other }},],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(37, 116, 169, 0.6)',
+                    'rgba(31, 58, 147, 0.6)',
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(37, 116, 169, 1)',
+                    'rgba(31, 58, 147, 1)',
+                ],
+                borderWidth: 1
             }]
         },
-    }
+        options: {
+            title: {
+                display: true,
+                text: 'Tickets by Type'
+            },
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+        }   
     });
 
+    
     /*Busy Users Chart */
     var ctx = document.getElementById('top_busy_users_chart').getContext('2d');
-    var Chart = new Chart(ctx, {
+    new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: {{ busy_users_labels | safe }},
+            labels: {{busy_users_labels|safe}},
             datasets: [{
                 label: '# Tickets',
-                data: {{ busy_users_data | safe }},
+                data: {{busy_users_data|safe}},
                 backgroundColor: [
                     '#e8ffe8',
                     '#b3ffb3',
@@ -172,7 +167,7 @@
                     '#00cc00'
                 ],
                 borderWidth: 1
-            }]
+             }]
         },
         options: {
             title: {
@@ -189,15 +184,13 @@
                 beginAtZero: true,
                 scaleLabel: {
                     labelString: 'Month'
-        },
-        ticks: {
-            stepSize: 1,
-            min: 0,
-            autoSkip: false
+                },
+                ticks: {
+                    stepSize: 1,
+                    min: 0,
+                    autoSkip: false
+                }
+            }]
         }
-    }]
-    }
     });
 </script>
-
-{% endblock javascript %}

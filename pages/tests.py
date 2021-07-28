@@ -16,7 +16,7 @@ class UserListViewTests(TestCase):
         self.assertEqual(self.response.status_code, 200)
 
     def test_user_list_view_template(self):
-        self.assertTemplateUsed(self.response, 'user_list.html')
+        self.assertTemplateUsed(self.response, 'pages/user_list.html')
 
     def test_user_list_page_contains_correct_html(self):
         self.assertContains(self.response, 'Personel')
