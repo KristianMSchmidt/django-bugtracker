@@ -30,7 +30,7 @@ class TicketListView(LoginRequiredMixin, ListView):
         TODO: Project Managers should see all tickets to all the projects they are enrolled in (perhaps this is not necessary, as ticket are shown in individual projects...)
         """
         if self.request.user.is_admin():
-            return Ticket.objects.all()
+            return Ticket.objects.all()[:10]
         return Ticket.objects.filter(Q(developer=self.request.user) | Q(submitter=self.request.user))
 
 

@@ -22,7 +22,7 @@
 
 <body>
     <!-- NavBar -->
-    <nav class="navbar navbar-expand navbar-dark bg-secondary sticky-top">
+    <nav class="navbar navbar-expand navbar-dark bg-secondary sticky-top" id="topnav">
         <div class="container-fluid d-flex flex-column flex-sm-row">
             <a class="navbar-brand kkk" href="#">
                     Bug Tracker
@@ -149,10 +149,10 @@
     <!-- NavBar END -->
 
     <!-- Row -->
-    <div class="row" id="body-row"> 
+    <div class="d-flex" id="body-row"> 
         {% if user.is_authenticated %}
         <!-- Sidebar -->
-        <div id="sidebar-container" class="sidebar-expanded d-none d-md-block">
+        <div id="sidebar-container" class="sidebar-expanded d-none d-xl-block">
             <!-- Bootstrap List Group -->
             <ul class="list-group sticky-top sticky-offset" style="top:100px; border-radius:0"> <!--style="top:56px;border-radius: 0;"> -->
                 <!-- Separator with title -->
