@@ -43,3 +43,8 @@ check:
 	docker-compose exec web python manage.py check --deploy
 
 
+# build production tailwind css & push master branch to heroku & check security
+make push-heroku:
+	pipenv run python manage.py tailwind build
+	git push heroku master
+	heroku run python manage.py check --deploy

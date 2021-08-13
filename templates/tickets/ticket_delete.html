@@ -1,13 +1,9 @@
-{% extends 'base.html' %}
 
-{% block title %}Delete {{ ticket.title }}{% endblock title%}
-
-{% block content %}
-    <h3>Delete Ticket{{ticket.title}}</h3>
-    <form action="" method="post">
-        {% csrf_token %}
-        <p>Are you sure you want to delete "{{ ticket.title }}"? </p>
-        <button type="submit">Confirm</button>
-    </form>
-    
-{% endblock content %}
+<div class="container mt-5">
+    <h3>Delete Ticket</h3>
+    <p>Are you sure, you want to delete the ticket <b>{{ ticket.title }}?</b></p>
+    <button hx-delete="{% url 'ticket_delete' ticket.pk %}" hx-target="#body-col">
+        Delete
+    </button>
+    <button href="#" hx-get="{% url 'ticket_list' %}?order=updated_at" hx-target="#body-col">Cancel</button>
+</div>

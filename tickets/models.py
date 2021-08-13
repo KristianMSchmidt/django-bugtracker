@@ -81,6 +81,11 @@ class Ticket(models.Model):
     def time_since_update(self):
         return time_ago(self.updated_at)
 
+    # role methods
+
+    def is_admin(self):
+        return self.role == self.role.ADMIN
+
     # status methods
 
     def is_open(self):

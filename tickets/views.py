@@ -14,15 +14,19 @@ from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from .forms import CommentCreateForm
+from django.urls import reverse
+
+from django.contrib import messages
 
 
 @login_required
 def ticket_list_view(request):
+
     order = request.GET['order']
     if request.user.is_admin():
-        tickets = Ticket.objects.all().order_by(order)[:10]
+        tickets = Ticket.objects.all().order_by(order)
     tickets = Ticket.objects.filter(
-        Q(developer=request.user) | Q(submitter=request.user)).order_by(order)[:10]
+        Q(developer=request.user) | Q(submitter=request.user)).order_by(order)
     return render(request, 'tickets/ticket_list.html', {"tickets": tickets})
 
 
@@ -34,8 +38,8 @@ class TicketListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """
-        Override. 
-        Admins should see all projects. 
+        Override.
+        Admins should see all projects.
         Developer and Project Managers should see tickets where they are developers or submitters
         TODO: Project Managers should see all tickets to all the projects they are enrolled in (perhaps this is not necessary, as ticket are shown in individual projects...)
         """
@@ -56,6 +60,7 @@ def ticket_detail_view(request, pk):
             comment.ticket = ticket
             comment.save()
             return redirect(ticket.get_absolute_url())
+
     else:
         form = CommentCreateForm()
 
@@ -70,9 +75,9 @@ def ticket_detail_view(request, pk):
 
 """
 class TicketDetailView(LoginRequiredMixin, DetailView):
-    # Lav den først som en funktion-based view. Få den til at virke med al funktionaliteten. 
+    # Lav den først som en funktion-based view. Få den til at virke med al funktionaliteten.
     # Herefter eventuelt som clas-base-view, hvorden arver fra View
-    # Herefter eventuelt som templateview -- men jeg er ikke sikker på, at dette er smart. 
+    # Herefter eventuelt som templateview -- men jeg er ikke sikker på, at dette er smart.
 
     model = Ticket
     context_object_name = 'ticket'
@@ -99,21 +104,35 @@ class TicketUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'tickets/ticket_edit.html'
 
     def form_valid(self, form):
-        #old_ticket = self.get_object()
+        # old_ticket = self.get_object()
         form.instance.updated_by = self.request.user
         new_ticket = form.save(commit=False)
         new_ticket.save(request=self.request)
         return super().form_valid(form)
 
 
-class TicketDeleteView(
-        LoginRequiredMixin,
-        # PermissionRequiredMixin,
-        DeleteView):
-    model = Ticket
-    template_name = 'tickets/ticket_delete.html'
-    success_url = reverse_lazy('ticket_list')
+@login_required
+def ticket_delete_view(request, pk):
 
+    if request.method == 'DELETE':
+        ticket = Ticket.objects.filter(pk=pk)
+        ticket_title = ticket.first().title
+        ticket.delete()
+        messages.success(
+            request, f"You deleted the ticket {ticket_title}")
+
+        # Same code as in ticket_list_view
+        if request.user.is_admin():
+            tickets = Ticket.objects.all().order_by('-updated_at')
+        tickets = Ticket.objects.filter(
+            Q(developer=request.user) | Q(submitter=request.user)).order_by('updated_at')
+
+        # should this be redirected?
+        return render(request, 'tickets/ticket_list.html', {"tickets": tickets})
+
+    elif request.method == 'GET':
+        ticket = Ticket.objects.get(pk=pk)
+        return render(request, 'tickets/ticket_delete.html', {"ticket": ticket})
     # NB:
     # permission_required = 'tickets.delete_ticket'  #could also be multiple permissions
     # Custom permissions er nemme a lave.
@@ -132,8 +151,8 @@ class TicketCreateView(LoginRequiredMixin, CreateView):
         form.instance.submitter = self.request.user
         form.instance.updated_by = self.request.user
 
-        #self.object = form.save()
-        #TicketEvent.objects.create(ticket=self.object, property_changed=TicketEvent.CREATED, user=self.request.user)
+        # self.object = form.save()
+        # TicketEvent.objects.create(ticket=self.object, property_changed=TicketEvent.CREATED, user=self.request.user)
         return super().form_valid(form)
 
 
@@ -153,11 +172,11 @@ class TicketCommentDeleteView(LoginRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         """
-        Override to redirect to ticket details after deleting. 
+        Override to redirect to ticket details after deleting.
         """
         self.object = self.get_object()
         success_url = reverse_lazy('ticket_detail', kwargs={
-                                   'pk': self.object.ticket.id})
+            'pk': self.object.ticket.id})
         self.object.delete()
         return HttpResponseRedirect(success_url)
 

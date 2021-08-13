@@ -20,7 +20,7 @@
                     <td>{{ project.created_by }}</td>
                     <td>{{ project.time_since_create }}</td>
                     <td>{{ project.time_since_update }}</td>
-                    <td><a href="{{ project.get_absolute_url }}">Details</a></td>
+                    <td><a href="#" hx-get="{{ project.get_absolute_url }}" hx-target="#body-col">Details</a></td>
                 </tr>
             {% endfor %}
         </tbody>

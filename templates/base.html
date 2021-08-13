@@ -21,6 +21,7 @@
 </head>
 
 <body>
+
     <!-- NavBar -->
     <nav class="navbar navbar-expand navbar-dark bg-secondary sticky-top" id="topnav">
         <div class="container-fluid d-flex flex-column flex-sm-row">
@@ -185,12 +186,12 @@
                     </div>
                 </a>
 
-                  <!-- Separator with title -->
-                  <li
-                      class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
-                      <small>MANAGE</small>
-                  </li>
-                  <!-- /END Separator -->
+                <!-- Separator with title -->
+                <li
+                    class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
+                    <small>MANAGE</small>
+                </li>
+                <!-- /END Separator -->
 
                 <a href="#" hx-get="{% url 'manage-enrollments' %}" hx-target="#body-col" class="bg-dark list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
@@ -206,17 +207,20 @@
                     </div>
                 </a>
                
+               {% if user.is_admin %}
                 <!-- Separator with title -->
                 <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
                     <small>ADMIN</small>
                 </li>
                 <!-- /END Separator -->
-                <a href="#" class="bg-dark list-group-item list-group-item-action">
+                <a href="/admin" class="bg-dark list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-cog fa-fw mr-3"></span>
                         <span class="menu-collapsed" style="text-color:red-100f">Admin Area</span>
                     </div>
                 </a>
+                {% endif %}
+
                 <!-- Separator without title -->
                 <li class="list-group-item sidebar-separator menu-collapsed"></li>
                 <!-- /END Separator -->
@@ -236,6 +240,7 @@
 
         <!-- Main -->
         <div class="col" id="body-col">
+     
             <div id="cy">
                 <!-- Potential messages -->
                 {% if messages %} {% for message in messages %}
