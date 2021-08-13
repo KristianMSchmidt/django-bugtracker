@@ -13,7 +13,9 @@ class TicketTests(TestCase):
             title='Test Project',
             description='Test Project description',
         )
+
         User = get_user_model()
+
         self.testuser_admin = User.objects.create_user(
             username='kris',
             password='testpass123',
@@ -88,17 +90,19 @@ class TicketTests(TestCase):
         self.assertFalse(self.ticket.type_is_feature_request())
         self.assertFalse(self.ticket.type_is_other())
 
+        self.assertEqual(Ticket.objects.all().count(), 2)
+
     def test_ticket_list_view(self):
         # login required
-        response = self.client.get(reverse('ticket_list'))
+        response = self.client.get(reverse('ticket_list') + '?order=status')
         self.assertEqual(response.status_code, 302)
 
         # login as admin -- context should contain ticket 1 and ticket 2
         self.client.login(username='kris', password='testpass123')
-        response = self.client.get(reverse('ticket_list'))
+        response = self.client.get(reverse('ticket_list') + '?order=status')
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Test Ticket 1')
-        self.assertContains(response, 'Test Ticket 2')
+        self.assertInHTML('Test Ticket 1', response.content.decode())
+        self.assertInHTML('Test Ticket 2', response.content.decode())
         self.assertNotContains(response, 'Fantasy Ticket Text')
         self.assertTemplateUsed(response, 'tickets/ticket_list.html')
         self.assertTemplateNotUsed(response, 'tickets/fantasy_list.html')
@@ -106,31 +110,31 @@ class TicketTests(TestCase):
 
         # log in as developer 1 --- context should contain ticket 1 as developer1 is assigned to ticket
         self.client.login(username='tom', password='testpass123')
-        response = self.client.get(reverse('ticket_list'))
+        response = self.client.get(reverse('ticket_list') + '?order=status')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test Ticket 1')
         self.assertNotContains(response, 'Test Ticket 2')
-        self.assertAlmostEqual(response.context['ticket_list'].count(), 1)
+        self.assertEqual(response.context['tickets'].count(), 1)
 
         self.client.logout()
 
         # log in as developer 2 --- context should only contain ticket 2
         self.client.login(username='hank', password='testpass123')
-        response = self.client.get(reverse('ticket_list'))
+        response = self.client.get(reverse('ticket_list') + '?order=status')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test Ticket 2')
         self.assertNotContains(response, 'Test Ticket 1')
-        self.assertAlmostEqual(response.context['ticket_list'].count(), 1)
+        self.assertEqual(response.context['tickets'].count(), 1)
 
         self.client.logout()
 
         # log in as developer 3 --- context should not contain any tickets
         self.client.login(username='bob', password='testpass123')
-        response = self.client.get(reverse('ticket_list'))
+        response = self.client.get(reverse('ticket_list') + '?order=status')
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, 'Test Ticket 2')
         self.assertNotContains(response, 'Test Ticket 1')
-        self.assertAlmostEqual(response.context['ticket_list'].count(), 0)
+        self.assertAlmostEqual(response.context['tickets'].count(), 0)
 
     def test_ticket_detail_view_user_not_logged_in(self):
         response = self.client.get(self.ticket.get_absolute_url())
@@ -183,7 +187,7 @@ class TicketTests(TestCase):
         self.client.login(username='kris', password='testpass123')
         response = self.client.get(reverse('ticket_create'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'New Ticket')
+        self.assertInHTML('New ticket', response.content.decode())
         self.assertTemplateUsed(response, 'tickets/ticket_new.html')
 
     def test_ticket_delete_view(self):
@@ -238,7 +242,3 @@ class TicketTests(TestCase):
         self.assertEqual(response.status_code, 302)
 
     # Test view->update creates ticket events...
-
-    # man kunne også teste selve update funktionaliteten et ticket post-requests
-    # Fx kan update funktionaliteten tjekkes sådan her: https://stackoverflow.com/questions/48814830/how-to-test-djangos-updateview
-    # Men der er selvfølgelig ingen grund til at teste djangos indbyggede funktionalitet

@@ -43,7 +43,7 @@ class UserDetailView(TestCase):
         self.assertEqual(self.response.status_code, 200)
 
     def test_user_detail_view_template(self):
-        self.assertTemplateUsed(self.response, 'user_details.html')
+        self.assertTemplateUsed(self.response, 'pages/user_details.html')
 
     def test_user_detail_page_contains_correct_html(self):
         self.assertContains(self.response, 'kristian')
@@ -125,10 +125,10 @@ class DashboardViewTests(TestCase):
         self.assertEqual(self.response.status_code, 302)
 
     def test_dashboard_list_view_template(self):
-        self.assertTemplateUsed(self.response, 'dashboard.html')
+        self.assertTemplateUsed(self.response, 'pages/dashboard.html')
 
     def test_dashboard_list_page_contains_correct_html(self):
-        self.assertContains(self.response, '<title>Dashboard')
+        self.assertContains(self.response, 'Tickets by Status')
 
     def test_dashboard_list_page_does_not_contain_incorrect_html(self):
         self.assertNotContains(

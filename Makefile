@@ -48,3 +48,9 @@ make push-heroku:
 	pipenv run python manage.py tailwind build
 	git push heroku master
 	heroku run python manage.py check --deploy
+
+
+
+# Open shell within running docker development container
+shell:
+	docker-compose exec web /bin/bash
