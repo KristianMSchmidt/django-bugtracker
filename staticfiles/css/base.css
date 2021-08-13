@@ -1,4 +1,11 @@
+/* **************   FontAwesome classes ********************* */
+
+
 /*     ************     SIDEBAR  *****************                   */
+
+body {
+    overflow-x: hidden;
+}
 
 #body-row {
     margin-left: 0;
@@ -15,7 +22,7 @@
 /* Sidebar sizes when expanded and expanded */
 
 .sidebar-expanded {
-    width: 238px;
+    min-width: 238px;
 }
 
 .sidebar-collapsed {

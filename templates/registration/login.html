@@ -30,7 +30,7 @@
     <div class="row mb-5">
         <div class="col-12 col-md-4 mb-5">
             <h4>Demo Admin</h4>
-            <p>Admins have access to all data and functionality of the site. They also have access to the admin area.</p>
+            <p>Admins have access to all data and functionality of the site. They also have access to the Django admin page.</p>
             <form action="{% url 'login' %}" method="POST"> {% csrf_token %}
                 <input type="hidden" name="username" value="demo_admin">
                 <input type="hidden" name="password" value="Stjerne1">
@@ -47,7 +47,7 @@
             </form>
         </div>
         <div class="col-12 col-md-4 mb-5">
-            <h4>Developer</h4>
+            <h4>Demo Developer</h4>
             <p>Developers can see their projects and tickets and make comments on the tickets they are assigned to.</p>
             <form action="{% url 'login' %}" method="POST"> {% csrf_token %}
                 <input type="hidden" name="username" value="demo_dev">

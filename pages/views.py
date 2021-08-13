@@ -104,7 +104,12 @@ class ChartView(View):
 class UserListView(ListView):
     model = get_user_model()
     context_object_name = 'user_list'
-    template_name = 'user_list.html'
+    template_name = 'pages/user_list.html'
+
+
+# def user_list_view(request):
+#   context = {'user_list': get_user_model()}
+#   return render(request, 'pages/user_list.html', context)
 
 
 class UserDetailView(View):
