@@ -1,26 +1,27 @@
-{% extends 'base.html' %}
-{% block title %}Personel{% endblock title%}
+<div class="container mt-5">   
+    <h1 class="mb-3">Manage User Roles</h1>
+    <p>One this page it should be possible for administrators and project managers to view users and change their roles</p>
+    <p class="text-danger">Feature not implemented yet. </p>
 
-{% block content %}
-<h1>Personel</h1>
-<br><br>
-<table>
-    <tr>
-        <th>Username</th>
-        <th>Role</th>
-        <th>Email</th>
-        <th>Date joined</th>
-        <th>More details</th>
+    <h3>All Personel</h3>
+    <br><br>
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Email</th>
+            <th>Date joined</th>
+            <th>More details</th>
 
-    </tr>
-    {% for user in user_list %}
-    <tr>
-        <td>{{ user.username }}</a></td>
-        <td>{{ user.get_role_display }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.date_joined }}</td>
-        <td><a href="{{ user.get_absolute_url }}">Details</a></td>
-    </tr>
-    {% endfor %}
+        </tr>
+        {% for user in user_list %}
+        <tr>
+            <td>{{ user.username }}</a></td>
+            <td>{{ user.get_role_display }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.date_joined }}</td>
+            <td><a href="{{ user.get_absolute_url }}">Details</a></td>
+        </tr>
+        {% endfor %}
 </table>
-{% endblock content %}
+<div>

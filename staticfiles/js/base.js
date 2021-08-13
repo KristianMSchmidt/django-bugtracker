@@ -1,5 +1,18 @@
 console.log("Base JS here!")
 
+/* When the user scrolls down, hide the navbar. When the user scrolls up, show the navbar */
+var prevScrollpos = window.pageYOffset;
+window.onscroll = function() {
+    console.log("scroll")
+    var currentScrollPos = window.pageYOffset;
+    if (prevScrollpos > currentScrollPos) {
+        document.getElementById("topnav").style.top = "0";
+    } else {
+        document.getElementById("topnav").style.top = "-56px";
+    }
+    prevScrollpos = currentScrollPos;
+}
+
 /*  **************  SideBar ************************ */
 
 // Hide submenus

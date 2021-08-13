@@ -135,6 +135,7 @@
                                 <b>{{ user.username }}</b>
                             </a>
                             <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
                             <a class="dropdown-item" href="{% url 'project_list' %}">Your projects</a>
                             <a class="dropdown-item" href="{% url 'ticket_list' %}?order=updated_at">Your tickets</a>
                             <div class="dropdown-divider"></div>
@@ -191,14 +192,14 @@
                   </li>
                   <!-- /END Separator -->
 
-                <a href="{% url 'manage-enrollments' %}" class="bg-dark list-group-item list-group-item-action">
+                <a href="#" hx-get="{% url 'manage-enrollments' %}" hx-target="#body-col" class="bg-dark list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fas fa-user-plus fa-fw mr-3"></span>
                         <span class="menu-collapsed">Manage Project Users</span>
                     </div>
                 </a>
-                
-                <a href="#" class="bg-dark list-group-item list-group-item-action">
+
+                <a href="#" hx-get="{% url 'user_list' %}" hx-target="#body-col" class="bg-dark list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fas fa-user-cog fa-fw mr-3"></span>
                         <span class="menu-collapsed">Manage User Roles</span>
