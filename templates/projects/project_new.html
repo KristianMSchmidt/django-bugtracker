@@ -3,8 +3,8 @@
 <div class="container mt-5">
     <h3>New Project</h3>
 
-    <form action="" method="post">{% csrf_token %}
-        {{ form|crispy }}
-        <button type="submit" class="btn btn-primary">Save</button>
+    <form hx-post="{% url "project_create" %}" hx-target="#body-col">
+        {{ form|crispy }} 
+        <button type="submit" class="btn btn-primary">Save Project</button>
     </form>
 </div>

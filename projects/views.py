@@ -1,3 +1,5 @@
+from django.contrib import messages
+from .forms import ProjectCreateForm
 from tickets.models import Ticket
 from .models import Project
 from django.urls import reverse_lazy
@@ -7,12 +9,16 @@ from django.views.generic import (
     CreateView,
     DetailView,
     UpdateView,
-    DeleteView
+    DeleteView,
+    View
 )
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
+
 
 def manage_enrollments_view(request):
     return render(request, 'projects/manage_enrollments.html')
+
 
 class ProjectListView(LoginRequiredMixin, ListView):
     model = Project
@@ -29,14 +35,32 @@ class ProjectListView(LoginRequiredMixin, ListView):
             return Project.objects.all()
         return Project.objects.filter(users=self.request.user)
 
+
 class ProjectDetailView(LoginRequiredMixin, DetailView):
     model = Project
     context_object_name = 'project'
     template_name = 'projects/project_detail.html'
 
 
-class ProjectCreateView(LoginRequiredMixin, CreateView):
-    model = Project
+class ProjectCreateView(LoginRequiredMixin, View):
+    def post(self, request):
+        form = ProjectCreateForm(request.POST)
+        if form.is_valid():
+            new_project = form.save(commit=False)
+            new_project.created_by = self.request.user
+            new_project.save()
+
+            messages.success(
+                request, f"You successfully created a new project")
+            return redirect(reverse('project_list'))
+        else:
+            # print(form.errors)
+            return render(request, 'projects/project_new.html', {'form': form})
+
+    def get(self, request):
+        form = ProjectCreateForm()
+        return render(request, 'projects/project_new.html', {'form': form})
+
     template_name = 'projects/project_new.html'
     fields = ('title', 'description', 'users')
 
@@ -65,14 +89,13 @@ class AddTicketToProjectView(LoginRequiredMixin, CreateView):
     fields = ('title', 'description', 'type',
               'status', 'priority', 'developer',)
 
-
     def get_context_data(self, **kwargs):
         """
         Override. We need to add some context to the default context
         """
         self.project = get_object_or_404(Project, pk=self.kwargs['pk'])
         context = super().get_context_data(**kwargs)
-        context['project_title'] = self.project.title 
+        context['project_title'] = self.project.title
         return context
 
     def form_valid(self, form):
@@ -81,8 +104,7 @@ class AddTicketToProjectView(LoginRequiredMixin, CreateView):
         This method is called when valid form data has been POSTed.
         """
         self.project = get_object_or_404(Project, pk=self.kwargs['pk'])
-        form.instance.submitter = self.request.user    
+        form.instance.submitter = self.request.user
         form.instance.project = self.project
 
         return super().form_valid(form)
-

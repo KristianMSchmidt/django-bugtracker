@@ -74,7 +74,7 @@
                                 {% endif %} 
                                 {% if ntf.type == 1 %}
                                 <!-- role change -->
-                                <a class="dropdown-item" href="{% url 'profile' %}">
+                                <a class="dropdown-item" href="#" hx-get="{% url 'profile' %}" hx-target="#body-col">
                                     <b>{{ ntf.sender }}</b> <br class="d-sm-none"> updated <br class="d-sm-none">your role
                                     to
                                     <br class="d-md-none">
@@ -84,7 +84,7 @@
 
                                 {% elif ntf.type == 2 %}
                                 <!-- ticket assignment-->
-                                <a class="dropdown-item" href="{% url 'ticket_detail' ntf.ticket.pk %}">
+                                <a class="dropdown-item" href="#" hx-get="{% url 'ticket_detail' ntf.ticket.pk %}" hx-target="#body-col">
                                     <b>{{ ntf.sender }}</b> <br class="d-sm-none"> assigned you <br class="d-md-none">to the
                                     ticket
                                     <br class="d-sm-none">
@@ -95,7 +95,7 @@
                                 {% elif ntf.type == 3 %}
                                 <!-- ticket un-assignment-->
                                 <a class="dropdown-item" style="display:block"
-                                    href="{% url 'ticket_detail' ntf.ticket.pk %}">
+                                    href="#" hx-get="{% url 'ticket_detail' ntf.ticket.pk %}" hx-target="#body-col">
                                     <b>{{ ntf.sender }}</b> <br class="d-sm-none"> un-assigned <br class="d-md-none">you
                                     from the ticket
                                     <br class="d-sm-none">
@@ -105,7 +105,7 @@
 
                                 {% elif ntf.type == 4 %}
                                 <!-- project enrollment-->
-                                <a class="dropdown-item" href="{% url 'project_detail' ntf.project.pk %}">
+                                <a class="dropdown-item" href="#" hx-get="{% url 'project_detail' ntf.project.pk %}" hx-target="#body-col">
                                     <b>{{ ntf.sender }}</b> <br class="d-sm-none"> enrolled <br class="d-md-none">you in the
                                     project
                                     <br class="d-sm-none"><b>{{ ntf.project.title|truncatechars:15 }}</b><br>
@@ -114,7 +114,7 @@
 
                                 {% elif ntf.type == 5 %}
                                 <!-- project dis-enrollment-->
-                                <a class="dropdown-item" href="{% url 'project_detail' ntf.project.pk %}">
+                                <a class="dropdown-item" href="#" hx-get="{% url 'project_detail' ntf.project.pk %}" hx-target="#body-col">
                                     <b>{{ ntf.sender }}</b> <br class="d-sm-none"> dis-enrolled <br class="d-md-none">you
                                     from the project <br class="d-sm-none">
                                     <b>{{ ntf.project.title|truncatechars:15 }}</b><br>
@@ -123,7 +123,7 @@
 
                                 {% elif ntf.type == 6 %}
                                 <!-- new ticket comment -->
-                                <a class="dropdown-item" href="{% url 'ticket_detail' ntf.ticket.pk %}">
+                                <a class="dropdown-item" href="#" hx-get="{% url 'ticket_detail' ntf.ticket.pk %}" hx-target="#body-col">
                                     <b>{{ ntf.sender }}</b> <br class="d-sm-none"> added a new <br class="d-md-none">comment
                                     to your
                                     <br class="d-sm-none">ticket
@@ -141,13 +141,13 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu dropdown-menu-right"
                             aria-labelledby="navbarUserDropdownMenuLink">
-                            <a class="dropdown-item" href="{% url 'profile' %}">Signed in as
+                            <a class="dropdown-item" href="#" hx-get="{% url 'profile' %}" hx-target="#body-col">Signed in as
                                 <b>{{ user.username }}</b>
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
-                            <a class="dropdown-item" href="{% url 'project_list' %}">Your projects</a>
-                            <a class="dropdown-item" href="{% url 'ticket_list' %}?order=updated_at">Your tickets</a>
+                            <a class="dropdown-item" href="#" hx-get="{% url 'charts' %}" hx-target="#body-col" hx-trigger="click[reloadDashboard()]">Dashboard</a>
+                            <a class="dropdown-item" href="#" hx-get="{% url 'project_list' %}" hx-target="#body-col">Your projects</a>
+                            <a class="dropdown-item" href="#" hx-get="{% url 'ticket_list' %}?order=updated_at" hx-target="#body-col">Your tickets</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{% url 'logout' %}">Sign out</a>
                         </div>

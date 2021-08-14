@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from .models import Ticket, TicketComment
+from ..models import Ticket, TicketComment
 from projects.models import Project
 from django.contrib.auth import get_user_model
 
@@ -147,7 +147,6 @@ class TicketTests(TestCase):
         self.assertEqual(response.status_code, 200)
         no_response = self.client.get('/ticket/12345/')
         self.assertEqual(no_response.status_code, 404)
-        self.assertContains(response, 'Ticket Details')
         self.assertTemplateUsed(response, 'tickets/ticket_detail.html')
         self.assertTemplateNotUsed(response, 'tickets/ticket_list.html')
 
@@ -178,17 +177,6 @@ class TicketTests(TestCase):
 
         self.assertContains(response, 'Edit')
         self.assertTemplateUsed(response, 'tickets/ticket_edit.html')
-
-    def test_ticket_create_view(self):
-        # login required
-        response = self.client.get(reverse('ticket_create'))
-        self.assertEqual(response.status_code, 302)
-
-        self.client.login(username='kris', password='testpass123')
-        response = self.client.get(reverse('ticket_create'))
-        self.assertEqual(response.status_code, 200)
-        self.assertInHTML('New ticket', response.content.decode())
-        self.assertTemplateUsed(response, 'tickets/ticket_new.html')
 
     def test_ticket_delete_view(self):
         # login required

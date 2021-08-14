@@ -1,9 +1,8 @@
 from django.views.generic import (
     ListView,
-    CreateView,
-    DetailView,
     UpdateView,
-    DeleteView
+    DeleteView,
+    View
 )
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -13,7 +12,7 @@ from .models import Ticket, TicketComment, TicketEvent
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from .forms import CommentCreateForm
+from .forms import CommentCreateForm, TicketCreateForm
 from django.urls import reverse
 
 from django.contrib import messages
@@ -141,20 +140,25 @@ def ticket_delete_view(request, pk):
     # I could also implement permisions with "user passes test...fx based on role"
 
 
-class TicketCreateView(LoginRequiredMixin, CreateView):
-    model = Ticket
-    template_name = 'tickets/ticket_new.html'
-    fields = ('title', 'description', 'project', 'type',
-              'status', 'priority', 'developer',)
+class TicketCreateView(LoginRequiredMixin, View):
 
-    def form_valid(self, form):
-        """Override. If the form is valid do these extra things before default behavior"""
-        form.instance.submitter = self.request.user
-        form.instance.updated_by = self.request.user
+    def post(self, request):
+        form = TicketCreateForm(request.POST)
+        if form.is_valid():
+            new_ticket = form.save(commit=False)
+            new_ticket.submitter = self.request.user
+            new_ticket.updated_by = self.request.user
+            new_ticket.save()
 
-        # self.object = form.save()
-        # TicketEvent.objects.create(ticket=self.object, property_changed=TicketEvent.CREATED, user=self.request.user)
-        return super().form_valid(form)
+            messages.success(request, f"You successfully created a new ticket")
+            return redirect(reverse('ticket_list') + '?order=updated_at')
+        else:
+            # print(form.errors)
+            return render(request, 'tickets/ticket_new.html', {'form': form})
+
+    def get(self, request):
+        form = TicketCreateForm()
+        return render(request, 'tickets/ticket_new.html', {'form': form})
 
 
 class TicketCommentUpdateView(LoginRequiredMixin, UpdateView):

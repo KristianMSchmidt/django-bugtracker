@@ -1,10 +1,10 @@
 <div class="container mt-5">   
-      <!-- Potential messages ... i should include this to make code DRY -->
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-        </div>
-        {% endfor %} 
+    <!-- Potential messages ... i should include this to make code DRY -->
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %} 
 
     <h1 class="mb-3">Your Tickets</h1>
     <table class="table table-responsive table-striped table-hover table-sm text-nowrap">
@@ -17,7 +17,7 @@
                 <th><a href="#" hx-get="{% url 'ticket_list' %}?order=submitter" hx-target="#body-col" style="color:black; text-decoration:underline">Submitter</a></th>
                 <th><a href="#" hx-get="{% url 'ticket_list' %}?order=developer" hx-target="#body-col" style="color:black; text-decoration:underline">Developer</a></th>
                 <th><a href="#" hx-get="{% url 'ticket_list' %}?order=created_at" hx-target="#body-col" style="color:black; text-decoration:underline">Created at</a></th>
-                <th><a href="#" hx-get="{% url 'ticket_list' %}?order=created_by" hx-target="#body-col" style="color:black; text-decoration:underline">Last update</a></th>
+                <th><a href="#" hx-get="{% url 'ticket_list' %}?order=updated_at" hx-target="#body-col" style="color:black; text-decoration:underline">Last update</a></th>
                 <th>More details</th>
             </tr>
         </thead>

@@ -6,6 +6,15 @@ up:
 test:
 	docker-compose run --rm web ./manage.py test
 
+test-factories:
+	docker-compose exec web python manage.py test tests.test_factories
+
+test-forms:
+	docker-compose exec web python manage.py test tests.test_forms
+
+test-views:
+	docker-compose exec web python manage.py test tests.test_views
+
 # Rebuild development docker image
 build:
 	docker-compose build
@@ -42,10 +51,8 @@ check:
 
 # build production tailwind css & push master branch to heroku & check security
 make push-heroku:
-	pipenv run python manage.py tailwind build
 	git push heroku master
 	heroku run python manage.py check --deploy
-
 
 
 # Open shell within running docker development container

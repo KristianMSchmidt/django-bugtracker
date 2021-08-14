@@ -1,18 +1,11 @@
-{% extends "base.html" %}
 {% load crispy_forms_tags %}
-
-{% block title %}Profile{% endblock title %}
-
-{% block content %}
-
-    <div class="container-fluid p-5">
-        <h3>Account settings</h3>
-        <form class="my-4" method="POST">{% csrf_token %}
-            {{ form|crispy }}
-            <button class="btn btn-primary" type='submit'>Update</button>
-        </form>
-        <a href="{% url 'password_change' %}">Change password</a><br>
-    </div>
-{% endblock content %}
+<div class="container-fluid p-5">
+    <h3>Account settings</h3>
+    <form class="my-4" method="POST">{% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-primary" type='submit'>Update</button>
+    </form>
+    <a href="{% url 'password_change' %}">Change password</a><br>
+</div>
 
 

@@ -8,21 +8,21 @@ from utils.time_ago import time_ago
 
 class Ticket(models.Model):
 
-    title = models.CharField(max_length=200, unique=True,
-                             default="Default ticket title")
+    title = models.CharField(max_length=200, unique=True)
     description = models.CharField(
-        max_length=300, default="Default ticket description")
+        max_length=300)
     project = models.ForeignKey(
         Project,
         on_delete=models.SET_NULL,
         related_name='tickets',
         null=True,
-        blank=True
+        blank=False
     )
     submitter = models.ForeignKey(
         get_user_model(),
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name='submitter_set'
     )
     created_at = models.DateTimeField(auto_now_add=True, null=True)

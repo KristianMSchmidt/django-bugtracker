@@ -1,8 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
-from .models import Project
+from ..models import Project
 from django.contrib.auth import get_user_model
-
 
 
 class ProjectViewsTests(TestCase):
@@ -16,7 +15,7 @@ class ProjectViewsTests(TestCase):
         self.admin_user = User.objects.create_user(
             username='admin',
             password='testpass123',
-            role = User.Role.ADMIN
+            role=User.Role.ADMIN
         )
         self.dev_user = User.objects.create_user(
             username='developer',
@@ -29,7 +28,6 @@ class ProjectViewsTests(TestCase):
         self.assertEqual(f'{self.project.title}', 'Test title')
         self.assertEqual(f'{self.project.description}', 'Test description')
 
-
     def test_project_list_view(self):
         # login requierd
         response = self.client.get(reverse('project_list'))
@@ -41,7 +39,7 @@ class ProjectViewsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test title')
         self.assertNotContains(response, 'Fantasy Project'),
-        #response.context['project_list']
+        # response.context['project_list']
         self.assertTemplateUsed(response, 'projects/project_list.html'),
         self.assertTemplateNotUsed(response, 'projects/fantasy_list.html'),
         self.client.logout()
@@ -56,7 +54,7 @@ class ProjectViewsTests(TestCase):
         self.project.users.add(self.dev_user)
         response = self.client.get(reverse('project_list'))
         self.assertContains(response, 'Test title'),
-       
+
     def test_project_detail_view(self):
         # login required
         response = self.client.get(self.project.get_absolute_url())
@@ -83,7 +81,7 @@ class ProjectViewsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Edit')
         self.assertTemplateUsed(response, 'projects/project_edit.html')
-    
+
     def test_project_create_view(self):
         # login required
         response = self.client.get(reverse('project_create'))
@@ -107,7 +105,7 @@ class ProjectViewsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Delete')
         self.assertTemplateUsed(response, 'projects/project_delete.html')
-    
+
     def test_add_ticket_to_project_view_get_request(self):
         # login required
         response = self.client.get(
@@ -122,24 +120,23 @@ class ProjectViewsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(no_response.status_code, 404)
         self.assertTemplateUsed(response, 'tickets/ticket_new.html')
-   
 
 
 class ProjectForeignKeyTests(TestCase):
 
     def setUp(self):
-       
+
         User = get_user_model()
         self.user1 = User.objects.create_user(
             username='kris',
             password='testpass123'
         )
-        
+
         self.user2 = User.objects.create_user(
             username='tom',
             password='testpass123'
         )
-        
+
         self.project1 = Project.objects.create(
             title='Test title',
             description='Test description',
@@ -151,7 +148,7 @@ class ProjectForeignKeyTests(TestCase):
         self.assertEqual(self.project1.users.count(), 1)
         self.project1.users.add(self.user2)
         self.assertEqual(self.project1.users.count(), 2)
-        self.assertEqual(self.user1.projects.count(),1)
+        self.assertEqual(self.user1.projects.count(), 1)
 
     def test_many_to_one(self):
         self.assertEqual(self.project1.created_by.username, 'kris')
