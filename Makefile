@@ -23,9 +23,6 @@ build-up-prod:
 terminal:
 	docker-compose exec web /bin/bash
 
-shell:
-	docker-compose exec web python manage.py shell
-
 # Makemigrations within within docker image
 migrations:
 	docker-compose exec web python manage.py makemigrations

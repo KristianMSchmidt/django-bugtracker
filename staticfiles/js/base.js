@@ -43,3 +43,14 @@ function SidebarCollapse() {
     // Collapse/Expand icon
     $('#collapse-icon').toggleClass('fa-angle-double-left fa-angle-double-right');
 }
+
+
+function reloadDashboard() {
+    e = document.getElementById('body-col')
+    if (e.innerHTML.indexOf("Tickets by Status") == -1) {
+        // dashboard is currently not shown - so reload it
+        return true
+    }
+    // dashboard is already shown - so don't reload it (it's tricky to get canvas sizes correct on reload)
+    return false
+}
