@@ -58,3 +58,7 @@ make push-heroku:
 # Open shell within running docker development container
 shell:
 	docker-compose exec web /bin/bash
+
+# Collect static (do this before every deployment to Heroku)
+collectstatic:
+	docker-compose exec web python manage.py collectstatic
