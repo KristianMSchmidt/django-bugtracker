@@ -76,6 +76,12 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     fields = ('title', 'description', 'users',)
     template_name = 'projects/project_edit.html'
 
+    def form_valid(self, form):
+        """Override. If the form is valid do these extra things before default behavior"""
+        messages.success(
+            self.request, f"You successfully updated this project")
+        return super().form_valid(form)
+
 
 class ProjectDeleteView(LoginRequiredMixin, DeleteView):
     model = Project

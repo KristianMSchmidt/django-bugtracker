@@ -104,10 +104,13 @@ class TicketUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'tickets/ticket_edit.html'
 
     def form_valid(self, form):
+        """Override. If the form is valid do these extra things before default behavior"""
         # old_ticket = self.get_object()
         form.instance.updated_by = self.request.user
         new_ticket = form.save(commit=False)
         new_ticket.save(request=self.request)
+        messages.success(
+            self.request, f"You successfully updated this ticket")
         return super().form_valid(form)
 
 

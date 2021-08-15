@@ -4,7 +4,7 @@
 
     <h3>Edit project</h3>
 
-    <form action="" method="post">
+    <form hx-post="{% url "project_edit" project.pk %}" hx-target="#body-col">
         {{ form|crispy }}
         <button class="btn btn-warning" type="submit">Update</button>
         <button hx-get="{{ project.get_absolute_url }}" hx-target="#body-col" class="btn btn-primary">Cancel</button>   

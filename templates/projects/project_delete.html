@@ -1,6 +1,6 @@
 <div class="container mt-5">
     <h3>Delete project</h3>
     <p>Are you sure you want to delete the project "{{ project.title }}"? </p>
-    <button class="btn btn-danger">Confirm</button>
+    <button hx-post="{% url "project_delete" project.pk %}" hx-target="#body-col" class="btn btn-danger">Confirm</button>
     <button hx-get="{{ project.get_absolute_url }}" hx-target="#body-col" class="btn btn-primary">Cancel</button>
 </div>

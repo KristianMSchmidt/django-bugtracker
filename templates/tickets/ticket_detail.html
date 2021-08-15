@@ -1,5 +1,11 @@
 {% load crispy_forms_tags %}
+
 <div class="container mt-5">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %} 
     <h3>Details for ticket: <b>{{ticket.title}}</b></h3>
     <table>
         <tr>
@@ -31,11 +37,12 @@
     <a href="#" hx-get="{% url 'ticket_edit' ticket.pk %}" hx-target="#body-col">Edit ticket</a>
     <a href="#" hx-get="{% url 'ticket_delete' ticket.pk %}" hx-target="#body-col">Delete ticket</a>
 
+    <!--
     <h3 class="mt-5">Ticket Comments</h3>
 
-    <form action="" method="post">
+    <form hx-post="{% url "ticket_create" %}" hx-target="#body-col">
         {{ form|crispy }}
-        <input type="submit" value="Add comment" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary">Add comment</button>
     </form>
     <br>
 
@@ -77,4 +84,5 @@
         </tr>
         {% endfor %}
     </table>
+    -->
 </div>
