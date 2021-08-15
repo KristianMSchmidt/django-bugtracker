@@ -53,6 +53,27 @@ class ChartContextTests(TestCase):
         self.assertIsInstance(ctx, dict)
         self.assertEqual(ctx, expected)
 
+    def test_one_ticket_with_null_value_for_developer(self):
+        ticket = TicketFactory(
+            priority=Ticket.Priority.HIGH,
+            status=Ticket.Status.IN_PROGRESS,
+            type=Ticket.Type.BUG,
+            developer=None
+        )
+        ctx = chart_context()
+        expected = {
+            'priority':
+                {'low': 0, 'medium': 0, 'high': 1, 'urgent': 0},
+            'status':
+                {'open': 0, 'info_required': 0, 'in_progress': 1, 'closed': 0},
+            'type':
+                {'feature_request': 0, 'bug': 1, 'other': 0},
+            'busy_users_labels': [],
+            'busy_users_data': []
+        }
+        self.assertIsInstance(ctx, dict)
+        self.assertEqual(ctx, expected)
+
     def test_three_tickets(self):
         Gretha = UserFactory(username='Gretha')
         TicketFactory(

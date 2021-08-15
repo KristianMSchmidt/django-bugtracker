@@ -18,9 +18,9 @@ def chart_context():
     In a real-world scenario, most users should probably only see charts representing their own tickets (see partial implementation below).
     """
 
-    busy_user_list = Ticket.objects.exclude(status=Ticket.Status.CLOSED).values(
+    busy_users = Ticket.objects.exclude(status=Ticket.Status.CLOSED).exclude(developer=None).values(
         'developer').annotate(cnt=Count('id')).order_by('-cnt')
-    busy_user_count = min(busy_user_list.count(), 5)
+    busy_user_count = min(busy_users.count(), 5)
     context = {
         'priority': {
             'low': Ticket.objects.filter(priority=Ticket.Priority.LOW).count(),
@@ -40,9 +40,8 @@ def chart_context():
             'bug': Ticket.objects.filter(type=Ticket.Type.BUG).count(),
             'other': Ticket.objects.filter(type=Ticket.Type.OTHER).count(),
         },
-
-        'busy_users_labels': [get_user_model().objects.get(id=busy_user_list[index]['developer']).username for index in range(busy_user_count)],
-        'busy_users_data': [busy_user_list[index]['cnt'] for index in range(busy_user_count)],
+        'busy_users_labels': [get_user_model().objects.get(id=busy_users[index]['developer']).username for index in range(busy_user_count)],
+        'busy_users_data': [busy_users[index]['cnt'] for index in range(busy_user_count)],
     }
     return context
 
@@ -53,9 +52,9 @@ def chart_context():
 
     # if self.request.user.is_admin():
     #     # alternative
-    # from django.db.models import Count
-    # priority_count = Ticket.objects.values('priority').annotate(cnt=Count('id'))
-    # 'low': priority_count.get(priority=Ticket.Priority.LOW)['cnt'],
+    #     from django.db.models import Count
+    #     priority_count = Ticket.objects.values('priority').annotate(cnt=Count('id'))
+    #     'low': priority_count.get(priority=Ticket.Priority.LOW)['cnt'],
 
     #     busy_user_list = Ticket.objects.filter(status=Ticket.Status.IN_PROGRESS).values(
     #         'developer').annotate(cnt=Count('id')).order_by('-cnt')
