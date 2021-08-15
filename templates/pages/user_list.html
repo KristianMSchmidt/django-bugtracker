@@ -4,23 +4,27 @@
     <p class="text-danger">Feature not implemented yet. </p>
 
     <h3>All Personel</h3>
-    <table>
-        <tr>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Email</th>
-            <th>Date joined</th>
-            <th>More details</th>
+    <table class="table table-responsive table-striped table-hover table-sm text-nowrap">   
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Email</th>
+                <th>Date joined</th>
+                <th>More details</th>
 
-        </tr>
-        {% for user in user_list %}
-        <tr>
-            <td>{{ user.username }}</a></td>
-            <td>{{ user.get_role_display }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.date_joined }}</td>
-            <td><a href="#" hx-get="{{ user.get_absolute_url }}" hx-target="#body-col">Details</a></td>
-        </tr>
-        {% endfor %}
-</table>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in user_list %}
+            <tr>
+                <td>{{ user.username }}</a></td>
+                <td>{{ user.get_role_display }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.date_joined }}</td>
+                <td><a href="#" hx-get="{{ user.get_absolute_url }}" hx-target="#body-col">Details</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 <div>

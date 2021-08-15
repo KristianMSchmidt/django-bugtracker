@@ -4,50 +4,57 @@
     <p>Role: {{some_user.get_role_display }}</p>
 
     <h3>Project enrollments</h3>
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Created by</th>
-            <th>Created at</th>
-            <th>Last update</th>
-            <th>More details</th>
+    <table class="table table-responsive table-striped table-hover table-sm text-nowrap">   
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Created by</th>
+                <th>Created at</th>
+                <th>Last update</th>
+                <th>More details</th>
 
-        </tr>
-        {% for project in project_list %}
-        <tr>
-            <td>{{ project.title }}</a></td>
-            <td>{{ project.description }}</td>
-            <td>{{ project.created_at }}</td>
-            <td>{{ project.created_by }}</td>
-            <td>{{ project.updated_at }}</td>
-            <td><a href="#" hx-get="{{ project.get_absolute_url }}" hx-target="#body-col">Details</a></td>
-        </tr>
-        {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for project in project_list %}
+            <tr>
+                <td>{{ project.title }}</a></td>
+                <td>{{ project.description }}</td>
+                <td>{{ project.created_at }}</td>
+                <td>{{ project.created_by }}</td>
+                <td>{{ project.updated_at }}</td>
+                <td><a href="#" hx-get="{{ project.get_absolute_url }}" hx-target="#body-col">Details</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
     <h3>Users Tickets:</h3>
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Project</th>
-            <th>Submitter</th>
-            <th>Developer</th>
-            <th>Created at</th>
-            <th>Last update</th>
-            <th>More details</th>
-        </tr>
-        {% for ticket in ticket_list %}
-        <tr>
-            <td>{{ ticket.title }}</td>
-            <td>{{ ticket.description }}</td>
-            <td>{{ ticket.project }}</td>
-            <td>{{ ticket.submitter }}</td>
-            <td>{{ ticket.developer }}</td>
-            <td>{{ ticket.created_at }}</td>
-            <td>{{ ticket.updated_at }}</td>
-            <td><a href="{{ ticket.get_absolute_url }}">Details</a></td>
-        </tr>
-        {% endfor %}
+    <table class="table table-responsive table-striped table-hover table-sm text-nowrap">   
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Project</th>
+                <th>Submitter</th>
+                <th>Developer</th>
+                <th>Created at</th>
+                <th>More details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in ticket_list %}
+            <tr>
+                <td>{{ ticket.title }}</td>
+                <td>{{ ticket.description }}</td>
+                <td>{{ ticket.project }}</td>
+                <td>{{ ticket.submitter }}</td>
+                <td>{{ ticket.developer }}</td>
+                <td>{{ ticket.created_at }}</td>
+                <td><a href="{{ ticket.get_absolute_url }}">Details</a></td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
     </table>
 </div>
