@@ -1,14 +1,13 @@
-{% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
-{% block title %}{{ project.title }}{% endblock title%}
+<div class="container mt-5">
 
-{% block content %}
-<h3>Project Edit:</h3>
+    <h3>Edit project</h3>
 
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Update</button>
-</form>
+    <form action="" method="post">
+        {{ form|crispy }}
+        <button class="btn btn-warning" type="submit">Update</button>
+        <button hx-get="{{ project.get_absolute_url }}" hx-target="#body-col" class="btn btn-primary">Cancel</button>   
+    </form>
 
-{% endblock content %}
+</div>

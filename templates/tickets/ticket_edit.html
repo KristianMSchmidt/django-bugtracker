@@ -1,10 +1,12 @@
+{% load crispy_forms_tags %}
+
 <div class="container mt-5">   
-    <h3>Ticket Edit:</h3>
+    <h3>Edit Ticket</h3>
 
     <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Update</button>
+        {{ form|crispy }}
+        <button class="btn btn-warning" type="submit">Update</button>
+        <button hx-get="{{ ticket.get_absolute_url }}" hx-target="#body-col" class="btn btn-primary">Cancel</button>   
     </form>
 </div>
 

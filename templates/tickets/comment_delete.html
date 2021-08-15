@@ -1,31 +1,19 @@
-{% extends 'base.html' %}
-
-{% block title %}Delete Comment{% endblock title%}
-
-{% block content %}
-<h3>Delete Ticket Comment for {{comment.ticket}}</h3>
-<form action="" method="post">
-    {% csrf_token %}
+<div class="container mt-5">   
+    <h3>Delete Ticket Comment for {{ comment.ticket }}</h3>
     <p>Are you sure you want to delete "{{ comment.message }}"? </p>
-    <button type="submit">Confirm</button>
-</form>
+    <table class="mb-5">
+        <tr>
+            <th>Commenter</th>
+            <th>Message</th>
+            <th>Created</th>
+        </tr>
+        <tr>
+            <td>{{ comment.commenter }} </td>
+            <td>{{ comment.message }} </td>
+            <td>{{ comment.created_at }} </td>
+        </tr>
+    </table>
 
-<h1>Ticket Comments</h1>
-{{comment}}
-{{comment.ticket}}
-<table>
-    <tr>
-        <th>Commenter</th>
-        <th>Message</th>
-        <th>Created</th>
-    </tr>
-    <tr>
-        <td>{{ comment.commenter }} </td>
-        <td>{{ comment.message }} </td>
-        <td>{{ comment.created_at }} </td>
-    </tr>
-   
-</table>
-
-
-{% endblock content %}
+    <button class="btn btn-danger" type="submit">Delete</button>
+    <button hx-get="{{ comment.ticket.get_absolute_url }}" hx-target="#body-col" class="btn btn-primary">Cancel</button>   
+</div>

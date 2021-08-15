@@ -15,10 +15,11 @@
             <td>{{ project.created_at }}</td>
             <td>{{ project.updated_at }}</td>
         </tr>
-    </table>    
-    <a href="{% url 'project_edit' project.pk %}">Edit project</a><br>
-    <a href="{% url 'project_delete' project.pk %}">Delete project</a><br>
-    <a href="{% url 'add_ticket_to_project' project.pk %}">Add ticket to project</a>
+    </table>
+        
+    <a href="#" hx-get="{% url 'project_edit' project.pk %}" hx-target="#body-col">Edit project</a><br>
+    <a href="#" hx-get="{% url 'project_delete' project.pk %}" hx-target="#body-col">Delete project</a><br>
+    <a href="#" hx-get="{% url 'add_ticket_to_project' project.pk %}" hx-target="#body-col">Add ticket to project</a>
     <br><br>
     <h2>Tickets for this project</h2>
     <table>
@@ -39,7 +40,7 @@
                 <td>{{ ticket.created_at }}<br></td>
                 <td>{{ ticket.updated_at }}<br></td>
                 <td>{{ ticket.developer }}<br></td>
-                <td><a href="{{ ticket.get_absolute_url }} ">Details</a>
+                <td><a href="#" hx-get="{{ ticket.get_absolute_url }}" hx-target="#body-col">Details</a>
                 </td>
             </tr>
         {% endfor %}

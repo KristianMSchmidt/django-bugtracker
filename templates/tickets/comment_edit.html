@@ -1,14 +1,10 @@
-{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+<div class="container mt-5">   
+    <h3>Edit Comment:</h3>
 
-{% block title %}Edit Comment{% endblock title%}
-
-{% block content %}
-<h3>Edit Comment:</h3>
-
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Update</button>
-</form>
-
-{% endblock content %}
+    <form action="" method="post">
+        {{ form|crispy }}
+        <button class="btn btn-warning" type="submit">Update</button>
+        <button hx-get="{{ comment.ticket.get_absolute_url }}" hx-target="#body-col" class="btn btn-primary">Cancel</button>   
+    </form>
+</div>      
