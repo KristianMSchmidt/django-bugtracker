@@ -14,7 +14,11 @@ class TestUserFactory(TestCase):
     def test_sanity_check(self):
         """ User factory produces user objects """
         self.assertIsInstance(self.user, get_user_model())
-        self.assertTrue('john' in self.user.username)
+        self.assertTrue(self.user.username, 'john0')
+        user2 = UserFactory()
+        self.assertEqual(user2.username, 'john1')
+        user3 = UserFactory(username="Tom")
+        self.assertEqual(user3.username, 'Tom')
 
     def test_can_log_in(self):
         """ User factory produces users that can log in """

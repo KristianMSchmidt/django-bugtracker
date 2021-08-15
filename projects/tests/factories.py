@@ -9,6 +9,6 @@ class ProjectFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Project
 
-    title = 'test project title'
+    title = factory.Sequence(lambda n: f'test project title{n}')
     description = 'test description'
     created_by = factory.SubFactory(UserFactory)

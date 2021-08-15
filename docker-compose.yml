@@ -1,4 +1,7 @@
-version: "3.8"
+# I use this compose file in my daily local development. 
+# Variables are set for max convenience during development and debugging.
+
+version: "3.8" # Docker version
 
 services:
   web:

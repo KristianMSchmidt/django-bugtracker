@@ -1,3 +1,5 @@
+# $ docker-compose exec web python manage.py test pages.tests.test_views
+
 from django.test import TestCase, SimpleTestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
@@ -8,20 +10,14 @@ from tickets.models import Ticket
 class UserListViewTests(TestCase):
 
     def setUp(self):
-        """will be run before every test"""
+        """ will be run before every test """
         url = reverse('user_list')
         self.response = self.client.get(url)
 
     def test_user_list_view_status_code(self):
         self.assertEqual(self.response.status_code, 200)
-
-    def test_user_list_view_template(self):
         self.assertTemplateUsed(self.response, 'pages/user_list.html')
-
-    def test_user_list_page_contains_correct_html(self):
         self.assertContains(self.response, 'Personel')
-
-    def test_user_list_page_does_not_contain_incorrect_html(self):
         self.assertNotContains(
             self.response, 'Hi there! I should not be on the page.')
 
@@ -29,7 +25,7 @@ class UserListViewTests(TestCase):
 class UserDetailView(TestCase):
 
     def setUp(self):
-        """will be run before every test"""
+        """ will be run before every test """
         User = get_user_model()
         self.user = User.objects.create_user(
             username='kristian',
@@ -41,15 +37,9 @@ class UserDetailView(TestCase):
 
     def test_user_detail_view_status_code(self):
         self.assertEqual(self.response.status_code, 200)
-
-    def test_user_detail_view_template(self):
         self.assertTemplateUsed(self.response, 'pages/user_details.html')
-
-    def test_user_detail_page_contains_correct_html(self):
         self.assertContains(self.response, 'kristian')
         self.assertContains(self.response, 'Admin')
-
-    def test_user_detail_page_does_not_contain_incorrect_html(self):
         self.assertNotContains(
             self.response, 'Hi there! I should not be on the page.')
 
@@ -118,18 +108,12 @@ class DashboardViewTests(TestCase):
 
     def test_dashboard_view_status_code_logged_in_user(self):
         self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, 'pages/dashboard.html')
+        self.assertContains(self.response, 'Tickets by Status')
+        self.assertNotContains(
+            self.response, 'Hi there! I should not be on the page.')
 
     def test_dashboard_view_status_code_logged_out_user(self):
         self.client.logout()
         self.response = self.client.get(self.url)
         self.assertEqual(self.response.status_code, 302)
-
-    def test_dashboard_list_view_template(self):
-        self.assertTemplateUsed(self.response, 'pages/dashboard.html')
-
-    def test_dashboard_list_page_contains_correct_html(self):
-        self.assertContains(self.response, 'Tickets by Status')
-
-    def test_dashboard_list_page_does_not_contain_incorrect_html(self):
-        self.assertNotContains(
-            self.response, 'Hi there! I should not be on the page.')

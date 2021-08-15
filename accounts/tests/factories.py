@@ -1,10 +1,6 @@
 # $ docker-compose exec web python manage.py test accounts.tests.factories
 
 import factory
-
-from projects.models import Project
-from tickets.models import Ticket
-from django.test import Client
 from django.contrib.auth import get_user_model
 
 
