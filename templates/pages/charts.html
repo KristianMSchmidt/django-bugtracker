@@ -1,20 +1,50 @@
-<div class="px-1 px-sm-5 py-5">
+<div class="py-5">
     <div class="row">
-        <div class="col-12 col-lg-6 mb-5 pl-5">
+        <div class="col-1"></div>        
+        <div class="col-10 col-lg-5 mb-5" >
             <canvas id="status_chart"></canvas>
         </div>
-        <div class="col-12 col-lg-6 mb-5 pl-5">
+        <div class="col-1 d-lg-none"></div>
+
+        <div class="col-1 d-lg-none"></div>
+        <div class="col-10 col-lg-5 mb-5">
             <canvas id="priority_chart"></canvas>
         </div>
-        <div class="col-12 col-lg-6 mb-5">
+        <div class="col-1"> </div>
+ 
+
+        <div class="col-1"></div>
+        <div class="col-10 col-lg-5 mb-5">
             <canvas id="type_chart"></canvas>
         </div>
-        <div class="col-12 col-lg-6 mb-5">
+        <div class="col-1 d-lg-none"> </div> 
+        <div class="col-1 d-lg-none"></div>
+        <div class="col-10 col-lg-5 mb-5">
             <canvas id="top_busy_users_chart"></canvas>
         </div>
+        <div class="col-1"> </div>
+
     </div>
 </div>
 
+
+{% comment %} 
+<div class="px-1 px-sm-5 py-5">
+    <div class="row">
+        <div class="col-12 col-lg-6 mb-5 pl-5 px-xl-5">
+            <canvas id="status_chart"></canvas>
+        </div>
+        <div class="col-12 col-lg-6 mb-5 pl-5 px-xl-5">
+            <canvas id="priority_chart"></canvas>
+        </div>
+        <div class="col-12 col-lg-6 mb-5 px-xl-5">
+            <canvas id="type_chart"></canvas>
+        </div>
+        <div class="col-12 col-lg-6 mb-5 px-xl-5">
+            <canvas id="top_busy_users_chart"></canvas>
+        </div>
+    </div>
+</div> {% endcomment %}
 <script>
     /* Ticket Status Chart */
     var ctx = document.getElementById('status_chart').getContext('2d');
