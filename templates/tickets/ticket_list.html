@@ -13,12 +13,12 @@
         <thead>
             <tr>
                 <th><a href="#" hx-get="{% url 'ticket_list' %}?order=title" hx-target="#body-col" style="color:black; text-decoration:underline">Title</a></th>
+                <th><a href="#" hx-get="{% url 'ticket_list' %}?order=project" hx-target="#body-col" style="color:black; text-decoration:underline">Project</a></th>
                 <th><a href="#" hx-get="{% url 'ticket_list' %}?order=type" hx-target="#body-col" style="color:black; text-decoration:underline">Type</a></th>
                 <th><a href="#" hx-get="{% url 'ticket_list' %}?order=status" hx-target="#body-col" style="color:black; text-decoration:underline">Status</a></th>
                 <th><a href="#" hx-get="{% url 'ticket_list' %}?order=priority" hx-target="#body-col" style="color:black; text-decoration:underline">Priority</a></th>
                 <th><a href="#" hx-get="{% url 'ticket_list' %}?order=submitter" hx-target="#body-col" style="color:black; text-decoration:underline">Submitter</a></th>
                 <th><a href="#" hx-get="{% url 'ticket_list' %}?order=developer" hx-target="#body-col" style="color:black; text-decoration:underline">Developer</a></th>
-                <th><a href="#" hx-get="{% url 'ticket_list' %}?order=created_at" hx-target="#body-col" style="color:black; text-decoration:underline">Created at</a></th>
                 <th><a href="#" hx-get="{% url 'ticket_list' %}?order=updated_at" hx-target="#body-col" style="color:black; text-decoration:underline">Last update</a></th>
                 <th>More details</th>
             </tr>
@@ -27,6 +27,7 @@
             {% for ticket in tickets %}
             <tr>
                 <td>{{ ticket.title }} </td>
+                <td>{{ ticket.project }} </td>
                 <td>{{ ticket.get_type_display }}</td>
                 <td>{{ ticket.get_status_display }}</td>
                 <td>{{ ticket.get_priority_display }}</td>  
@@ -44,7 +45,6 @@
                         {{ ticket.developer }}
                     {% endif %}
                 </td>
-                <td>{{ ticket.time_since_create }}</td>
                 <td>{{ ticket.time_since_update }}</td>
                 <td><a href="#" hx-get="{{ ticket.get_absolute_url }}" hx-target="#body-col">Details</a></td>
             </tr>

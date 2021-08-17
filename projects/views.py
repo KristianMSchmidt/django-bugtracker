@@ -86,8 +86,8 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         """Override. If the form is valid do these extra things before default behavior"""
-        messages.success(
-            self.request, f"You successfully updated this project")
+        # messages.success(
+        #    self.request, f"You successfully updated this project")
         self.success_url = reverse_lazy('project_detail_card_body', kwargs={
                                         'pk': self.get_object().pk})
 
@@ -111,3 +111,13 @@ class ProjectDeleteView(LoginRequiredMixin, DeleteView):
     model = Project
     template_name = 'projects/project_delete.html'
     success_url = reverse_lazy('project_list')
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        object = self.get_object()
+        messages.success(
+            self.request, f"You deleted the project '{object.title}'")
+        return super().delete(self, request, *args, **kwargs)
