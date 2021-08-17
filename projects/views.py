@@ -56,10 +56,10 @@ class ProjectCreateView(LoginRequiredMixin, View):
             new_project = form.save(commit=False)
             new_project.created_by = self.request.user
             new_project.save()
-
+            print("HEJGERE", new_project.pk)
             messages.success(
                 request, f"You successfully created a new project")
-            return redirect(reverse('project_list'))
+            return redirect(new_project.get_absolute_url())
         else:
             # print(form.errors)
             return render(request, 'projects/project_new.html', {'form': form})
@@ -89,7 +89,7 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
         # messages.success(
         #    self.request, f"You successfully updated this project")
         self.success_url = reverse_lazy('project_detail_card_body', kwargs={
-                                        'pk': self.get_object().pk})
+            'pk': self.get_object().pk})
 
         return super().form_valid(form)
 
