@@ -56,7 +56,6 @@ def ticket_detail_view(request, pk):
     ticket = Ticket.objects.get(pk=pk)
 
     if request.method == "POST":
-        print("POOOOOST")
         form = CommentCreateForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
