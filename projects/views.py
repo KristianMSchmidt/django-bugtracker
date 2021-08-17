@@ -87,30 +87,3 @@ class ProjectDeleteView(LoginRequiredMixin, DeleteView):
     model = Project
     template_name = 'projects/project_delete.html'
     success_url = reverse_lazy('project_list')
-
-
-class AddTicketToProjectView(LoginRequiredMixin, CreateView):
-    model = Ticket
-    template_name = 'tickets/ticket_new.html'
-    fields = ('title', 'description', 'type',
-              'status', 'priority', 'developer',)
-
-    def get_context_data(self, **kwargs):
-        """
-        Override. We need to add some context to the default context
-        """
-        self.project = get_object_or_404(Project, pk=self.kwargs['pk'])
-        context = super().get_context_data(**kwargs)
-        context['project_title'] = self.project.title
-        return context
-
-    def form_valid(self, form):
-        """
-        Overridde. We need to set submitter and project values before saving to the db.
-        This method is called when valid form data has been POSTed.
-        """
-        self.project = get_object_or_404(Project, pk=self.kwargs['pk'])
-        form.instance.submitter = self.request.user
-        form.instance.project = self.project
-
-        return super().form_valid(form)

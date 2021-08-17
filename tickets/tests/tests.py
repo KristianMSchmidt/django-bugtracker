@@ -202,7 +202,7 @@ class TicketTests(TestCase):
             reverse('ticket_comment_delete', kwargs={'pk': self.ticket_comment.id}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'tickets/comment_delete.html')
-        self.assertContains(response, 'Confirm')
+        self.assertContains(response, 'Delete')
 
         # self.ticket should currently have 1 comments
         self.assertEqual(self.ticket.ticketcomment_set.count(), 1)

@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.urls import reverse_lazy
 from .models import Ticket, TicketComment, TicketEvent
+from projects.models import Project
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -16,6 +17,8 @@ from .forms import CommentCreateForm, TicketCreateForm
 from django.urls import reverse
 
 from django.contrib import messages
+
+from django.shortcuts import get_object_or_404, render, redirect
 
 
 @login_required
@@ -154,13 +157,21 @@ class TicketCreateView(LoginRequiredMixin, View):
             new_ticket.save()
 
             messages.success(request, f"You successfully created a new ticket")
-            return redirect(reverse('ticket_list') + '?order=updated_at')
+            # return redirect(reverse('ticket_list') + '?order=updated_at')
+            return redirect(new_ticket.get_absolute_url())
+
         else:
             # print(form.errors)
             return render(request, 'tickets/ticket_new.html', {'form': form})
 
-    def get(self, request):
-        form = TicketCreateForm()
+    def get(self, request, **kwargs):
+        if 'pk' in self.kwargs:
+            # Ticket is being added to a specific project
+            self.kwargs['pk']
+            project = get_object_or_404(Project, pk=self.kwargs['pk'])
+            form = TicketCreateForm(initial={'project': project})
+        else:
+            form = TicketCreateForm()
         return render(request, 'tickets/ticket_new.html', {'form': form})
 
 
