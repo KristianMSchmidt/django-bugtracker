@@ -1,0 +1,14 @@
+{% load crispy_forms_tags %}
+<div hx-target="this" hx-swap="outerHTML">
+    <p class="card-title"><span class="text-muted">Title:</span> {{ project.title }}</p>
+    <p class="card-text"><span class="text-muted">Description:</span> {{ project.description }}</p>
+    <p class="card-text"><span class="text-muted">Created by:</span> {{ project.created_by }}</p>
+    <p class="card-text"><span class="text-muted">Created at:</span> {{ project.created_at }}</p>
+    <p class="card-text"><span class="text-muted">Last update:</span> {{ project.updated_at }}</p>
+    <div class="d-flex justify-content-center">
+        <button hx-get="{% url 'project_edit' project.pk %}" class="btn btn-primary">
+            Edit Project
+        </button>   
+    </div>
+</div>
+

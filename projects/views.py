@@ -27,9 +27,9 @@ class ProjectListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """
-        Override. 
-        Admins will see all projects. 
-        Other users will only see the projects thery are enrolled in. 
+        Override.
+        Admins will see all projects.
+        Other users will only see the projects thery are enrolled in.
         """
         if self.request.user.is_admin():
             return Project.objects.all()
@@ -40,6 +40,13 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
     model = Project
     context_object_name = 'project'
     template_name = 'projects/project_detail.html'
+
+
+class ProjectDetailCardBodyView(LoginRequiredMixin, View):
+    def get(self, request, **kwargs):
+        project = get_object_or_404(Project, pk=self.kwargs['pk'])
+        form = ProjectCreateForm(instance=project)
+        return render(request, 'projects/project_detail_card_body.html', {"project": project, "form": form})
 
 
 class ProjectCreateView(LoginRequiredMixin, View):
@@ -73,44 +80,34 @@ class ProjectCreateView(LoginRequiredMixin, View):
 class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     model = Project
     context_object_name = 'project'
-    fields = ('title', 'description', 'users',)
+    # fields = ('title', 'description', 'users',)
+    fields = ('title', 'description')
     template_name = 'projects/project_edit.html'
 
     def form_valid(self, form):
         """Override. If the form is valid do these extra things before default behavior"""
         messages.success(
             self.request, f"You successfully updated this project")
+        self.success_url = reverse_lazy('project_detail_card_body', kwargs={
+                                        'pk': self.get_object().pk})
+
         return super().form_valid(form)
+
+
+# class ProjectUpdateView(LoginRequiredMixin, UpdateView):
+#     model = Project
+#     context_object_name = 'project'
+#     fields = ('title', 'description', 'users',)
+#     template_name = 'projects/project_edit.html'
+
+#     def form_valid(self, form):
+#         """Override. If the form is valid do these extra things before default behavior"""
+#         messages.success(
+#             self.request, f"You successfully updated this project")
+#         return super().form_valid(form)
 
 
 class ProjectDeleteView(LoginRequiredMixin, DeleteView):
     model = Project
     template_name = 'projects/project_delete.html'
     success_url = reverse_lazy('project_list')
-
-
-class AddTicketToProjectView(LoginRequiredMixin, CreateView):
-    model = Ticket
-    template_name = 'tickets/ticket_new.html'
-    fields = ('title', 'description', 'type',
-              'status', 'priority', 'developer',)
-
-    def get_context_data(self, **kwargs):
-        """
-        Override. We need to add some context to the default context
-        """
-        self.project = get_object_or_404(Project, pk=self.kwargs['pk'])
-        context = super().get_context_data(**kwargs)
-        context['project_title'] = self.project.title
-        return context
-
-    def form_valid(self, form):
-        """
-        Overridde. We need to set submitter and project values before saving to the db.
-        This method is called when valid form data has been POSTed.
-        """
-        self.project = get_object_or_404(Project, pk=self.kwargs['pk'])
-        form.instance.submitter = self.request.user
-        form.instance.project = self.project
-
-        return super().form_valid(form)

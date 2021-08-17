@@ -4,29 +4,26 @@
         {{ message }}
     </div>
     {% endfor %} 
-    <h3>Details for project: <b>{{project.title}}</b></h3>
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Created by</th>
-            <th>Created at</th>
-            <th>Last update</th>
-        </tr>
-        <tr>
-            <td>{{ project.title }}</td>
-            <td>{{ project.description }}</td>
-            <td>{{ project.created_by }}</td>
-            <td>{{ project.created_at }}</td>
-            <td>{{ project.updated_at }}</td>
-        </tr>
-    </table>
-        
-    <a href="#" hx-get="{% url 'project_edit' project.pk %}" hx-target="#body-col">Edit project</a><br>
-    <a href="#" hx-get="{% url 'project_delete' project.pk %}" hx-target="#body-col">Delete project</a><br>
-    <a href="#" hx-get="{% url 'add_ticket_to_project' project.pk %}" hx-target="#body-col">Add ticket to project</a>
+
+    <div class="card">
+        <div class="card-header">
+            Project Details
+        </div>
+        <div class="card-body">
+           {% include 'projects/project_detail_card_body.html' %}
+        </div>
+    </div>
+
+
+
+    <div id="modals-here"></div>
+
+
     <br><br>
+
     <h2>Tickets for this project</h2>
+        <a href="#" hx-get="{% url 'add_ticket_to_project' project.pk %}" hx-target="#body-col">Add ticket to project</a>
+
     <table>
         <tr>
             <th>Title</th>
@@ -50,10 +47,18 @@
             </tr>
         {% endfor %}
     </table>
-  <h2>Enrolled Users</h2> 
+    <h2>Enrolled Users</h2> 
         {% for user in project.users.all %}
             {{ user.username }}<br>
         {% endfor %}
-
-
+    
+    <br>
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-danger" href="#" 
+            hx-get="{% url 'project_delete' project.pk %}"
+            hx-target="#modals-here" 
+            hx-trigger="click"
+            _="on htmx:afterOnLoad wait 10ms then add .show to #modal then add .show to #modal-backdrop">Delete Project
+        </button>
+    </div>
 </div>

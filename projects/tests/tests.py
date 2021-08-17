@@ -79,7 +79,6 @@ class ProjectViewsTests(TestCase):
         response = self.client.get(
             reverse('project_edit', kwargs={'pk': self.project.id}))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Edit')
         self.assertTemplateUsed(response, 'projects/project_edit.html')
 
     def test_project_create_view(self):

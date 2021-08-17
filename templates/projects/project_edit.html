@@ -1,4 +1,4 @@
-{% load crispy_forms_tags %}
+{% comment %} {% load crispy_forms_tags %}
 
 <div class="container mt-5">
 
@@ -10,4 +10,15 @@
         <button hx-get="{{ project.get_absolute_url }}" hx-target="#body-col" class="btn btn-primary">Cancel</button>   
     </form>
 
-</div>
+</div> {% endcomment %}
+{% load crispy_forms_tags %}
+<form hx-post="{% url "project_edit" project.pk %}" hx-target="this" hx-swap="outerHTML">
+    {{ form|crispy }}
+    <p class="card-text"><span class="text-muted">Created by:</span> {{ project.created_by }}</p>
+    <p class="card-text"><span class="text-muted">Created at:</span> {{ project.created_at }}</p>
+    <p class="card-text"><span class="text-muted">Last update:</span> {{ project.updated_at }}</p>
+    <div class="d-flex justify-content-between">
+        <button class="btn btn-warning" type="submit">Update</button>
+        <button hx-get="{% url "project_detail_card_body" project.pk %}" class="btn btn-primary">Cancel</button> 
+    </div>
+</form> 
