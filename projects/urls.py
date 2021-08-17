@@ -6,6 +6,7 @@ from .views import (
     ProjectDetailView,
     ProjectUpdateView,
     ProjectDeleteView,
+    ProjectDetailCardBodyView,
     manage_enrollments_view
 )
 from tickets.views import TicketCreateView
@@ -19,4 +20,6 @@ urlpatterns = [
          name='add_ticket_to_project'),
     path('<int:pk>/edit/', ProjectUpdateView.as_view(), name='project_edit'),
     path('<int:pk>/delete/', ProjectDeleteView.as_view(), name='project_delete'),
+    path('<int:pk>/project_detail_card_body/',
+         ProjectDetailCardBodyView.as_view(), name='project_detail_card_body'),
 ]
