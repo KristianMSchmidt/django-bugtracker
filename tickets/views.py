@@ -56,47 +56,30 @@ def ticket_detail_view(request, pk):
     ticket = Ticket.objects.get(pk=pk)
 
     if request.method == "POST":
+        print("POOOOOST")
         form = CommentCreateForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.commenter = request.user
             comment.ticket = ticket
             comment.save()
-            return redirect(ticket.get_absolute_url())
-
+            ticket_comments = TicketComment.objects.filter(
+                ticket=ticket).order_by('-created_at')
+            return render(request, 'tickets/comment_card_body.html',
+                          {'ticket': ticket,
+                           'form': CommentCreateForm(),
+                           'ticket_comments': ticket_comments})
     else:
         form = CommentCreateForm()
 
     context = {
         'ticket': ticket,
-        'comment_list': TicketComment.objects.filter(ticket=ticket),
+        'ticket_comments': TicketComment.objects.filter(ticket=ticket),
         'event_list': TicketEvent.objects.filter(ticket=ticket).order_by('-created_at'),
         'form': form
     }
+
     return render(request, 'tickets/ticket_detail.html', context)
-
-
-"""
-class TicketDetailView(LoginRequiredMixin, DetailView):
-    # Lav den først som en funktion-based view. Få den til at virke med al funktionaliteten.
-    # Herefter eventuelt som clas-base-view, hvorden arver fra View
-    # Herefter eventuelt som templateview -- men jeg er ikke sikker på, at dette er smart.
-
-    model = Ticket
-    context_object_name = 'ticket'
-    template_name = 'tickets/ticket_detail.html'
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super().get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
-        ticket_id = kwargs['object'].id
-
-        context['comment_list'] = TicketComment.objects.filter(
-            ticket=kwargs['object'])
-
-        return context
-"""
 
 
 class TicketUpdateView(LoginRequiredMixin, UpdateView):
@@ -121,7 +104,7 @@ class TicketUpdateView(LoginRequiredMixin, UpdateView):
       #  return super().form_valid(form)
 
 
-@login_required
+@ login_required
 def ticket_delete_view(request, pk):
 
     if request.method == 'POST':
@@ -202,24 +185,3 @@ class TicketCommentDeleteView(LoginRequiredMixin, DeleteView):
             'pk': self.object.ticket.id})
         self.object.delete()
         return HttpResponseRedirect(success_url)
-
-
-"""
-def my_view(request):
-
-    if request.method == 'POST':
-        print request.POST.get('my_field')
-
-        form = MyForm(request.POST)
-
-        print form['my_field'].value()
-        print form.data['my_field']
-
-        if form.is_valid():
-
-            print form.cleaned_data['my_field']
-            print form.instance.my_field
-
-            form.save()
-            print form.instance.id  # now this one can access id/pk
-"""

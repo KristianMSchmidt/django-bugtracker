@@ -21,7 +21,7 @@
 
     <br><br>
 
-    <a href="#" class="btn btn-info mb-1" hx-get="{% url 'add_ticket_to_project' project.pk %}" hx-target="#body-col">Add Ticket to Project</a>
+    <a href="#" class="btn btn-primary mb-1" hx-get="{% url 'add_ticket_to_project' project.pk %}" hx-target="#body-col">Add Ticket to Project</a>
     <div class="card">
         <div class="card-header">
             Project Tickets
@@ -68,7 +68,7 @@
     <br>
     <br>
 
-    <a href="#" class="btn btn-info mb-1" hx-get="{% url 'add_ticket_to_project' project.pk %}" hx-target="#body-col">Manage Project Users</a>
+    <a href="#" class="btn btn-primary mb-1" hx-get="{% url 'add_ticket_to_project' project.pk %}" hx-target="#body-col">Manage Project Users</a>
     <div class="card">
         <div class="card-header">
             Enrolled Personel
@@ -110,7 +110,7 @@
     <br>
 
     <div class="d-flex justify-content-center">
-        <button class="btn btn-warning" href="#" 
+        <button class="btn btn-danger" href="#" 
             hx-get="{% url 'project_delete' project.pk %}"
             hx-target="#modals-here" 
             hx-trigger="click"

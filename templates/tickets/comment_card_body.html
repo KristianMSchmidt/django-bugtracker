@@ -1,0 +1,36 @@
+{% load crispy_forms_tags %}
+
+<div class="container">
+    <form hx-post="{% url "ticket_detail" ticket.pk %}" hx-target="#comment-card-body">
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Add comment</button>
+    </form> 
+    {% if ticket_comments.count > 0 %}
+    <br>        
+    <br>  
+    <p class="card-title">All comments for this ticket</p>
+    <div class="table-responsive">
+                    
+        <table class="table table-striped table-hover table-sm text-nowrap">
+            <thead>
+                    <tr>
+                    <th>Commenter</th>
+                    <th>Message</th>
+                    <th>Created</th>
+                </tr>                  
+            </thead>
+            <tbody>
+            {% for comment in ticket_comments.all %}
+                <tr>
+                    <td>{{ comment.commenter }} </td>
+                    <td>{{ comment.message }} </td>
+                    <td>{{ comment.created_at }} </td>
+                </tr>    
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}                          
+</div>
+
+

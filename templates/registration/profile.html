@@ -10,7 +10,7 @@
         {{ form|crispy }}
         <button class="btn btn-primary" type='submit'>Update</button>
     </form>
-    <a href="{% url 'password_change' %}">Change password</a><br>
+    <a href="#" hx-get="{% url 'password_change' %}" hx-target="#body-col">Change password</a><br>
 </div>  
     
 
