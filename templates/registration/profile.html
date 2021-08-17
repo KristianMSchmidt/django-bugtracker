@@ -1,11 +1,18 @@
 {% load crispy_forms_tags %}
 <div class="container-fluid p-5">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %} 
     <h3>Account settings</h3>
-    <form class="my-4" method="POST">{% csrf_token %}
+    <form class="my-4" hx-post="{% url 'profile' %}" hx-target="#body-col" method="POST">
         {{ form|crispy }}
         <button class="btn btn-primary" type='submit'>Update</button>
     </form>
     <a href="{% url 'password_change' %}">Change password</a><br>
-</div>
+</div>  
+    
+
 
 
