@@ -163,7 +163,7 @@
     <div class="d-flex" id="body-row"> 
         {% if user.is_authenticated %}
         <!-- Sidebar -->
-        <div id="sidebar-container" class="sidebar-expanded d-none d-lg-block">
+        <div id="sidebar-container" class="sidebar-expanded d-none d-xl-block">
             <!-- Bootstrap List Group -->
             <ul class="list-group sticky-top sticky-offset" style="top:100px; border-radius:0"> <!--style="top:56px;border-radius: 0;"> -->
                 <!-- Separator with title -->
@@ -255,6 +255,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+    
     <!-- Htmx JS -->
     <script src="https://unpkg.com/htmx.org@1.1.0"></script>
     <script>
@@ -279,21 +280,21 @@
     <!-- JS for sidebar -->
     <script src="{% static 'js/base.js' %}"></script>
  
- <script>
-    function closeModal() {
-        var container = document.getElementById("modals-here")
-        var backdrop = document.getElementById("modal-backdrop")
-        var modal = document.getElementById("modal")
+    <script>
+        function closeModal() {
+            var container = document.getElementById("modals-here")
+            var backdrop = document.getElementById("modal-backdrop")
+            var modal = document.getElementById("modal")
 
-        modal.classList.remove("show")
-        backdrop.classList.remove("show")
+            modal.classList.remove("show")
+            backdrop.classList.remove("show")
 
-        setTimeout(function() {
-            container.removeChild(backdrop)
-            container.removeChild(modal)
-        }, 200)
-    }
-</script>
+            setTimeout(function() {
+                container.removeChild(backdrop)
+                container.removeChild(modal)
+            }, 200)
+        }
+    </script>
 
     <!-- Page theme JS -->
     {% block javascript %} {% endblock javascript %}

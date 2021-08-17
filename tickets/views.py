@@ -112,15 +112,19 @@ class TicketUpdateView(LoginRequiredMixin, UpdateView):
         form.instance.updated_by = self.request.user
         new_ticket = form.save(commit=False)
         new_ticket.save(request=self.request)
+        self.success_url = self.get_object().get_absolute_url()
         messages.success(
             self.request, f"You successfully updated this ticket")
-        return super().form_valid(form)
+        self.object = form.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+      #  return super().form_valid(form)
 
 
 @login_required
 def ticket_delete_view(request, pk):
 
-    if request.method == 'DELETE':
+    if request.method == 'POST':
         ticket = Ticket.objects.filter(pk=pk)
         ticket_title = ticket.first().title
         ticket.delete()

@@ -56,7 +56,6 @@ class ProjectCreateView(LoginRequiredMixin, View):
             new_project = form.save(commit=False)
             new_project.created_by = self.request.user
             new_project.save()
-            print("HEJGERE", new_project.pk)
             messages.success(
                 request, f"You successfully created a new project")
             return redirect(new_project.get_absolute_url())

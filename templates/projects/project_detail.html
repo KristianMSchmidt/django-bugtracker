@@ -1,17 +1,4 @@
 
-<style>
-.empty-table-row {
-    background-color: #f1f1f1;
-    border-bottom: 1px solid #ddd;
-    border-top: 1px solid #ddd;
-    text-align: center;
-    padding: 0;
-    p {
-        padding: 8px 8px;
-        margin: 0;
-    }
-}</style>
-
 <div class="container mt-5">
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }}">

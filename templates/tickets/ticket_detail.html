@@ -6,38 +6,50 @@
         {{ message }}
     </div>
     {% endfor %} 
-    <h3>Details for ticket: <b>{{ticket.title}}</b></h3>
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Project</th>
-            <th>Submitter</th>
-            <th>Developer</th>
-            <th>Created at</th>
-            <th>Last update</th>
-            <th>Status</th>
-            <th>Type</th>
-            <th>Priority</th>
-        </tr>
-        <tr>
-            <td>{{ ticket.title }}</td>
-            <td>{{ ticket.description }}</td>
-            <td>{{ ticket.project }}</td>
-            <td>{{ ticket.submitter }}</td>
-            <td>{{ ticket.developer }}</td>
-            <td>{{ ticket.created_at }}</td>
-            <td>{{ ticket.updated_at }}</td>
-            <td>{{ ticket.get_status_display }}</td>
-            <td>{{ ticket.get_type_display }}</td>
-            <td>{{ ticket.get_priority_display }}</td>
-        </tr>
-    </table>
-
-    <a href="#" hx-get="{% url 'ticket_edit' ticket.pk %}" hx-target="#body-col">Edit ticket</a>
-    <a href="#" hx-get="{% url 'ticket_delete' ticket.pk %}" hx-target="#body-col">Delete ticket</a>
-
-    <!--
+    
+    <div class="card">
+        <div class="card-header">
+            Ticket Details
+        </div>
+        <div class="card-body">
+            <div class="row mb-5">
+                <div class="col col-12 col-sm-6">
+                    <p class="card-text"><span class="text-muted">Title:</span> {{ ticket.title }}</p>
+                    <p class="card-text"><span class="text-muted">Description:</span> {{ ticket.description }}</p>
+                    <p class="card-text"><span class="text-muted">Project:</span> {{ ticket.project }}</p>
+                    <p class="card-text"><span class="text-muted">Submitter:</span> {{ ticket.submitter }}</p>
+                    <p class="card-text"><span class="text-muted">Developer:</span> {{ ticket.developer }}</p>
+                </div>
+                <div class="col col-12 col-sm-6">
+                    <p class="card-text"><span class="text-muted">Created at:</span> {{ ticket.created_at }}</p>
+                    <p class="card-text"><span class="text-muted">Last update:</span> {{ ticket.updated_at }}</p>
+                    <p class="card-text"><span class="text-muted">Status</span> {{ ticket.get_status_display }}</p>
+                    <p class="card-text"><span class="text-muted">Type</span> {{ ticket.get_type_display }}</p>
+                    <p class="card-text"><span class="text-muted">Priority</span> {{ ticket.get_priority_display }}</p>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center"> 
+                <button class="btn btn-info" href="#" hx-get="{% url 'ticket_edit' ticket.pk %}" hx-target="#body-col">Edit Details</button>
+            </div>
+        </div>
+    </div>
+    
+      
+    <!-- Pop up modals -->
+    <div id="modals-here"></div>
+    
+    <br>
+    <br>
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-warning" href="#" 
+            hx-get="{% url 'ticket_delete' ticket.pk %}"
+            hx-target="#modals-here" 
+            hx-trigger="click"
+            _="on htmx:afterOnLoad wait 10ms then add .show to #modal then add .show to #modal-backdrop">Delete Ticket
+        </button>
+    </div>
+    
+    {% comment %} 
     <h3 class="mt-5">Ticket Comments</h3>
 
     <form hx-post="{% url "ticket_create" %}" hx-target="#body-col">
@@ -61,8 +73,9 @@
                 <td><a href="#" hx-get="{% url 'ticket_comment_delete' comment.pk %}" hx-target="#body-col">Delete</a></td>
             </tr>
         {% endfor %}
-    </table>
+    </table>  {% endcomment %}
 
+    {% comment %}     
     <h3>Ticket History</h3>
     <table>
         <tr>
@@ -83,6 +96,7 @@
 
         </tr>
         {% endfor %}
-    </table>
-    -->
+    </table> 
+    {% endcomment %}
+    
 </div>

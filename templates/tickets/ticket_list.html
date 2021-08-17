@@ -7,7 +7,8 @@
     {% endfor %} 
 
     <h3 class="mb-3">Your Tickets</h3>
-    <p>All your tickets in the database (Admins will see ALL tickets)</p>
+    {% if tickets.count > 0 %}
+    <p>All your tickets in the database</p>
 
     <table class="table table-responsive table-striped table-hover table-sm text-nowrap">
         <thead>
@@ -51,4 +52,7 @@
             {% endfor %}
         </tbody>
     <table>
+    {% else %}
+    <p><i>You have no tickets in the database</i></p>
+    {% endif %}
 </div>
