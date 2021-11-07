@@ -14,9 +14,6 @@ import socket
 from pathlib import Path
 from environs import Env
 
-env = Env()
-env.read_env()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env.str("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DJANGO_DEBUG", default=False)
+DEBUG = int(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1', '0.0.0.0']  # new
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(" ")
 
 # Application definition
 
@@ -39,7 +36,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
 
     # Third-party
@@ -59,7 +55,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MIDDLEWARE = [
     'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -100,7 +95,14 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 DATABASES = {
-    "default": env.dj_db_url("DATABASE_URL", default="postgres://postgres@db/postgres")
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME' : os.environ.get("POSTGRES_DB"),
+        'USER' : os.environ.get("POSTGRES_USER"),
+        'PASSWORD' : os.environ.get("POSTGRES_PASSWORD"),
+        'HOST' : os.environ.get("POSTGRES_HOST"),
+        'PORT' : 5432,
+    }
 }
 
 # Password validation

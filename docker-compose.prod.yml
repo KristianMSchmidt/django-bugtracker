@@ -1,0 +1,58 @@
+version: "3.8" # Docker version
+
+services:
+  web:
+    build: .
+    restart: always
+    command: /bin/sh -c /code/entrypoint.prod.sh
+
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    environment:
+      - "DJANGO_SECRET_KEY=Bulh95zwjk8GvZ0ktjI7zNui75jlOZ6Nw8abuUe2vQE5KFd41fo"
+      - "DJANGO_SECURE_SSL_REDIRECT=False" # will be True in actual deployment (but I keep it false here for convenience)
+  
+    # configuration values for traefik
+    labels:
+      # create a new router for my container and specify
+      # the routing rule used to determine if a request matches this container
+      # (with this configuration, all traffic sent to my Docker host 
+      # on port 80 or 443 with the domain of bug-tracker-django
+      # will be routed to the bug-tracker-django container)
+      - traefik.http.routers.bug-tracker-django.rule=Host(`bug-tracker-django.kristianms.com`)
+      # this router should use TLS
+      - traefik.http.routers.bug-tracker-django.tls=true
+      # the certificates resolver 'lets-encrypt' should be used to
+      # get a certificate for this route
+      - traefik.http.routers.bug-tracker-django.tls.certresolver=lets-encrypt
+      # the exposed port that Traefik should use to route traffic to this container
+      - traefik.port=80
+    networks:
+      - internal
+      - traefik
+   
+  db:
+    image: postgres:11
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+    networks:
+      - internal
+
+volumes:
+  postgres_data:
+
+
+networks:
+  # join the externally defined reverse proxy net 
+  traefik:
+    external: true
+  
+  # define an internal network called 'internal'
+  internal:
+    external: false

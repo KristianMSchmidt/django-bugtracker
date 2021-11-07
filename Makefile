@@ -1,56 +1,68 @@
-# Run development server
-up:
+## ----------------------------------------------------------------------
+## Makefile for bug-tracker-django.kristianms.com
+##
+## Used for both development and production. See targets below.
+## ----------------------------------------------------------------------
+
+help:   # Show this help.
+	@sed -ne '/@sed/!s/## //p' $(MAKEFILE_LIST)
+
+# ---------- Development ---------- #
+
+up: ## Run development server
 	docker-compose up
 
 # Rebuild development docker image
 build:
 	docker-compose build
 
-# Rebuild development container and run development server
-up-build:
+up-build: ## Rebuild development container and run development server
 	docker-compose up --build
 
-# Execute all tests within the docker container
-test:
+test: ## Execute all tests within the docker container
 	docker-compose run --rm web ./manage.py test
 
-# Rebuild production docker image
-build-prod:
-	docker-compose -f docker-compose-prod.yml build
-
-# Start docker production 
-up-build-prod:
-	docker-compose -f docker-compose-prod.yml up --build
-
-# Open terminal within running docker development container
-shell:
+shell: ## Open terminal within running docker development container
 	docker-compose exec web /bin/bash
 
-# Makemigrations within within docker container
-migrations:
+migrations: ## Makemigrations within within docker container
 	docker-compose exec web python manage.py makemigrations
 
-# Migrate within within docker container
-migrate:
+migrate: ## Migrate within within docker container
 	docker-compose exec web python manage.py migrate
 
-# Create superuser within docker container
-superuser:
+
+superuser: ## Create superuser within docker container
 	docker-compose exec web python manage.py createsuperuser
 
-# Deployment security checklist
-check:
+
+check: ## Deployment security checklist
 	docker-compose exec web python manage.py check --deploy
 
-# Collect static (do this before every deployment to Heroku)
-collectstatic:
+collectstatic: ## Collect static (do this before every deployment to Heroku)
 	docker-compose exec web python manage.py collectstatic
 
-# build production tailwind css & push master branch to heroku & check security
-make push-heroku:
-	git push heroku master
-	heroku run python manage.py check --deploy
 
-# Give myself ownership of all files in directory:
-make chown:
+# ---------- Production ---------- #
+production_stop: ## Stop production server
+	docker-compose -f docker-compose.prod.yml down --remove-orphans
+
+production_start: ## Start production server as daemon
+	docker-compose -f docker-compose.prod.yml up --build --remove-orphans -d
+
+production_djangologs: ## Show django logs
+	docker logs bug-tracker-django
+
+
+production_traefiklogs: ## Show traefik access logs
+	docker logs traefik
+
+
+production_shell: # Open shell in running docker production container
+	docker-compose -f docker-compose.prod.yml exec web /bin/bash
+
+
+# ---------- Other ---------- #
+
+make chown: ## Give myself ownership of all files in directory:
 	sudo chown -R $USER:$USER .
