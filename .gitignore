@@ -1,3 +1,4 @@
 __pycache__/
 notesblok.txt
 .env.prod
+/static/

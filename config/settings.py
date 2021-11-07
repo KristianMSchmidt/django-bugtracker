@@ -142,21 +142,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 
-# location of static files in local development (can be a list)
-STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
-
 STATIC_URL = '/static/'
-
-# location of static files for production
-STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
-
-# this is the default setting - we just make it explicit here
-STATICFILES_FINDERS = [
-    # first look here (looks in STATICFILES_DIRS)
-    "django.contrib.staticfiles.finders.FileSystemFinder",
-    # then look here (looks directories defined by STATIC_URL ... in our case all directories named static)
-    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-]
+STATIC_ROOT = os.path.join(BASE_DIR.joinpath('static'))
 
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
