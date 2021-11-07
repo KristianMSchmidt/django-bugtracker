@@ -18,4 +18,5 @@ jobs:
         run: 	docker-compose -f docker-compose.dev.yml build
 
       - name: Run tests
-        run: make test
+        run: docker-compose -f docker-compose.dev.yml run web python manage.py test
+
