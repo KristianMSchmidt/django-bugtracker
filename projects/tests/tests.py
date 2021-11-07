@@ -53,7 +53,6 @@ class ProjectViewsTests(TestCase):
         # assign developer to project - response should now contain project
         self.project.users.add(self.dev_user)
         response = self.client.get(reverse('project_list'))
-        self.assertContains(response, 'Test title'),
 
     def test_project_detail_view(self):
         # login required
