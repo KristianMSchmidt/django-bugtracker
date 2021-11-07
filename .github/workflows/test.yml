@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build docker images
-        run: make build
+        run: make develop
 
       - name: Run tests
         run: make test
