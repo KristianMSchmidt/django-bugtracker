@@ -1,58 +1,82 @@
-version: "3.8" # Docker version
-
+version: "3.3"
+   
 services:
   web:
-    build: .
     restart: always
+    build: .
     command: /bin/sh -c /code/entrypoint.prod.sh
-
     volumes:
-      - .:/code
-    ports:
-      - 8000:8000
+      - static_volume:/code/staticfiles
+    expose:
+      - 8005
+    env_file:
+      - ./.env.prod
     depends_on:
       - db
-    environment:
-      - "DJANGO_SECRET_KEY=Bulh95zwjk8GvZ0ktjI7zNui75jlOZ6Nw8abuUe2vQE5KFd41fo"
-      - "DJANGO_SECURE_SSL_REDIRECT=False" # will be True in actual deployment (but I keep it false here for convenience)
-  
-    # configuration values for traefik
-    labels:
-      # create a new router for my container and specify
-      # the routing rule used to determine if a request matches this container
-      # (with this configuration, all traffic sent to my Docker host 
-      # on port 80 or 443 with the domain of bug-tracker-django
-      # will be routed to the bug-tracker-django container)
-      - traefik.http.routers.bug-tracker-django.rule=Host(`bug-tracker-django.kristianms.com`)
-      # this router should use TLS
-      - traefik.http.routers.bug-tracker-django.tls=true
-      # the certificates resolver 'lets-encrypt' should be used to
-      # get a certificate for this route
-      - traefik.http.routers.bug-tracker-django.tls.certresolver=lets-encrypt
-      # the exposed port that Traefik should use to route traffic to this container
-      - traefik.port=80
     networks:
-      - internal
-      - traefik
-   
-  db:
-    image: postgres:11
+      - reverse-proxy_proxynet
+
+  nginx:
+    restart: always
+    image: nginx:latest
+    hostname: bug-tracker-django.kristianms.com
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - static_volume:/code/staticfiles
+      - type: bind
+        source: ./nginx_config/nginx.conf
+        target: /etc/nginx/conf.d/default.conf
+    expose:
+      - 1347
+    depends_on:
+      - web
+    environment:
+      - VIRTUAL_HOST=bug-tracker-django.kristianms.com
+      - VIRTUAL_PORT=1347
+      - LETSENCRYPT_HOST=bug-tracker-django.kristianms.com
+      - LETSENCRYPT_EMAIL=kmollerschmidt@gmail.com
+      - url=https://bug-tracker-django.kristianms.com
+    networks:
+      - reverse-proxy_proxynet
+
+  db:
+    image: postgres:14
+    restart: always
+    volumes:
+      - database_volume:/var/lib/postgresql/data/
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
+    env_file:
+      - .env.prod
+    user: postgres:postgres
     networks:
-      - internal
+      - reverse-proxy_proxynet
 
+
+  pgbackups:
+    image: prodrigestivill/postgres-backup-local:14
+    restart: always
+    user: postgres:postgres
+    volumes:
+      - ./backups:/backups:rw
+    links:
+      - db
+    depends_on:
+      - db
+    env_file:
+      - .env.prod
+    environment:
+      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs --clean
+      - SCHEDULE=@daily
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=4
+      - BACKUP_KEEP_MONTHS=6
+      - HEALTHCHECK_PORT=8080
+    networks:
+      - reverse-proxy_proxynet
 volumes:
-  postgres_data:
-
+  database_volume: {}
+  static_volume: {}
 
 networks:
-  # join the externally defined reverse proxy net 
-  traefik:
+  reverse-proxy_proxynet:
     external: true
-  
-  # define an internal network called 'internal'
-  internal:
-    external: false
