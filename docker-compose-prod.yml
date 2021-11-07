@@ -1,0 +1,29 @@
+# I use this docker compose file to simulate production settings locally,
+# especially to check security settings before deployment.
+# Good practice to always test application once in this container before push to heroku (so save time) 
+# In actual deployment on Heroku, only the heroku.yml file is used. 
+
+version: "3.8" # Docker version
+
+services:
+  web:
+    build: .
+    command: gunicorn config.wsgi -b 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    environment:
+      - "DJANGO_SECRET_KEY=Bulh95zwjk8GvZ0ktjI7zNui75jlOZ6Nw8abuUe2vQE5KFd41fo"
+      - "DJANGO_SECURE_SSL_REDIRECT=False" # will be True in actual deployment (but I keep it false here for convenience)
+  db:
+    image: postgres:11
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+
+volumes:
+  postgres_data:
