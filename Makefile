@@ -89,6 +89,9 @@ production_shell: # Open shell in running docker production container
 production_create_backup: ## Create a database backup manually
 	docker-compose -f docker-compose.prod.yml run --rm pgbackups /backup.sh
 
+production_superuser: # make development superuser 
+	docker-compose -f docker-compose.prod.yml exec web python manage.py createsuperuser
+
 # ---------- Other ---------- #
 
 make chown: ## Give myself ownership of all files in directory:
