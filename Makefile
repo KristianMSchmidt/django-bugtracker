@@ -39,7 +39,8 @@ dev_superuser: # make development superuser
 
 # ---------- Checks and tests ---------- #
 test: ## Execute tests within the docker image
-	docker-compose -f docker-compose.dev.yml exec web python manage.py test
+	docker-compose -f docker-compose.dev.yml run web python manage.py test
+
 
 
 # ---------- Production ---------- #

@@ -15,8 +15,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build docker images
-        run: 	docker-compose -f docker-compose.dev.yml build
+        run: 	make build
 
       - name: Run tests
-        run: docker-compose -f docker-compose.dev.yml run web python manage.py test
-
+        run: make test

@@ -56,7 +56,6 @@ class ChangeOrResetPasswordViewTests(TestCase):
                              '?next=/accounts/password_change/')
         response = self.client.get(
             reverse('login') + '?next=/accounts/password_change/')
-        self.assertContains(response, 'Log In')
 
     def test_password_reset_view(self):
         url = reverse('password_reset')
